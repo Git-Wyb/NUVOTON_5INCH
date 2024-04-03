@@ -3155,6 +3155,8 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 					}
 				}
         return 0;
+				break;//F8
+				
       case '9':
 					if((buff[5]=='F')&&(buff[6]=='F')&&(buff[7]=='F'))//基板检查模式
 				{
@@ -3180,12 +3182,13 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 			  }
 			
 			  
-				break;
+				break;//F9
 			
-			break;
+			
       				
 			default:break;
-			}
+			}//SWITCH F-COM
+		   break;
 	case 'N':
 		  if(buff[4] == '0')
 		  {
@@ -3200,9 +3203,9 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 							code_protocol_ack(Tp_xor,0,NULL,0);
 			}
 			
-			break;
+			break;//STATUS = 'N'
 		default:break;
-	}
+	}//switch (STATUS)
 	
 	if(buff[3]!='Y')
 	{
