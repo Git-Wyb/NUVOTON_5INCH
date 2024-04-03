@@ -1687,12 +1687,15 @@ uint32_t  usb_cannot_find_image:1;//16// u���Ҳ���ͼ���ļ�  
 	if(systerm_error_status.bits.image_samefilename_error\
 		||systerm_error_status.bits.image_coversize_error\
 		||systerm_error_status.bits.image_filenobmp_error\
-		||systerm_error_status.bits.usb_cannot_find_image\
 	  ||systerm_error_status.bits.image_outofrange_error\
 	  ||systerm_error_status.bits.image_bmp800480_large_error)
 		{
-		  
+		  systerm_error_status.bits.usb_cannot_find_image=0;
 
+		}
+		else if(systerm_error_status.bits.usb_cannot_find_image)
+		{
+		   
 		}
      else	
 	 	{      	
