@@ -98,13 +98,13 @@ int32_t  spiInit(int32_t fd)
 {
     if(fd == 0)
     {
-        sysInstallISR(IRQ_LEVEL_1, SPI0_IRQn, (PVOID)spi0ISR);
+        sysInstallISR(IRQ_LEVEL_5, SPI0_IRQn, (PVOID)spi0ISR);
         sysEnableInterrupt(SPI0_IRQn);
         memset((void *)&spi_device[0], 0, sizeof(spi_dev));
     }
     else
     {
-        sysInstallISR(IRQ_LEVEL_1, SPI1_IRQn, (PVOID)spi1ISR);
+        sysInstallISR(IRQ_LEVEL_5, SPI1_IRQn, (PVOID)spi1ISR);
         sysEnableInterrupt(SPI1_IRQn);
         memset((void *)&spi_device[1], 0, sizeof(spi_dev));
     }

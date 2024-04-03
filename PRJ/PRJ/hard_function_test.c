@@ -20,6 +20,7 @@
 #include "poweron.h"
 #include "poweroff.h"
 #include "wwdt.h"
+#include "W25Q128.h"
 
 extern LAYER_SDRAM_STR display_layer_sdram;
 test_E test_e=test_Reset;//test_Reset;//download_pin_test;//test_Reset;
@@ -46,6 +47,8 @@ extern uint8_t screen_reverse_bit;
 uint8_t TEMP_COUNT=0;
 static uint8_t Q_Num=0;
 static uint32_t Q_ADDR[4]={0};
+extern uint8_t *BaseData_ARR;
+
 
 void AD_init_8V(void)
 {
@@ -1508,7 +1511,7 @@ void hard_function_test(void)
 						 while(1);
 					 }
 						 delay_ms(3000);
-						 test_e = Updata_image;//Nand_check;//Updata_image;
+						 test_e = W25Q128_check;//Nand_check;//Updata_image;
 //			     Flag_int = 0;
 //			      while(1)
 //								{
@@ -1521,6 +1524,41 @@ void hard_function_test(void)
 //									}
 //								}
 						}
+				   break;
+			case W25Q128_check:
+				    Tp_i=0;
+				    while(1)
+						{
+							
+				    memset((void *)(BaseData_ARR),Tp_i,164*9);
+			      W25Q128_Write();
+							memset((void *)(BaseData_ARR),0,164*9);
+							W25Q128_Read();
+							if((*(uint8_t *)(BaseData_ARR+3*9)!=Tp_i)||
+								(*(uint8_t *)(BaseData_ARR+4*9)!=Tp_i)||
+							   (*(uint8_t *)(BaseData_ARR+12*9)!=Tp_i)||
+							   (*(uint8_t *)(BaseData_ARR+13*9)!=Tp_i))
+							{
+								SetZuobiao(10, 400 + 40);  
+				         lcd_printf_new("W25Q128 err");
+								#ifdef  SYSUARTPRINTF 
+								sysprintf("W25Q128 err=%X\r\n",Tp_i);
+								#endif
+								 while(1);
+							}
+							else
+							{
+								SetZuobiao(10, 400 + 40);  
+				         lcd_printf_new("W25Q128 ok");
+								#ifdef  SYSUARTPRINTF 
+								sysprintf("W25Q128 ok=%X\r\n",Tp_i);
+								#endif
+							}
+							Tp_i = (Tp_i+1)%256;
+							if(Tp_i == 0) break;
+							
+				    }
+				    test_e = Updata_image;
 				   break;
 			case Updata_image:
 				if(touch_send_imm==0)

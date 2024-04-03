@@ -201,7 +201,7 @@ void power_save(void)
 //	REG_OPERATE(REG_CLK_PCLKEN1,1<<27,clear);//PWM
 //	REG_OPERATE(REG_CLK_PCLKEN1, 1<<24,clear);//AD
   REG_OPERATE(REG_CLK_PCLKEN1, (1<<24)|(1<<27) ,clear);
-	
+	REG_OPERATE(REG_CLK_PCLKEN1,0X10,clear);//SPI0
 //////////////////	 
 	 LED_POWERLOW_ON();
 	 AUDIO_AMPLIFIER_SHUT_DOWN;

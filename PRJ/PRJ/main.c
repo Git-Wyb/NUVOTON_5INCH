@@ -35,6 +35,8 @@ PB5 --> �û�LED1
 #include "hard_function_test.h"
 #include "wwdt.h"
 #include "ff.h"
+#include "W25Q128.h"
+
 #ifdef BIAOYANJI
 void bianyan_scan(void);
 #endif
@@ -257,7 +259,9 @@ int main(void)
 		power_int_init();
 		#endif
 		
-			
+		
+    W25Q128_init();
+    
 		nandflash_init();
    	SDRAM_DATA_INIT();
 		

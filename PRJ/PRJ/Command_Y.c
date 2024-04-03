@@ -692,7 +692,7 @@ void Printf_One_Line_FIELDtype(void)
 	memset(writeTextBuff,0,0x2000+1);
 	strcpy(writeTextBuff,"FIELD DATA_CLASS  ,\0");
 	#ifdef SYSUARTPRINTF
-	sysprintf("*x_name=%s\r\n",*x_name);
+	//sysprintf("*x_name=%s\r\n",*x_name);
 	#endif
 		
 	for(Tp_i=0;Tp_i<16;Tp_i++)

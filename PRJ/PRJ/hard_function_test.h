@@ -71,6 +71,7 @@ typedef enum
 	POWER_8V_LEVEL_LOW,
 	Sdram_check,
 	Nand_check,
+	W25Q128_check,
 	Updata_image,
 	Display_FF00,
 	Display_FF00_WAIT,
