@@ -245,30 +245,30 @@ void DisPlayLayer(char cmd, int layer1, int layer2) //
 		if ((layer1 < 4) && (layer1 > 0))
 		{
 			//gs_layFlag &= ~(1 <<(layer1 - 1));
-			//////////gs_layer[layer1 - 1].bmpCnt = 0;
-			//////////ClearLayerData(layer1 - 1);
+			gs_layer[layer1 - 1].bmpCnt = 0;
+			ClearLayerData(layer1 - 1);
 			bmp_protocol[layer1 - 1].num=0;
 		}
 		if ((layer2 < 4)&& (layer2 > 0))
 		{
 			//gs_layFlag &= ~(1 << (layer2 - 1));
-			//////////gs_layer[layer2 - 1].bmpCnt = 0;
-			//////////ClearLayerData(layer2 - 1);
+			gs_layer[layer2 - 1].bmpCnt = 0;
+			ClearLayerData(layer2 - 1);
 			bmp_protocol[layer2 - 1].num=0;
 		}
 		return ; //break;
 
 	case LCD_G7:
 		//gs_layFlag = 0x00;
-		//////////gs_layer[0].bmpCnt = 0;
-		//////////gs_layer[1].bmpCnt = 0;
-		//////////gs_layer[2].bmpCnt = 0;
+		gs_layer[0].bmpCnt = 0;
+		gs_layer[1].bmpCnt = 0;
+		gs_layer[2].bmpCnt = 0;
 	  bmp_protocol[0].num=0;
 	  bmp_protocol[1].num=0;
 	  bmp_protocol[2].num=0;
-		//////////ClearLayerData(0);
-		//////////ClearLayerData(1);
-		//////////ClearLayerData(2);
+		ClearLayerData(0);
+		ClearLayerData(1);
+		ClearLayerData(2);
 	
 		return ; //break;	
 	default:
