@@ -41,6 +41,29 @@ uint32_t shift_pointer(uint32_t ptr, uint32_t align);
 extern UART_T param;
 extern volatile  uint32_t UART_TX_REAL,UART_TX_WANT;	
 
+
+void UART_TOIO(void)
+{
+	//pe 2 3
+	REG_OPERATE(REG_SYS_GPE_MFPL,0X0000FF00,clear);
+ // REG_OPERATE(REG_SYS_GPE_MFPL,0X00009900,set);
+	//PH8 9
+	REG_OPERATE(REG_SYS_GPH_MFPH,0X000000FF,clear);
+	//PI3 PI4
+	REG_OPERATE(REG_SYS_GPI_MFPL,0X000FF000,clear);
+	
+	GPIO_OpenBit(GPIOE,BIT2|BIT3, DIR_OUTPUT, PULL_UP);
+	GPIO_OpenBit(GPIOH,BIT8|BIT9, DIR_OUTPUT, PULL_UP);
+	GPIO_OpenBit(GPIOI,BIT3|BIT4, DIR_OUTPUT, PULL_UP);
+	
+	GPIO_Clr(GPIOE, BIT2);
+	GPIO_Clr(GPIOE, BIT3);
+	GPIO_Clr(GPIOH, BIT8);
+	GPIO_Clr(GPIOH, BIT9);
+	GPIO_Clr(GPIOI, BIT3);
+	GPIO_Clr(GPIOI, BIT4);
+}
+
 //ÏÂÔØ³ÌÐòµÄ¿Ú³õÊ¼»¯
 void download_gpio_set_output(void)  //ÅäÖÃ³ÉÊä³ö DOWNLOAD_HEX_INIT(void)
 {
@@ -536,27 +559,53 @@ uint8_t Programme_data_send(void)
 }
 
 //ÖØÐÂÆô¶¯MCU
+//void Restart_mcu(void)
+//{
+//	uint8_t i;
+//	//Clear_sdram(0X41);//ÇåÀíµÚÒ»²ãºÍÒº¾§ÏÔÊ¾ÇøÓò 20171009Ê²Ã´Ò²²»Çå Ä¿Ç°Ö»Ö§³Ö750K´óÐ¡µÄHEX ¶àÁË»­ÃæÒª³ö´í 
+//	
+//	//DOWNLOAD_TOOL_CLR();
+//	//	DOWNLOAD_RESET_CLR();  
+//	 
+//	  delay_us1(2300);
+//	  POWER_5V_OFF();
+//	for(i=0;i<200;i++)
+//       	{
+//			delay_us1(2300);  //	delay_us1(100000);
+//       	}	  	
+//	// download_gpio_set_output();
+//	download_gpio_set_input();
+//	delay_us1(2300);
+//	POWER_5V_ON();
+//	delay_us1(2300);
+//	DOWNLOAD_RESET_SET();
+//}
 void Restart_mcu(void)
 {
 	uint8_t i;
-	//Clear_sdram(0X41);//ÇåÀíµÚÒ»²ãºÍÒº¾§ÏÔÊ¾ÇøÓò 20171009Ê²Ã´Ò²²»Çå Ä¿Ç°Ö»Ö§³Ö750K´óÐ¡µÄHEX ¶àÁË»­ÃæÒª³ö´í 
+	//Clear_sdram(0X41);//??????h????????????? 20171009?ô????? ?j????750K?????HEX ???????????? 
 	
 	//DOWNLOAD_TOOL_CLR();
 	//	DOWNLOAD_RESET_CLR();  
-	 
+	 UART_TOIO();
+	 download_gpio_set_output();
+	
+		DOWNLOAD_TOOL_CLR();
+		DOWNLOAD_RESET_CLR();  
 	  delay_us1(2300);
 	  POWER_5V_OFF();
 	for(i=0;i<200;i++)
        	{
 			delay_us1(2300);  //	delay_us1(100000);
        	}	  	
-	// download_gpio_set_output();
-	download_gpio_set_input();
-	delay_us1(2300);
+
+	//download_gpio_set_input();
+	delay_us1(12300);
 	POWER_5V_ON();
 	delay_us1(2300);
 	DOWNLOAD_RESET_SET();
 }
+
 
 void Calculate_real_long(void)
 {
