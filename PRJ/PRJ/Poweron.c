@@ -16,6 +16,7 @@
 #include "display.h"
 #include "lcd.h"
 #include "Command_E.h"
+#include "W25Q128.h"
 
 static uint8_t vbat_ad_cnt=0;
 static uint16_t vbat_ad_sum=0;
@@ -321,6 +322,8 @@ jump:
 		gs_AreaInfo[0].addr = 0x6000000;//base_data__nandflash_start*2048;
 		gs_AreaInfo[0].space = 0x20000;
 		gs_AreaInfo[0].type = 0;
+		
+		W25Q128_Read();
 	}
 	
 	ReadAreaConfig_new();

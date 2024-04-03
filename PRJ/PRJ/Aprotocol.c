@@ -2148,7 +2148,7 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 				case BASE_DATA_CLASS://基本数据
 					Tp_data3 = convet_3_dec_asccii_to_hex(buff + 5);
 					//if(Tp_data3 >= Basedata_4BYTE_Type_Start/8) return 0;
-					if((Tp_data3 == 0) ||(Tp_data3 == 2) || (Tp_data3 == 4))  return 0;//20180906
+					if((Tp_data3 == BASE_data_fresh_time) ||(Tp_data3 == LCD_Ver_index) || (Tp_data3 == BMP_Ver_index))  return 0;//20180906
 					for(n = 0;n<(data_len-6);n ++)
 					{
 						if((buff[8+n]<'A')||(buff[8+n]>'Z'))//不是大写字母

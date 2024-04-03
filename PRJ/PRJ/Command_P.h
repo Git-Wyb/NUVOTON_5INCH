@@ -9,6 +9,8 @@
 #define BMP_Ver_index  4
 #define IDNumber_High_index 6
 #define IDNumber_Low_index 7
+#define PCB_Checked_5inch  12
+#define VBAT_FLAG_5inch  13
 #define BASE_data_8byte_end 32
 #define BASE_data_PowerOffYear 96
 #define BASE_data_fieldarea_end 96

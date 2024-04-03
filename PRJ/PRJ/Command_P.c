@@ -13,6 +13,7 @@
 #include "Aprotocol.h"
 #include "poweron.h"
 #include "lcd.h"
+#include "W25Q128.h"
 
 CopyFileInfo gs_CpyInfo = {0};
 extern char  USB_IMAGE_TYPE;
@@ -1437,6 +1438,7 @@ int CheckUsbDirFile(int cmd,int flag) //(0, 0);
 							 Clear_sdram(0X4F);
 							 *(uint8_t *)(BaseData_ARR+BMP_Ver_index*9+8) = 8;
   							memcpy(BaseData_ARR+BMP_Ver_index*9, dirPath+15 , *(uint8_t *)(BaseData_ARR+BMP_Ver_index*9+8));
+							  W25Q128_Write();
 						}
 //						if(ret == 0)
 //						{

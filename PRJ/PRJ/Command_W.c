@@ -7,6 +7,7 @@
 #include "Aprotocol.h"
 #include "Command_all.h"
 #include "rtc.h"
+#include "W25Q128.h"
 
 extern AreaConfig gs_AreaInfo[16];
 extern uint32_t logodata_sdrambuffer_addr_arry[16];
@@ -189,6 +190,11 @@ int AreaWriteCmd(char cmd, int field, int idx,void *data,int len)		//√¸¡Ó FILED 
 			SDRAM_TO_NANDFLASH(logodata_basedata_BUFFER,baseA_data__nandflash_start,1);
 			SDRAM_TO_NANDFLASH(logodata_basedata_BUFFER,baseB_data__nandflash_start,1);
 			sysprintf("4.BaseData_ARR[idx] = %s\r\n",(char *)(BaseData_ARR+idx*9));
+			
+			if((idx==Master_Ver_index)||(idx==BMP_Ver_index)||(idx==PCB_Checked_5inch)||(idx==VBAT_FLAG_5inch))
+			{
+				W25Q128_Write();
+			}
 			return 1;
 			
 			//SaveAreaData(0, 0);
