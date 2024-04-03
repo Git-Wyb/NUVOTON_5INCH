@@ -1,0 +1,8 @@
+PRJ/PRJ/obj/*.crf
+PRJ/PRJ/obj/*.d
+PRJ/PRJ/obj/*.o
+PRJ/PRJ/obj/*.axf
+PRJ/PRJ/obj/*.htm
+PRJ/PRJ/obj/*.lnp
+PRJ/PRJ/obj/*.dep
+PRJ/PRJ/lst

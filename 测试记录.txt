@@ -1,0 +1,20 @@
+开始D 结束D      
+outpw(REG_GE2D_TRG, 1);
+    
+sysprintf("start:%d",_sys_uTimer0Count);
+    
+while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
+    
+sysprintf("end:%d",_sys_uTimer0Count);
+
+输出
+start:4end:8start:341end:346start:679end:683start:1,017end:1,021start:1,355end:1,359start:1,693end:1,697
+
+4-5ms是刷前景色
+
+16:16:39.671 start:3,699end:3,711
+16:16:40.684 start:4,712end:4,725
+16:16:41.685 start:5,725end:5,738
+16:16:42.711 start:6,738end:6,751
+16:16:43.724 start:7,752end:7,764
+12-13ms是800*480图片
