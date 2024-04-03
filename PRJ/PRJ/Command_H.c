@@ -599,11 +599,11 @@ void Restart_mcu(void)
 			delay_us1(2300);  //	delay_us1(100000);
        	}	  	
 
-	//download_gpio_set_input();
+	download_gpio_set_input();
 	delay_us1(12300);
 	POWER_5V_ON();
 	delay_us1(2300);
-	DOWNLOAD_RESET_SET();
+	//DOWNLOAD_RESET_SET();
 }
 
 
