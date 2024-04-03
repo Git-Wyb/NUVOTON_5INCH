@@ -48,6 +48,10 @@ extern uint32_t logodata_basedata_BUFFER,logodata_field1_BUFFER,logodata_field2_
 uint32_t logodata_sdrambuffer_addr_arry[16]={0};
 uint32_t logodata_sdrambuffer_addr_arry_bak[16]={0};
 uint8_t Tp_layerover=0;
+extern  uint8_t flag_AB;
+
+extern uint8_t LOGO_ERR;
+extern uint8_t COMMAND_N;
 
 const uint32_t logodata_sdrambuffer_size_arry[]=
                                 {
@@ -3146,11 +3150,52 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 					}
 				}
         return 0;
+      case '9':
+					if((buff[5]=='F')&&(buff[6]=='F')&&(buff[7]=='F'))//基板检查模式
+				{
+					//CHECK_str.HardwareCheck_Flag = 1;
+					//CHECK_str.HardwareCheck_Step = CHECK_IDLE;
+             if((flag_AB==1)||(LOGO_ERR==1))
+						 {
+							 ack_buf[0] = 0xEF;//
+						   if(type == COMM_DATA_UARST)
+						    code_protocol_ack(Tp_xor,1,ack_buf,0);
+						 }
+						 else
+						 {
+							 ack_buf[0] = 0x1C;//
+						   if(type == COMM_DATA_UARST)
+						    code_protocol_ack(Tp_xor,1,ack_buf,0);
+						 }
 
+				}
+				else
+			  {
+				   return 0;
+			  }
 			
-			break;			 
+			  
+				break;
+			
+			break;
+      				
 			default:break;
 			}
+	case 'N':
+		  if(buff[4] == '0')
+		  {
+				COMMAND_N = 1;
+				if(type == COMM_DATA_UARST)
+							code_protocol_ack(Tp_xor,0,NULL,0);
+			}
+			else if(buff[4] == '1')
+			{
+				COMMAND_N = 0;
+				if(type == COMM_DATA_UARST)
+							code_protocol_ack(Tp_xor,0,NULL,0);
+			}
+			
+			break;
 		default:break;
 	}
 	

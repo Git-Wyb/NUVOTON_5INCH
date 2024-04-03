@@ -40,7 +40,7 @@ extern uint16_t flag_logo_change;
 extern uint32_t logodata_sdrambuffer_addr_arry_bak[16];
 uint8_t FLAG_WDT=0;
 extern uint8_t LOGO_ERR;
-
+uint8_t COMMAND_N=0;
 
 void LVD_IRQHandler(void)
 {
@@ -266,7 +266,7 @@ void LOW_POWER_cyw(void)
 	  power_save( );
 	
 	if(LOGO_ERR == 1) goto HDLEFLAG;
-	
+	if(COMMAND_N == 1) goto HDLEFLAG;
 	//power_checkreset();
 	
 	//LVD_init_scan();

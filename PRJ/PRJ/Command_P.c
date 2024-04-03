@@ -1438,6 +1438,10 @@ int CheckUsbDirFile(int cmd,int flag) //(0, 0);
 							 Clear_sdram(0X4F);
 							 *(uint8_t *)(BaseData_ARR+BMP_Ver_index*9+8) = 8;
   							memcpy(BaseData_ARR+BMP_Ver_index*9, dirPath+15 , *(uint8_t *)(BaseData_ARR+BMP_Ver_index*9+8));
+							  Updata_Basedata_No0_cyw();
+			          basedata_ram_to_sdram();
+			          SDRAM_TO_NANDFLASH(logodata_basedata_BUFFER,baseA_data__nandflash_start,1);
+			          SDRAM_TO_NANDFLASH(logodata_basedata_BUFFER,baseB_data__nandflash_start,1);
 							  W25Q128_Write();
 						}
 //						if(ret == 0)

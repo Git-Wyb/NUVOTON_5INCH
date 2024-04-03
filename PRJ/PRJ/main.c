@@ -138,6 +138,7 @@ int main(void)
 		
 		
 		init_gpio();
+		UART_TOIO();
 		POWER_5V_SETTING_initstart();
 		
 	#ifdef POWER_INT_MODE

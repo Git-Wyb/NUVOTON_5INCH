@@ -53,8 +53,10 @@ extern uint32_t logodata_sdrambuffer_addr_arry_bak[16];
 //extern uint8_t *Tp_Image_Buf;
 
 char SOFT_VERSION[] = "TBNUVA01";
+ uint8_t flag_AB=0;
 
 uint8_t LOGO_ERR = 0;
+
 
 
 uint8_t DECTOHEX(uint8_t x_data);
@@ -230,7 +232,7 @@ void para_init(void)
 void BASEDATA_RAM_INIT(void)
 {
 //  static  uint8_t Tp_cmp = 0;
-  static uint8_t flag_AB=0;
+  
 //	void *addr;
 	uint16_t Tp_i=0;
 	uint32_t Tp_checksum1,Tp_checksum2;

@@ -45,4 +45,5 @@ void set_download_task(uint8_t a);
 void download_gpio_set_input(void)  ;
 void download_gpio_set_output(void) ;
 void delay_us1(int usec);
+void UART_TOIO(void);
 #endif
