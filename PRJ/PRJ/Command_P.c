@@ -1517,7 +1517,7 @@ void UsbWriteNandFlash(char cmd, unsigned short *iFile, int cnt)
 		{
 			///ack = 0X1C;
 			///code_protocol_ack(get_command_xor(), 1, &ack,0);
-			
+			systerm_error_status.bits.usb_cannot_find_image = 1;
 			#ifdef  SYSUARTPRINTF 
 			sysprintf("check_u_disk_img=0\r\n");
 			#endif
