@@ -348,7 +348,7 @@ jump:
 	else
 	{
 	
-	
+	   systerm_error_status.bits.nandflash_error = 0;//error from F9 COMMAND
 	}
 	
     	

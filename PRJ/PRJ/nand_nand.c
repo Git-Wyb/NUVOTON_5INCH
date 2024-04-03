@@ -19,6 +19,7 @@ uint8_t NAND_ID[5];
 uint8_t STATUS = 0;
 extern volatile uint8_t Flag_int;
 extern BADMANAGE_TAB_TYPE_U badmanage_str[1];
+extern SYSTEMERRORSTATUS_TYPE  systerm_error_status;
 
 int nuc970_dev_ready(void)
 {
@@ -198,12 +199,17 @@ u8 NAND_EraseBlock(u32 BlockNum)
 	
 	if(NAND_GetStatus()!=NSTA_READY)
 	{
-     sysprintf("BlockNum erase error = %x\n\r",BlockNum );
+     #ifdef SYSUARTPRINTF
+		sysprintf("BlockNum erase error = %x\n\r",BlockNum );
+		#endif
+		systerm_error_status.bits.nandflash_Write_error = 1;
 		return NSTA_ERROR;
 	}
 	else
 	{
-    sysprintf("Erase ok = %x\n\r",BlockNum);
+    #ifdef SYSUARTPRINTF
+		sysprintf("Erase ok = %x\n\r",BlockNum);
+		#endif
 		return 0;	//³É¹¦   
 	}
 	
@@ -280,7 +286,10 @@ u8 NAND_WritePage(u32 PageNum,u16 ColNum,u8 *pBuffer,u16 NumByteToWrite)
 	
 	if(NAND_GetStatus()!=NSTA_READY)
 	{
+		#ifdef SYSUARTPRINTF
 		sysprintf("WRITE PAGE ERROR = %x\n",PageNum );
+		#endif
+		systerm_error_status.bits.nandflash_error = 1;
 		return NSTA_ERROR;//Ê§°Ü
 	}
 
