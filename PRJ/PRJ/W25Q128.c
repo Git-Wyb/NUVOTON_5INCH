@@ -126,8 +126,8 @@ void W25Q128_init(void)
 //	sysprintf("Tp_id[2]=0x%x\r\n",Tp_id[2]);
 //	sysprintf("Tp_id[3]=0x%x\r\n",Tp_id[3]);
 //	#endif
-	
-	
+	spiIoctl(0, SPI_IOC_DISABLE_SS, SPI_SS_SS0, 0);
+	 
 }
 /*
 ???:SpiFlash_WaitReady(void)
