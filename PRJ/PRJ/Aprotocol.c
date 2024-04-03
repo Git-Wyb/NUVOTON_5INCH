@@ -2073,6 +2073,9 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 								 {
 									 NAND_EraseBlock((Tp_gs_AreaInfo[Tp_field].addr+logodata_2gbit_change_addr)/0x20000+Q0_addr);
 								 }
+								 
+								 SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],(Tp_gs_AreaInfo[Tp_field].addr+logodata_2gbit_change_addr)/2048,1);
+								 
 								 field_info_init();
                 break;							
 						default:break;	
