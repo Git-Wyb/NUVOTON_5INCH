@@ -2850,20 +2850,21 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 					 // if(pwr_on_cnt) return 0;//if(LOGO_HANDLE_flag == 0) return 0;//在领域数据初始化前抽出不处理
 					  if(buff[5]!='*') return 0;//防止文件名多1位也回文
 				     //OUTPUT_BACKUP_FILE();//
-
+             ack_buf[0] = 0X16;//20170721 ITEM2 指令受信完了
+		         command_xor=Tp_xor;//IMAGE_FCS = Tp_FSC;
+				     if(type == COMM_DATA_UARST)
+						 {
+				     	 wait_send_over();
+							 code_protocol_ack(Tp_xor,1,ack_buf,0);
+						 }
+						 
 				   if (GetUsbMountFlag() == 0)
 					{						
 						systerm_error_status.bits.usb_unable_connect = 1;
 						return 1;
 					}	
 				   
-				     ack_buf[0] = 0X16;//20170721 ITEM2 指令受信完了
-		         	     command_xor=Tp_xor;//IMAGE_FCS = Tp_FSC;
-				     if(type == COMM_DATA_UARST)
-						 {
-				     	 wait_send_over();
-							 code_protocol_ack(Tp_xor,1,ack_buf,0);
-						 }
+				 
 
            i_return_flag =    BackupDeviceData( );
 						  if(systerm_error_status.bits.usb_canot_write_error)
@@ -2886,20 +2887,21 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 					//if(pwr_on_cnt) return 0;   //if(LOGO_HANDLE_flag == 0) return 0;//在领域数据初始化前抽出不处理
 				      if(buff[5]!='*') return 0;//防止文件名多1位也回文
 				      //SYNCHRONOUS_BACKUP_FILE();//开始从备份数据导入软件状态
-
+		          ack_buf[0] = 0X16;//20170721 ITEM2 指令受信完了
+		          command_xor=Tp_xor;//IMAGE_FCS = Tp_FSC;
+				      if(type == COMM_DATA_UARST)
+							{
+				     		 wait_send_over();
+								code_protocol_ack(Tp_xor,1,ack_buf,0);
+							}
+							
 					 if (GetUsbMountFlag() == 0)
 					{						
 						systerm_error_status.bits.usb_unable_connect = 1;
 						return 1;
 					}	
 
-					  ack_buf[0] = 0X16;//20170721 ITEM2 指令受信完了
-		          		command_xor=Tp_xor;//IMAGE_FCS = Tp_FSC;
-				      if(type == COMM_DATA_UARST)
-							{
-				     		 wait_send_over();
-								code_protocol_ack(Tp_xor,1,ack_buf,0);
-							}
+			
 
                i_return_flag        =  RestoreDeviceData( ); // CheckFromDir("3:/BELMONT_BACKUP","0:");//RestoreDeviceData( );
 							if(systerm_error_status.bits.usb_cannot_find_hexortxt)
