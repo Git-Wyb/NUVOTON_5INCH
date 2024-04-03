@@ -31,8 +31,8 @@
     Program header entries: 1
     Section header entries: 16
 
-    Program header offset: 1018192 (0x000f8950)
-    Section header offset: 1018224 (0x000f8970)
+    Program header offset: 1018196 (0x000f8954)
+    Section header offset: 1018228 (0x000f8974)
 
     Section header string table index: 15
 
@@ -30198,7 +30198,7 @@
         0x0001a8a4:    e3a07000    .p..    MOV      r7,#0
         0x0001a8a8:    e3500000    ..P.    CMP      r0,#0
         0x0001a8ac:    e2886000    .`..    ADD      r6,r8,#0
-        0x0001a8b0:    0a000013    ....    BEQ      0x1a904 ; download_process + 116
+        0x0001a8b0:    0a00001a    ....    BEQ      0x1a920 ; download_process + 144
         0x0001a8b4:    e5c87000    .p..    STRB     r7,[r8,#0]
         0x0001a8b8:    ebffe743    C...    BL       copy_download_hex_to_sdram ; 0x145cc
         0x0001a8bc:    e20010ff    ....    AND      r1,r0,#0xff
@@ -30210,62 +30210,62 @@
         0x0001a8d4:    e20010ff    ....    AND      r1,r0,#0xff
         0x0001a8d8:    e5c61002    ....    STRB     r1,[r6,#2]
         0x0001a8dc:    e3510003    ..Q.    CMP      r1,#3
-        0x0001a8e0:    3a000007    ...:    BCC      0x1a904 ; download_process + 116
+        0x0001a8e0:    3a00000e    ...:    BCC      0x1a920 ; download_process + 144
         0x0001a8e4:    e5c67002    .p..    STRB     r7,[r6,#2]
         0x0001a8e8:    e5c57000    .p..    STRB     r7,[r5,#0]
         0x0001a8ec:    e3a04001    .@..    MOV      r4,#1
         0x0001a8f0:    e5d80000    ....    LDRB     r0,[r8,#0]
         0x0001a8f4:    e3800001    ....    ORR      r0,r0,#1
         0x0001a8f8:    e5c80000    ....    STRB     r0,[r8,#0]
-        0x0001a8fc:    ea000021    !...    B        0x1a988 ; download_process + 248
+        0x0001a8fc:    ea000028    (...    B        0x1a9a4 ; download_process + 276
         0x0001a900:    e5c57000    .p..    STRB     r7,[r5,#0]
-        0x0001a904:    e5d5000c    ....    LDRB     r0,[r5,#0xc]
-        0x0001a908:    e3500001    ..P.    CMP      r0,#1
-        0x0001a90c:    1a00006a    j...    BNE      0x1aabc ; download_process + 556
-        0x0001a910:    ebffd7d2    ....    BL       Touch_int_disable ; 0x10860
-        0x0001a914:    e5c67002    .p..    STRB     r7,[r6,#2]
-        0x0001a918:    e3a01f69    i...    MOV      r1,#0x1a4
-        0x0001a91c:    e3a0000a    ....    MOV      r0,#0xa
-        0x0001a920:    ebffd724    $...    BL       SetZuobiao ; 0x105b8
-        0x0001a924:    e28f0e1a    ....    ADR      r0,{pc}+0x1a8 ; 0x1aacc
-        0x0001a928:    eb001a3e    >...    BL       lcd_printf ; 0x21228
-        0x0001a92c:    e3a04000    .@..    MOV      r4,#0
-        0x0001a930:    ebffc774    t...    BL       Power_application ; 0xc708
-        0x0001a934:    ebffc036    6...    BL       Mode_setting ; 0xaa14
-        0x0001a938:    ebffa51e    ....    BL       Baud_setting ; 0x3db8
-        0x0001a93c:    e3500000    ..P.    CMP      r0,#0
-        0x0001a940:    0a000028    (...    BEQ      0x1a9e8 ; download_process + 344
-        0x0001a944:    e1a00009    ....    MOV      r0,r9
-        0x0001a948:    ebfffac7    ....    BL       delay_us1 ; 0x1946c
-        0x0001a94c:    ebffa5c1    ....    BL       Block_erase_N ; 0x4058
-        0x0001a950:    e3500000    ..P.    CMP      r0,#0
-        0x0001a954:    0a000025    %...    BEQ      0x1a9f0 ; download_process + 352
-        0x0001a958:    e1a00009    ....    MOV      r0,r9
-        0x0001a95c:    ebfffac2    ....    BL       delay_us1 ; 0x1946c
-        0x0001a960:    ebffce86    ....    BL       Programme_start ; 0xe380
-        0x0001a964:    e3500000    ..P.    CMP      r0,#0
-        0x0001a968:    0a000022    "...    BEQ      0x1a9f8 ; download_process + 360
-        0x0001a96c:    e1a00009    ....    MOV      r0,r9
-        0x0001a970:    ebfffabd    ....    BL       delay_us1 ; 0x1946c
-        0x0001a974:    ebffcddc    ....    BL       Programme_data_send ; 0xe0ec
-        0x0001a978:    e3500000    ..P.    CMP      r0,#0
-        0x0001a97c:    0a00001f    ....    BEQ      0x1aa00 ; download_process + 368
-        0x0001a980:    e1a00009    ....    MOV      r0,r9
-        0x0001a984:    ebfffab8    ....    BL       delay_us1 ; 0x1946c
-        0x0001a988:    e59fa150    P...    LDR      r10,[pc,#336] ; [0x1aae0] = 0x2baa5
-        0x0001a98c:    e3540001    ..T.    CMP      r4,#1
-        0x0001a990:    e3a0bc96    ....    MOV      r11,#0x9600
-        0x0001a994:    0a00001b    ....    BEQ      0x1aa08 ; download_process + 376
-        0x0001a998:    ebffd3e4    ....    BL       Restart_mcu ; 0xf930
-        0x0001a99c:    e585b008    ....    STR      r11,[r5,#8]
-        0x0001a9a0:    eb002460    `$..    BL       protocol_uart_init ; 0x23b28
-        0x0001a9a4:    e3a0001c    ....    MOV      r0,#0x1c
-        0x0001a9a8:    e58d0000    ....    STR      r0,[sp,#0]
-        0x0001a9ac:    eb000a19    ....    BL       get_command_xor ; 0x1d218
-        0x0001a9b0:    e3a03000    .0..    MOV      r3,#0
-        0x0001a9b4:    e1a0200d    . ..    MOV      r2,sp
-        0x0001a9b8:    e3a01001    ....    MOV      r1,#1
-        0x0001a9bc:    ebffe38e    ....    BL       code_protocol_ack ; 0x137fc
+        0x0001a904:    e3a0001c    ....    MOV      r0,#0x1c
+        0x0001a908:    e58d0000    ....    STR      r0,[sp,#0]
+        0x0001a90c:    eb000a41    A...    BL       get_command_xor ; 0x1d218
+        0x0001a910:    e3a03000    .0..    MOV      r3,#0
+        0x0001a914:    e1a0200d    . ..    MOV      r2,sp
+        0x0001a918:    e3a01001    ....    MOV      r1,#1
+        0x0001a91c:    ebffe3b6    ....    BL       code_protocol_ack ; 0x137fc
+        0x0001a920:    e5d5000c    ....    LDRB     r0,[r5,#0xc]
+        0x0001a924:    e3500001    ..P.    CMP      r0,#1
+        0x0001a928:    1a000063    c...    BNE      0x1aabc ; download_process + 556
+        0x0001a92c:    ebffd7cb    ....    BL       Touch_int_disable ; 0x10860
+        0x0001a930:    e5c67002    .p..    STRB     r7,[r6,#2]
+        0x0001a934:    e3a01f69    i...    MOV      r1,#0x1a4
+        0x0001a938:    e3a0000a    ....    MOV      r0,#0xa
+        0x0001a93c:    ebffd71d    ....    BL       SetZuobiao ; 0x105b8
+        0x0001a940:    e28f0f61    a...    ADR      r0,{pc}+0x18c ; 0x1aacc
+        0x0001a944:    eb001a37    7...    BL       lcd_printf ; 0x21228
+        0x0001a948:    e3a04000    .@..    MOV      r4,#0
+        0x0001a94c:    ebffc76d    m...    BL       Power_application ; 0xc708
+        0x0001a950:    ebffc02f    /...    BL       Mode_setting ; 0xaa14
+        0x0001a954:    ebffa517    ....    BL       Baud_setting ; 0x3db8
+        0x0001a958:    e3500000    ..P.    CMP      r0,#0
+        0x0001a95c:    0a000021    !...    BEQ      0x1a9e8 ; download_process + 344
+        0x0001a960:    e1a00009    ....    MOV      r0,r9
+        0x0001a964:    ebfffac0    ....    BL       delay_us1 ; 0x1946c
+        0x0001a968:    ebffa5ba    ....    BL       Block_erase_N ; 0x4058
+        0x0001a96c:    e3500000    ..P.    CMP      r0,#0
+        0x0001a970:    0a00001e    ....    BEQ      0x1a9f0 ; download_process + 352
+        0x0001a974:    e1a00009    ....    MOV      r0,r9
+        0x0001a978:    ebfffabb    ....    BL       delay_us1 ; 0x1946c
+        0x0001a97c:    ebffce7f    ....    BL       Programme_start ; 0xe380
+        0x0001a980:    e3500000    ..P.    CMP      r0,#0
+        0x0001a984:    0a00001b    ....    BEQ      0x1a9f8 ; download_process + 360
+        0x0001a988:    e1a00009    ....    MOV      r0,r9
+        0x0001a98c:    ebfffab6    ....    BL       delay_us1 ; 0x1946c
+        0x0001a990:    ebffcdd5    ....    BL       Programme_data_send ; 0xe0ec
+        0x0001a994:    e3500000    ..P.    CMP      r0,#0
+        0x0001a998:    0a000018    ....    BEQ      0x1aa00 ; download_process + 368
+        0x0001a99c:    e1a00009    ....    MOV      r0,r9
+        0x0001a9a0:    ebfffab1    ....    BL       delay_us1 ; 0x1946c
+        0x0001a9a4:    e59fa134    4...    LDR      r10,[pc,#308] ; [0x1aae0] = 0x2baa5
+        0x0001a9a8:    e3540001    ..T.    CMP      r4,#1
+        0x0001a9ac:    e3a0bc96    ....    MOV      r11,#0x9600
+        0x0001a9b0:    0a000014    ....    BEQ      0x1aa08 ; download_process + 376
+        0x0001a9b4:    ebffd3dd    ....    BL       Restart_mcu ; 0xf930
+        0x0001a9b8:    e585b008    ....    STR      r11,[r5,#8]
+        0x0001a9bc:    eb002459    Y$..    BL       protocol_uart_init ; 0x23b28
         0x0001a9c0:    e28f0f47    G...    ADR      r0,{pc}+0x124 ; 0x1aae4
         0x0001a9c4:    eb001a17    ....    BL       lcd_printf ; 0x21228
         0x0001a9c8:    e59f0128    (...    LDR      r0,[pc,#296] ; [0x1aaf8] = 0x2bae8
@@ -30277,13 +30277,13 @@
         0x0001a9e0:    0a00001d    ....    BEQ      0x1aa5c ; download_process + 460
         0x0001a9e4:    ea000025    %...    B        0x1aa80 ; download_process + 496
         0x0001a9e8:    e3a04001    .@..    MOV      r4,#1
-        0x0001a9ec:    eaffffe5    ....    B        0x1a988 ; download_process + 248
+        0x0001a9ec:    eaffffec    ....    B        0x1a9a4 ; download_process + 276
         0x0001a9f0:    e3a04001    .@..    MOV      r4,#1
-        0x0001a9f4:    eaffffe3    ....    B        0x1a988 ; download_process + 248
+        0x0001a9f4:    eaffffea    ....    B        0x1a9a4 ; download_process + 276
         0x0001a9f8:    e3a04001    .@..    MOV      r4,#1
-        0x0001a9fc:    eaffffe1    ....    B        0x1a988 ; download_process + 248
+        0x0001a9fc:    eaffffe8    ....    B        0x1a9a4 ; download_process + 276
         0x0001aa00:    e3a04001    .@..    MOV      r4,#1
-        0x0001aa04:    eaffffdf    ....    B        0x1a988 ; download_process + 248
+        0x0001aa04:    eaffffe6    ....    B        0x1a9a4 ; download_process + 276
         0x0001aa08:    e1a00009    ....    MOV      r0,r9
         0x0001aa0c:    ebfffa96    ....    BL       delay_us1 ; 0x1946c
         0x0001aa10:    e585b008    ....    STR      r11,[r5,#8]
@@ -48737,7 +48737,7 @@
 
 
 ** Section #7 '.debug_line' (SHT_PROGBITS)
-    Size   : 128940 bytes
+    Size   : 128944 bytes
 
 
 ** Section #8 '.debug_loc' (SHT_PROGBITS)

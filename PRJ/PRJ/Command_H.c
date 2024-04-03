@@ -829,7 +829,8 @@ void download_process(void)  //COPY_SDRAM_TO_MCU(void)
         if(ack==0)
         {    
 		      download.task=0;
-					
+						ack = 0X1C;
+			     code_protocol_ack(get_command_xor(), 1, &ack,0);
         }	 
         else
 		   {
@@ -932,8 +933,7 @@ over_flag:
 		  download.bps = 38400;
 		  //uart2_init(38400);	 //USART_Config(38400);
 			protocol_uart_init();
-			ack = 0X1C;
-			code_protocol_ack(get_command_xor(), 1, &ack,0);
+		
 			lcd_printf("Update Success     ");			
 			systerm_error_status.bits.comm_handle_finish = 1;//升级正常结束
 			if(updata_hex_fromSW2 == 1)
