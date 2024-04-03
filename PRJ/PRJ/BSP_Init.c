@@ -845,7 +845,8 @@ void rtc_init(void)
 	
 	  RTC_Read(RTC_CURRENT_TIME,&pwr_on_time_ground);
 		///RTC_ground_to_app(&pwr_on_time_ground,&pwr_on_time_app);
-	  if((pwr_on_time_ground.u32Year==0x7d5)&&(pwr_on_time_ground.u32cMonth==1)&&(pwr_on_time_ground.u32cDay==1))
+	  if((pwr_on_time_ground.u32Year==0x7d5)&&(pwr_on_time_ground.u32cMonth==1)&&(pwr_on_time_ground.u32cDay==1)&&
+			(pwr_on_time_ground.u32cHour == 0)&&(pwr_on_time_ground.u32cMinute==0)&&(pwr_on_time_ground.u32cSecond==0))
 		{
 			pwr_on_time_ground.u32Year = RTC_YEAR2000;
 			pwr_on_time_ground.u32cHour = 0;
