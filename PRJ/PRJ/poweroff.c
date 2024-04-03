@@ -175,7 +175,13 @@ void power_save(void)
 	 
 	 //while(1);
 	 //free((void *)display_layer_sdram.LCD_CACHE_BUFFER);
-	 LCD_PWR_OFF();
+	 	//PG2 - LCD RESET
+		 REG_OPERATE(REG_SYS_GPG_MFPL,0X00000F00,clear);
+		 GPIO_OpenBit(GPIOG,BIT2, DIR_OUTPUT, PULL_UP);
+		 GPIO_Clr(GPIOG, BIT2);
+	
+	
+	LCD_PWR_OFF();
 	 POWER_5V_OFF();
 	 //Backlinght_Control_Init_HARDV4(255);
 	
