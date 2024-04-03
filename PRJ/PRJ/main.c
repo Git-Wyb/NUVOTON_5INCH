@@ -237,6 +237,7 @@ int main(void)
 	  protocol_uart_init();
 	
 		rtc_init();
+		
 		//AD_init();
 		
 		//#ifdef POWER_AD_MODE
