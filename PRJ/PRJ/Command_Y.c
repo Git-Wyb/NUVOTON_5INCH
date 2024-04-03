@@ -244,7 +244,7 @@ void Printf_One_Line(const char  *x_name,uint8_t  *x_sou,uint8_t x_long,uint32_t
 {
 	
 	const char char2_const[]={0X0D,0X0A};
-	const char char1_const[]=",";
+	const char char1_const[]=",\0";
 	uint16_t  bytesWritten,bytesToWrite;
 	FRESULT res;
 	static uint32_t Tp_i =0;
@@ -393,8 +393,8 @@ void Printf_One_Line_TestAll(const char *x_name,uint8_t *x_sou,uint8_t x_long,ui
 {
 	
 	const char char2_const[]={0X0D,0X0A};
-	const char char1_const[]=",";
-	static char Tp_data[21]="2017/05/07,00:00:00,";
+	const char char1_const[]=",\0";
+	static char Tp_data[21]="2017/05/07,00:00:00,\0";
 	uint16_t  bytesWritten,bytesToWrite;
 	FRESULT res;
 	static uint32_t Tp_i =0;
@@ -482,7 +482,7 @@ void Printf_One_Line_ASCII_right(const char *x_name,uint8_t *x_sou)
 void Printf_One_Line_ASCII(const char *x_name,uint8_t *x_sou,uint8_t x_long,uint32_t x_num)
 {
 		const char char2_const[]={0X0D,0X0A};
-	const char char1_const[]=",";
+	const char char1_const[]=",\0";
 	uint16_t  bytesWritten,bytesToWrite;
 	FRESULT res;
 	static uint32_t Tp_i =0;
@@ -571,7 +571,7 @@ void Printf_One_Line_NO96(const char *x_name,uint8_t *x_sou)
 void Printf_One_Line_ADDRANDSIZE(const char *x_name,uint8_t *x_sou,uint8_t x_long,uint32_t x_num)
 {
 	const char char2_const[]={0X0D,0X0A};
-	const char char1_const[]=",";
+	const char char1_const[]=",\0";
 	uint16_t  bytesWritten,bytesToWrite;
 	FRESULT res;
 	static uint32_t Tp_i =0;
@@ -632,7 +632,7 @@ void Printf_One_Line_ADDRANDSIZE(const char *x_name,uint8_t *x_sou,uint8_t x_lon
 }
 
 
-void Printf_One_Line_FIELDnumber(const char *x_name)
+void Printf_One_Line_FIELDnumber(void)
 {
 		const char char2_const[]={0X0D,0X0A};
 	//const char char1_const[]=",";
@@ -643,7 +643,8 @@ void Printf_One_Line_FIELDnumber(const char *x_name)
 		char * Tp_char;
 		
 	memset(writeTextBuff,0,0x2000+1);
-	strcpy(writeTextBuff,x_name);
+	//strcpy(writeTextBuff,x_name);
+		strcpy(writeTextBuff,"FIELD NUMBER      ,\0");
 		
 	for(Tp_i=0;Tp_i<16;Tp_i++)
 	{
@@ -678,7 +679,7 @@ void Printf_One_Line_FIELDnumber(const char *x_name)
 	
 }
 
-void Printf_One_Line_FIELDtype(const char *x_name)
+void Printf_One_Line_FIELDtype(void)
 {
 	const char char2_const[]={0X0D,0X0A};
 	//const char char1_const[]=",";
@@ -689,7 +690,10 @@ void Printf_One_Line_FIELDtype(const char *x_name)
 		char * Tp_char;
 		
 	memset(writeTextBuff,0,0x2000+1);
-	strcpy(writeTextBuff,x_name);
+	strcpy(writeTextBuff,"FIELD DATA_CLASS  ,\0");
+	#ifdef SYSUARTPRINTF
+	sysprintf("*x_name=%s\r\n",*x_name);
+	#endif
 		
 	for(Tp_i=0;Tp_i<16;Tp_i++)
 	{
@@ -778,7 +782,7 @@ void Printf_One_Line_FIELDtype(const char *x_name)
 void Printf_One_Line_DATAF(const char *x_name,uint8_t *x_sou,uint8_t x_long,uint32_t x_num)
 {
 	const char char2_const[]={0X0D,0X0A};
-	const char char1_const[]=",";
+	const char char1_const[]=",\0";
 	uint16_t  bytesWritten,bytesToWrite;
 	FRESULT res;
 	static uint32_t Tp_i =0;
@@ -823,8 +827,8 @@ void Printf_One_Line_DATAF(const char *x_name,uint8_t *x_sou,uint8_t x_long,uint
 void Printf_One_Line_Dataclass12time(const char *x_name,uint8_t *x_sou,uint8_t x_long,uint32_t x_num)
 {
 	const char char2_const[]={0X0D,0X0A};
-	const char char1_const[]=",";
-	char Tp_char[]="2017/00";
+	const char char1_const[]=",\0";
+	char Tp_char[]="2017/00\0";
 	uint16_t  bytesWritten,bytesToWrite;
 	FRESULT res;
 	static uint32_t Tp_i =0;
@@ -1037,7 +1041,7 @@ void Printf_One_Line_DATA0_DEC(const char *x_name,uint8_t *x_sou,uint8_t x_long,
 {
 	
 	const char char2_const[]={0X0D,0X0A};
-	const char char1_const[]=",";
+	const char char1_const[]=",\0";
 	uint16_t  bytesWritten,bytesToWrite;
 	FRESULT res;
 	static uint32_t Tp_i =0;
@@ -1113,8 +1117,8 @@ void Printf_One_Line_TestFinal(const char *x_name,uint8_t *x_sou,uint8_t x_long,
 {
 	
 	const char char2_const[]={0X0D,0X0A};
-	const char char1_const[]=",";
-	static char Tp_data[24]="2017/05/07,00:00:00,00,";
+	const char char1_const[]=",\0";
+	static char Tp_data[24]="2017/05/07,00:00:00,00,\0";
 	uint16_t  bytesWritten,bytesToWrite;
 	FRESULT res;
 	static uint32_t Tp_i =0;
@@ -1158,9 +1162,9 @@ void LOGOData_Write_To_USB(uint32_t x_flag)
 //	FRESULT res;
 	static uint32_t  Tp_j =0;
 	uint32_t Tp_addr;
-	char Tp_char[]=".....FIELD=0......DATACLASS=1";
-	char Tp_char1[]="HISTORY           ";//HISTROY???-?????j????
-	char Tp_char2[]=" 000 ,";
+	char Tp_char[]=".....FIELD=0......DATACLASS=1\0";
+	char Tp_char1[]="HISTORY           \0";//HISTROY???-?????j????
+	char Tp_char2[]=" 000 ,\0";
 //	char Tp_char3[]="No000000:";
 	static FATFS Tp_fatfs[17];
 	static uint8_t Tp_fatfs_num = 0;
@@ -1252,7 +1256,7 @@ void LOGOData_Write_To_USB(uint32_t x_flag)
 					}
 					
 					//IWDG_Reset();//
-				  Printf_One_Line(".....FIELD=0......DATACLASS=0",(uint8_t *)BaseData_ARR,0,1);
+				  Printf_One_Line(".....FIELD=0......DATACLASS=0\0",(uint8_t *)BaseData_ARR,0,1);
 					
 					Printf_Header();//?????? 20171011
 					
@@ -1276,29 +1280,29 @@ void LOGOData_Write_To_USB(uint32_t x_flag)
 //				 sprintf((char *)writeTextBuff,"**************************************************************%c%c",13,10);
 //					  Tp_res = f_write(&file,writeTextBuff,strlen((char *)writeTextBuff),(void *)&bytesToWrite);
 				 
-					    Printf_One_Line_TestAll("YY/MM/DD HH:MM:SS ,",(uint8_t *)BaseData_ARR,6,1,0);
-					      Printf_One_Line_ASCII_right("RESERVED          ,",(uint8_t *)BaseData_ARR+9);
-					      Printf_One_Line_ASCII_right("LCD MCU VER       ,",(uint8_t *)BaseData_ARR+LCD_Ver_index*9);
-					      Printf_One_Line_ASCII_right("MCU VER           ,",(uint8_t *)BaseData_ARR+Master_Ver_index*9);
-					      Printf_One_Line_ASCII_right("IMAGE FILE VER    ,",(uint8_t *)BaseData_ARR+BMP_Ver_index*9);
-					      Printf_One_Line_ASCII_right("RESERVED          ,",(uint8_t *)BaseData_ARR+45);
-					      Printf_One_Line_ASCII_right("SERIAL_NO1        ,",(uint8_t *)BaseData_ARR+IDNumber_High_index*9);
-					      Printf_One_Line_ASCII_right("SERIAL_NO2        ,",(uint8_t *)BaseData_ARR+IDNumber_Low_index*9);
+					    Printf_One_Line_TestAll("YY/MM/DD HH:MM:SS ,\0",(uint8_t *)BaseData_ARR,6,1,0);
+					      Printf_One_Line_ASCII_right("RESERVED          ,\0",(uint8_t *)BaseData_ARR+9);
+					      Printf_One_Line_ASCII_right("LCD MCU VER       ,\0",(uint8_t *)BaseData_ARR+LCD_Ver_index*9);
+					      Printf_One_Line_ASCII_right("MCU VER           ,\0",(uint8_t *)BaseData_ARR+Master_Ver_index*9);
+					      Printf_One_Line_ASCII_right("IMAGE FILE VER    ,\0",(uint8_t *)BaseData_ARR+BMP_Ver_index*9);
+					      Printf_One_Line_ASCII_right("RESERVED          ,\0",(uint8_t *)BaseData_ARR+45);
+					      Printf_One_Line_ASCII_right("SERIAL_NO1        ,\0",(uint8_t *)BaseData_ARR+IDNumber_High_index*9);
+					      Printf_One_Line_ASCII_right("SERIAL_NO2        ,\0",(uint8_t *)BaseData_ARR+IDNumber_Low_index*9);
 					for(Tp_j=0; Tp_j<24; Tp_j++)
 					{
-						    Printf_One_Line_ASCII_right("RESERVED          ,",(uint8_t *)BaseData_ARR+72+Tp_j*9);
+						    Printf_One_Line_ASCII_right("RESERVED          ,\0",(uint8_t *)BaseData_ARR+72+Tp_j*9);
 					}
 					//Printf_One_Line_ADDRANDSIZE("FIELD START_ADDR  ,",(uint8_t *)logodata_sdrambuffer_addr_arry[0]+Basedata_fieldinformation,4,16);
-				  Printf_One_Line_ADDRANDSIZE("FIELD START_ADDR  ,",(uint8_t *)BaseData_ARR+32*9-1,8,16);
-					Printf_One_Line_ADDRANDSIZE("FIELD SIZE        ,",(uint8_t *)BaseData_ARR+33*9-1,8,16);
-				    Printf_One_Line_FIELDnumber("FIELD NUMBER      ,");
-				    Printf_One_Line_FIELDtype("FIELD DATA_CLASS  ,");
-                Printf_One_Line_NO96("FIELD MANAGE1     ,",(uint8_t *)BaseData_ARR+96*9-1);
-				        Printf_One_Line_DATAF("FIELD MANAGE2     ,",(uint8_t *)BaseData_ARR+112*9-1,8,16);
-				        Printf_One_Line_DATAF("FIELD MANAGE3     ,",(uint8_t *)BaseData_ARR+128*9-1,8,16);
-				        Printf_One_Line_DATAF("FIELD MANAGE4     ,",(uint8_t *)BaseData_ARR+144*9-1,8,16);
-					      Printf_One_Line_ASCII("RESERVED          ,",(uint8_t *)BaseData_ARR+BASE_data_ErrBlock*9,8,1);
-				        Printf_One_Line_DATAF("RTC POWER OFF     ,",(uint8_t *)BaseData_ARR+BASE_data_Dataclass12RTCPowerOffTimer*9-1,8,1);
+				  Printf_One_Line_ADDRANDSIZE("FIELD START_ADDR  ,\0",(uint8_t *)BaseData_ARR+32*9-1,8,16);
+					Printf_One_Line_ADDRANDSIZE("FIELD SIZE        ,\0",(uint8_t *)BaseData_ARR+33*9-1,8,16);
+				    Printf_One_Line_FIELDnumber();
+				    Printf_One_Line_FIELDtype();
+                Printf_One_Line_NO96("FIELD MANAGE1     ,\0",(uint8_t *)BaseData_ARR+96*9-1);
+				        Printf_One_Line_DATAF("FIELD MANAGE2     ,\0",(uint8_t *)BaseData_ARR+112*9-1,8,16);
+				        Printf_One_Line_DATAF("FIELD MANAGE3     ,\0",(uint8_t *)BaseData_ARR+128*9-1,8,16);
+				        Printf_One_Line_DATAF("FIELD MANAGE4     ,\0",(uint8_t *)BaseData_ARR+144*9-1,8,16);
+					      Printf_One_Line_ASCII("RESERVED          ,\0",(uint8_t *)BaseData_ARR+BASE_data_ErrBlock*9,8,1);
+				        Printf_One_Line_DATAF("RTC POWER OFF     ,\0",(uint8_t *)BaseData_ARR+BASE_data_Dataclass12RTCPowerOffTimer*9-1,8,1);
 					
 					
 					
@@ -1419,13 +1423,13 @@ void LOGOData_Write_To_USB(uint32_t x_flag)
 						{ 
 							
 						Data_Negate((uint8_t *)Tp_linshi,(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+Tp_j+(Tp_i%16)*4*2048),16);
-						Printf_One_Line_DATA0_DEC("",(uint8_t *)Tp_linshi,4,16);//HISTROYXXX-XX    :
+						Printf_One_Line_DATA0_DEC("\0",(uint8_t *)Tp_linshi,4,16);//HISTROYXXX-XX    :
 						}
 						else
 						{
 					//	Data_Negate((uint8_t *)Tp_linshi,(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+Tp_j+(Tp_i%16)*4*2048),16);
 							memset(Tp_linshi,0,sizeof(Tp_linshi));
-						Printf_One_Line_DATA0_DEC("",(uint8_t *)Tp_linshi,4,16/*(logodata_ActionNumber_SIZE-Tp_j)/4*/);
+						Printf_One_Line_DATA0_DEC("\0",(uint8_t *)Tp_linshi,4,16/*(logodata_ActionNumber_SIZE-Tp_j)/4*/);
 						}
 						Tp_j = Tp_j + 64;	
 					}
@@ -1685,7 +1689,7 @@ void LOGOData_Write_To_USB(uint32_t x_flag)
 									}
 								}
 								
-								Printf_One_Line_TestAll("",(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+Tp_j*MAX_LOGO_ALLTEST_ONEPACKET(Tp_field)),MAX_LOGO_ALLTEST_ONEPACKET(Tp_field),1,gs_AreaInfo[Tp_field].size%2);
+								Printf_One_Line_TestAll("\0",(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+Tp_j*MAX_LOGO_ALLTEST_ONEPACKET(Tp_field)),MAX_LOGO_ALLTEST_ONEPACKET(Tp_field),1,gs_AreaInfo[Tp_field].size%2);
 						  }
 						  
 					}
@@ -1775,7 +1779,7 @@ void LOGOData_Write_To_USB(uint32_t x_flag)
 									Tp_linshi[6] = 0x00;
 									Tp_linshi[7] = 0x1E;
 									Tp_linshi[8] = 0xF0;
-									Printf_One_Line_TestAll("",(uint8_t *)Tp_linshi,9,1,1);
+									Printf_One_Line_TestAll("\0",(uint8_t *)Tp_linshi,9,1,1);
 						 
 								}
 								else if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+Tp_j*MAX_LOGO_ALLTEST_ONEPACKET(Tp_field)) == 0xE0)//??h???????????
@@ -1789,11 +1793,11 @@ void LOGOData_Write_To_USB(uint32_t x_flag)
 									Tp_linshi[6] = 0x00;
 									Tp_linshi[7] = 0x1E;
 									Tp_linshi[8] = 0x00;
-									Printf_One_Line_TestAll("",(uint8_t *)Tp_linshi,9,1,1);
+									Printf_One_Line_TestAll("\0",(uint8_t *)Tp_linshi,9,1,1);
 								}	 
 								else
 								{
-								Printf_One_Line_TestAll("",(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+Tp_j*MAX_LOGO_ALLTEST_ONEPACKET(Tp_field)),MAX_LOGO_ALLTEST_ONEPACKET(Tp_field),1,gs_AreaInfo[Tp_field].size%2);
+								Printf_One_Line_TestAll("\0",(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+Tp_j*MAX_LOGO_ALLTEST_ONEPACKET(Tp_field)),MAX_LOGO_ALLTEST_ONEPACKET(Tp_field),1,gs_AreaInfo[Tp_field].size%2);
 						    }
 						}
 						  
