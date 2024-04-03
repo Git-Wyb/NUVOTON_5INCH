@@ -31,8 +31,8 @@
     Program header entries: 1
     Section header entries: 16
 
-    Program header offset: 1018188 (0x000f894c)
-    Section header offset: 1018220 (0x000f896c)
+    Program header offset: 1018216 (0x000f8968)
+    Section header offset: 1018248 (0x000f8988)
 
     Section header string table index: 15
 
@@ -20283,35 +20283,37 @@
         0x00011328:    64656c69    iled    DCD    1684368489
         0x0001132c:    00642520     %d.    DCD    6563104
     $a
-        0x00011330:    e5961000    ....    LDR      r1,[r6,#0]
-        0x00011334:    e3811801    ....    ORR      r1,r1,#0x10000
-        0x00011338:    e5861000    ....    STR      r1,[r6,#0]
-        0x0001133c:    e3e01000    ....    MVN      r1,#0
-        0x00011340:    e1c710ba    ....    STRH     r1,[r7,#0xa]
-        0x00011344:    e5981004    ....    LDR      r1,[r8,#4]
-        0x00011348:    e3510000    ..Q.    CMP      r1,#0
+        0x00011330:    e5960000    ....    LDR      r0,[r6,#0]
+        0x00011334:    e3800801    ....    ORR      r0,r0,#0x10000
+        0x00011338:    e5860000    ....    STR      r0,[r6,#0]
+        0x0001133c:    e3e00000    ....    MVN      r0,#0
+        0x00011340:    e1c700ba    ....    STRH     r0,[r7,#0xa]
+        0x00011344:    e5980004    ....    LDR      r0,[r8,#4]
+        0x00011348:    e3500000    ..P.    CMP      r0,#0
         0x0001134c:    1a000002    ....    BNE      0x1135c ; UsbWriteNandFlash + 1004
-        0x00011350:    e5962000    . ..    LDR      r2,[r6,#0]
-        0x00011354:    e3822801    .(..    ORR      r2,r2,#0x10000
-        0x00011358:    e5862000    . ..    STR      r2,[r6,#0]
-        0x0001135c:    e1500001    ..P.    CMP      r0,r1
-        0x00011360:    1affff0e    ....    BNE      0x10fa0 ; UsbWriteNandFlash + 48
-        0x00011364:    e5960000    ....    LDR      r0,[r6,#0]
-        0x00011368:    e310063e    >...    TST      r0,#0x3e00000
-        0x0001136c:    0a000002    ....    BEQ      0x1137c ; UsbWriteNandFlash + 1036
-        0x00011370:    e3c00801    ....    BIC      r0,r0,#0x10000
-        0x00011374:    e5860000    ....    STR      r0,[r6,#0]
-        0x00011378:    eaffff08    ....    B        0x10fa0 ; UsbWriteNandFlash + 48
-        0x0001137c:    e3100801    ....    TST      r0,#0x10000
-        0x00011380:    1affff06    ....    BNE      0x10fa0 ; UsbWriteNandFlash + 48
-        0x00011384:    e3a0001c    ....    MOV      r0,#0x1c
-        0x00011388:    e58d0004    ....    STR      r0,[sp,#4]
-        0x0001138c:    eb002fa4    ./..    BL       get_command_xor ; 0x1d224
-        0x00011390:    e3a03000    .0..    MOV      r3,#0
-        0x00011394:    e28d2004    . ..    ADD      r2,sp,#4
-        0x00011398:    e3a01001    ....    MOV      r1,#1
-        0x0001139c:    eb000919    ....    BL       code_protocol_ack ; 0x13808
-        0x000113a0:    eafffefe    ....    B        0x10fa0 ; UsbWriteNandFlash + 48
+        0x00011350:    e5960000    ....    LDR      r0,[r6,#0]
+        0x00011354:    e3800801    ....    ORR      r0,r0,#0x10000
+        0x00011358:    e5860000    ....    STR      r0,[r6,#0]
+        0x0001135c:    e5960000    ....    LDR      r0,[r6,#0]
+        0x00011360:    e310063e    >...    TST      r0,#0x3e00000
+        0x00011364:    0a000001    ....    BEQ      0x11370 ; UsbWriteNandFlash + 1024
+        0x00011368:    e3c00801    ....    BIC      r0,r0,#0x10000
+        0x0001136c:    e5860000    ....    STR      r0,[r6,#0]
+        0x00011370:    e5960000    ....    LDR      r0,[r6,#0]
+        0x00011374:    e59f1024    $...    LDR      r1,[pc,#36] ; [0x113a0] = 0x3e10000
+        0x00011378:    e1100001    ....    TST      r0,r1
+        0x0001137c:    1affff07    ....    BNE      0x10fa0 ; UsbWriteNandFlash + 48
+        0x00011380:    e3a0001c    ....    MOV      r0,#0x1c
+        0x00011384:    e58d0004    ....    STR      r0,[sp,#4]
+        0x00011388:    eb002fa5    ./..    BL       get_command_xor ; 0x1d224
+        0x0001138c:    e3a03000    .0..    MOV      r3,#0
+        0x00011390:    e28d2004    . ..    ADD      r2,sp,#4
+        0x00011394:    e3a01001    ....    MOV      r1,#1
+        0x00011398:    eb00091a    ....    BL       code_protocol_ack ; 0x13808
+        0x0001139c:    eafffeff    ....    B        0x10fa0 ; UsbWriteNandFlash + 48
+    $d
+        0x000113a0:    03e10000    ....    DCD    65077248
+    $a
     i.WWDT_Open
     WWDT_Open
         0x000113a4:    e3520000    ..R.    CMP      r2,#0
@@ -48738,7 +48740,7 @@
 
 
 ** Section #7 '.debug_line' (SHT_PROGBITS)
-    Size   : 128956 bytes
+    Size   : 128952 bytes
 
 
 ** Section #8 '.debug_loc' (SHT_PROGBITS)
@@ -48754,9 +48756,9 @@
 
 
 ** Section #11 '.symtab' (SHT_SYMTAB)
-    Size   : 54064 bytes (alignment 4)
+    Size   : 54096 bytes (alignment 4)
     String table #12 '.strtab'
-    Last local symbol no. 2537
+    Last local symbol no. 2539
 
 
 ** Section #12 '.strtab' (SHT_STRTAB)

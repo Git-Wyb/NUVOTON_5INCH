@@ -1675,7 +1675,7 @@ void UsbWriteNandFlash(char cmd, unsigned short *iFile, int cnt)
 		
 	}
 	
-	if(gs_CpyInfo.total ==gs_CpyInfo.okCnt)  //if (ret == 0)
+	//if(gs_CpyInfo.total ==gs_CpyInfo.okCnt)  //if (ret == 0)
 	{
 
 /*
@@ -1693,11 +1693,17 @@ uint32_t  usb_cannot_find_image:1;//16// u���Ҳ���ͼ���ļ�  
 		  systerm_error_status.bits.usb_cannot_find_image=0;
 
 		}
-		else if(systerm_error_status.bits.usb_cannot_find_image)
+		
+		if(systerm_error_status.bits.image_samefilename_error\
+		||systerm_error_status.bits.image_coversize_error\
+		||systerm_error_status.bits.image_filenobmp_error\
+	  ||systerm_error_status.bits.image_outofrange_error\
+	  ||systerm_error_status.bits.image_bmp800480_large_error\
+		||systerm_error_status.bits.usb_cannot_find_image)
 		{
 		   
 		}
-     else	
+     else	//if()
 	 	{      	
 			ack = 0X1C;
 			code_protocol_ack(get_command_xor(), 1, &ack,0);
