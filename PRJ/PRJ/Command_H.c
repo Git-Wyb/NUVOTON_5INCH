@@ -550,7 +550,7 @@ void Restart_mcu(void)
        	{
 			delay_us1(2300);  //	delay_us1(100000);
        	}	  	
-	 download_gpio_set_output();
+	// download_gpio_set_output();
 	download_gpio_set_input();
 	delay_us1(2300);
 	POWER_5V_ON();
@@ -848,6 +848,7 @@ void download_process(void)  //COPY_SDRAM_TO_MCU(void)
 	 
 	if( download.start == 1)
 	{
+		Touch_int_disable();
 		read_hex_cnt = 0;
 		
 		///////////////stop_tim6( );  //NVIC_DisableIRQ(TIM7_IRQn);//½ûÖ¹TOUCH		
@@ -957,6 +958,7 @@ over_flag:
 		if(tx_buff_uart2_noshift) free(tx_buff_uart2_noshift);
 		if(rrx_buff_uart2_noshift) free(rrx_buff_uart2_noshift);
 		
+		Touch_int_enable();
 		 download.start =0;	
 	}
 	 
