@@ -228,7 +228,7 @@ void Timer_1ms_Init(void)
 
 void usb_deinit(void)
 {
-	 if(flag_usb_init==1)
+	// if(flag_usb_init==1)
 	 {
 	outpw(REG_SYS_GPE_MFPH, (inpw(REG_SYS_GPE_MFPH) & (~0xff000000)) );
 		 flag_usb_init = 0;
@@ -285,7 +285,8 @@ void usb_init(void)
 		}
 		if(Tp_count>=3000)
 		{
-			flag_usb_init = 0;
+			usb_deinit();
+			//flag_usb_init = 0;
 		}
 		
 		#ifdef  SYSUARTPRINTF

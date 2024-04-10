@@ -316,14 +316,14 @@ void OneSecondProcess(void)
 					
 				if(READ_PIN_SW1_2==SW_ON)
 	      {
-		       usb_init();
+		       
 					SetZuobiao(10, 400 + 20);
 		       lcd_printf_new("Waiting        ");
 		                                    
 	      } 
 	      if((READ_PIN_SW1_3==SW_ON)||(READ_PIN_SW1_6==SW_ON))
 	      {
-		      usb_init(); 
+		      
 					SetZuobiao(10, 400 + 40);
 		       lcd_printf_new("Waiting        ");
 					  USB_IMAGE_TYPE = '0';
@@ -333,7 +333,7 @@ void OneSecondProcess(void)
 	      } 
 	      if(READ_PIN_SW1_4==SW_ON)
 	      {
-		       usb_init();
+		       
 					SetZuobiao(10, 400 + 60);
 		       lcd_printf_new("Waiting        ");
 		                                    

@@ -108,6 +108,7 @@ void check_sw234(void) //100ms run one
 
 		if((READ_PIN_SW1_2==SW_ON)||(READ_PIN_SW1_3==SW_ON)||(READ_PIN_SW1_4==SW_ON)||(READ_PIN_SW1_6==SW_ON))
 				{
+					usb_init();
 					if(gs_usb_mount_flag == 1)//U≈Ã“—æ≠º”‘ÿ
 					{
 						 SetZuobiao(10, 400);
