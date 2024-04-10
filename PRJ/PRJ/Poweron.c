@@ -125,7 +125,7 @@ uint8_t get_vbat_ad_value(void)
 			 
 	if(Tp_data_vbat<500)  //约1.7V
 	{
-		systerm_error_status.bits.lse_error=1;//402  不装电池要回402 403
+//		systerm_error_status.bits.lse_error=1;//402  不装电池要回402 403
 		systerm_error_status.bits.vbat_error=1;
 		systerm_error_status.bits.rtc_no_bat_after_no_set=1;
 		Tp_data_vbat = 0;
@@ -832,7 +832,7 @@ void power_on_logo(void)
 				{
 					
 					vbat_pwr_on_ad_finish=1;
-					/////if(systerm_error_status.bits.lse_error==1) rtc_time_deinit();
+					if(systerm_error_status.bits.vbat_error==1) systerm_error_status.bits.lse_error=1;
 					vbat_average_ad=vbat_ad_sum/vbat_ad_cnt;
 					BATTERY_ADCODE = vbat_average_ad;
 					vbat_ad_sum-=vbat_average_ad;
