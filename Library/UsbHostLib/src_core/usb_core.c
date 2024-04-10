@@ -643,6 +643,7 @@ int usbh_get_device_descriptor(UDEV_T *udev, DESC_DEV_T *desc_buff)
 
         USB_debug("Get device descriptor failed - %d, retry!\n", ret);
     }
+		
     return ret;
 }
 
@@ -1014,7 +1015,12 @@ int  connect_device(UDEV_T *udev)
 
      USB_debug("usbh_get_device_descriptor =>\n");
 	
-	  usbh_get_device_descriptor(udev, &udev->descriptor);
+	  ret =usbh_get_device_descriptor(udev, &udev->descriptor);
+	  if(ret<0)
+	  {
+		      USB_debug("usbh_get_device_descriptor!!\n");
+          return ret;
+	   }
     
 	 USB_debug("reset_device =>\n");
 	delay_us(10000 /* 1000*/);

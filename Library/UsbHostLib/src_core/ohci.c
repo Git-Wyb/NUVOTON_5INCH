@@ -925,8 +925,11 @@ static int ohci_rh_polling(void)
                 USB_error("connect_device error! [%d]\n", ret);
                 free_device(udev);
             }
+						else
+						{
 
-            change = 1;
+                change = 1;
+						}
         }
         else
         {
