@@ -164,7 +164,7 @@ void ETMR3_IRQHandler(void)
 					 if(send_data_flag==0)
 			                   {
 			                     AMP_DATA_1;
-					  voice_tim_start(2000);  //delay_us(2000); //Delay_10us(200); 2ms
+					  voice_tim_start(50000);  //delay_us(2000); //Delay_10us(200); 2ms
 					  
 						send_data_flag=1;
 			                   }
@@ -255,15 +255,15 @@ void send_tts_command_control(void)  //  run 1 ms 命令之间隔5ms
 
 		case 1:
 			//if(HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_2)==GPIO_PIN_RESET)
-			if(GPIO_ReadBit(GPIOI,BIT12)==1)
-		  {
-				//sysprintf("wt588h_send_step = 5\r\n");
-				send_wt588h_init(STOP_PLAY);//send commad 5+2+5+0.8*16=24.8ms
-				wt588h_send_delay=TTS_DELAY;//VOICE_COMMAND_INTERVAL+25;
-				flag_voice_end =0;
-				wt588h_send_step=5;
-				
-			}
+//			if(GPIO_ReadBit(GPIOI,BIT12)==1)
+//		  {
+//				//sysprintf("wt588h_send_step = 5\r\n");
+//				send_wt588h_init(STOP_PLAY);//send commad 5+2+5+0.8*16=24.8ms
+//				wt588h_send_delay=TTS_DELAY;//VOICE_COMMAND_INTERVAL+25;
+//				flag_voice_end =0;
+//				wt588h_send_step=5;
+//				
+//			}
 ////////////////////			else if(bak_voice!=tts.voice)
 ////////////////////			{
 ////////////////////				//sysprintf("wt588h_send_step = 4\r\n");
@@ -273,7 +273,7 @@ void send_tts_command_control(void)  //  run 1 ms 命令之间隔5ms
 ////////////////////				flag_voice_end =0;
 ////////////////////				wt588h_send_step=4;
 ////////////////////			}
-			else
+//			else
 			{
 			 // sysprintf("wt588h_send_step = 2\r\n");
 				wt588h_send_delay=0;  //没发声音，则直接跳过
@@ -282,13 +282,13 @@ void send_tts_command_control(void)  //  run 1 ms 命令之间隔5ms
 		//	wt588h_send_step=2;
 			break;
 		case 2:
-			if(GPIO_ReadBit(GPIOI,BIT12)==1)
-			{
-				wt588h_send_step = 1;
-				return;
-			}
+//			if(GPIO_ReadBit(GPIOI,BIT12)==1)
+//			{
+//				wt588h_send_step = 1;
+//				return;
+//			}
 			AUDIO_AMPLIFIER_WORK;
-			send_wt588h_init(0XE000|(tts.voice<<8)|tts.file); 	
+			send_wt588h_init(0XE0|(tts.voice)|(tts.file<<8)); 	
 			wt588h_send_step=3;
 			wt588h_send_delay=TTS_DELAY;
 		 // bak_voice=tts.voice;//cyw move 
