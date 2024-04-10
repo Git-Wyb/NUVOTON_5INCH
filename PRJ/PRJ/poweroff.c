@@ -461,16 +461,16 @@ void LOW_POWER_cyw(void)
 			//{
 				 *(uint8_t *)(BaseData_ARR+BASE_data_PowerOffYear*9+8) = 8;
 				 *(uint8_t *)(BaseData_ARR+BASE_data_PowerOffMonth*9+8) = 8;
-			 if(systerm_error_status.bits.lse_error==1)
-				 {
-					 para.last_poweroff_year = 99;//20170924
-									 para.last_poweroff_month = 99;//20170924
-				 }
-				 else
-				 {
-					 para.last_poweroff_year = pwr_on_time_app.year;//20170924
-						       para.last_poweroff_month = pwr_on_time_app.month;//20170924
-				 }
+//////			 if(systerm_error_status.bits.lse_error==1)
+//////				 {
+//////					 para.last_poweroff_year = 99;//20170924
+//////									 para.last_poweroff_month = 99;//20170924
+//////				 }
+//////				 else
+//////				 {
+//////					 para.last_poweroff_year = pwr_on_time_app.year;//20170924
+//////						       para.last_poweroff_month = pwr_on_time_app.month;//20170924
+//////				 }
 					 
 				
 			   	field_info_save();//??BASEDATA??????????? 

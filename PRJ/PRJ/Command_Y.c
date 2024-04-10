@@ -592,14 +592,14 @@ void Printf_One_Line_ADDRANDSIZE(const char *x_name,uint8_t *x_sou,uint8_t x_lon
 	   (x_sou[(Tp_i*4)*(x_long+1)+8] =='0')
 	)
 	{
-				 writeTextBuff[strlen(writeTextBuff)]='0';
-		 writeTextBuff[strlen(writeTextBuff)]='0';
-		 writeTextBuff[strlen(writeTextBuff)]='0';
-		 writeTextBuff[strlen(writeTextBuff)]='0';
-		 writeTextBuff[strlen(writeTextBuff)]='0';
-		 writeTextBuff[strlen(writeTextBuff)]='0';
-		 writeTextBuff[strlen(writeTextBuff)]='0';
-		 writeTextBuff[strlen(writeTextBuff)]='0';
+				 writeTextBuff[strlen(writeTextBuff)]='F';
+		 writeTextBuff[strlen(writeTextBuff)]='F';
+		 writeTextBuff[strlen(writeTextBuff)]='F';
+		 writeTextBuff[strlen(writeTextBuff)]='F';
+		 writeTextBuff[strlen(writeTextBuff)]='F';
+		 writeTextBuff[strlen(writeTextBuff)]='F';
+		 writeTextBuff[strlen(writeTextBuff)]='F';
+		 writeTextBuff[strlen(writeTextBuff)]='F';
 		strcpy(writeTextBuff+strlen(writeTextBuff),char1_const);
 		continue;
 	}
@@ -650,7 +650,7 @@ void Printf_One_Line_FIELDnumber(void)
 	{
 		if(gs_AreaInfo[Tp_i].type==0xff)
 		{
-			for(Tp_j=0;Tp_j<8;Tp_j++) writeTextBuff[strlen(writeTextBuff)]='0';
+			for(Tp_j=0;Tp_j<8;Tp_j++) writeTextBuff[strlen(writeTextBuff)]='F';
 			writeTextBuff[strlen(writeTextBuff)] = ',';
 		}
 		else if((gs_AreaInfo[Tp_i].type<=7)&&(gs_AreaInfo[Tp_i].size<=99))
@@ -694,8 +694,8 @@ void Printf_One_Line_FIELDtype(void)
 	{
 		if(gs_AreaInfo[Tp_i].type==0xff)
 		{
-			for(Tp_j=0;Tp_j<6;Tp_j++) writeTextBuff[strlen(writeTextBuff)]='0';
-			for(Tp_j=0;Tp_j<2;Tp_j++) writeTextBuff[strlen(writeTextBuff)]='F';
+			//for(Tp_j=0;Tp_j<6;Tp_j++) writeTextBuff[strlen(writeTextBuff)]='0';
+			for(Tp_j=0;Tp_j<8;Tp_j++) writeTextBuff[strlen(writeTextBuff)]='F';
 			writeTextBuff[strlen(writeTextBuff)] = ',';
 		}
 		else if(gs_AreaInfo[Tp_i].type<=7)

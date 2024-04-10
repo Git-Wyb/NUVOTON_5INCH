@@ -2809,19 +2809,19 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 					//AreaEraseCmd(LCD_E0,0);
            FIELD_ERASE_STEP = 1;
 				   FIELD_ERASE_FLAG = 0xffff;
-          ack_buf[0] = 0;
-					for(Q0_i = 1;Q0_i <16;Q0_i++)
-					{
-						if(gs_AreaInfo[Q0_i].type<=7)
-						{
-							ack_buf[0]=0x1C;
-						}
-					}
-					if(ack_buf[0] !=0x1C)
-					{
-						ack_buf[0]=0xEF;
-					}
-					
+          ack_buf[0] = 0x1C;
+//					for(Q0_i = 1;Q0_i <16;Q0_i++)
+//					{
+//						if(gs_AreaInfo[Q0_i].type<=7)
+//						{
+//							ack_buf[0]=0x1C;
+//						}
+//					}
+//					if(ack_buf[0] !=0x1C)
+//					{
+//						ack_buf[0]=0xEF;
+//					}
+//					
 				
 					command_xor=Tp_xor;////IMAGE_FCS = Tp_FSC;
 					//LED_LOGO_CONTROL_ON();
@@ -2871,15 +2871,17 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
            FIELD_ERASE_STEP = 1;
 				   FIELD_ERASE_FLAG = filed_num;
 					
+					ack_buf[0] = 0x1C;
+					
 					//LED_LOGO_CONTROL_ON();
-					if(gs_AreaInfo[filed_num].type<=7)
-					{
-					ack_buf[0]=0x1C;
-					}
-					else 
-					{
-					ack_buf[0]=0xEF;
-					}
+//					if(gs_AreaInfo[filed_num].type<=7)
+//					{
+//					ack_buf[0]=0x1C;
+//					}
+//					else 
+//					{
+//					ack_buf[0]=0xEF;
+//					}
 					command_xor=Tp_xor;////IMAGE_FCS = Tp_FSC;
 					//FIELD_ERASE_STEP = 1;
 					if(type == COMM_DATA_UARST)
