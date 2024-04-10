@@ -1001,7 +1001,7 @@ void init_gpio(void)
 			
 			//pi12 AMP BUSY
 			 REG_OPERATE(REG_SYS_GPI_MFPH,0XF0000,clear);
-			GPIO_OpenBit(GPIOI,BIT12,DIR_INPUT,PULL_UP);
+			GPIO_OpenBit(GPIOI,BIT12,DIR_INPUT,NO_PULL_UP);
 			
 			GPIO_EnableTriggerType(GPIOI, BIT12,FALLING);
 	    GPIO_EnableInt(GPIOI, (GPIO_CALLBACK)GPIOICallback, 0);

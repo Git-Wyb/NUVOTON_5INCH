@@ -37794,8 +37794,8 @@
         0x00021b84:    e3a0180f    ....    MOV      r1,#0xf0000
         0x00021b88:    e1a00004    ....    MOV      r0,r4
         0x00021b8c:    ebffb2de    ....    BL       REG_OPERATE ; 0xe70c
-        0x00021b90:    e3a03001    .0..    MOV      r3,#1
-        0x00021b94:    e3a02000    . ..    MOV      r2,#0
+        0x00021b90:    e3a03000    .0..    MOV      r3,#0
+        0x00021b94:    e1a02003    . ..    MOV      r2,r3
         0x00021b98:    e3a01a01    ....    MOV      r1,#0x1000
         0x00021b9c:    e3a00c02    ....    MOV      r0,#0x200
         0x00021ba0:    ebff99b8    ....    BL       GPIO_OpenBit ; 0x8288
