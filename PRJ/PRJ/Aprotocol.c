@@ -1152,10 +1152,15 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 				 }
 
 			   //
+				    
 			    	if( (buff[4]=='8')||(buff[4]=='9')  )
-	                    {
-	                               command_D8_D9_time=TIM_100MS;
+	          {
+	             command_D8_D9_time=TIM_100MS;
 			    	}				
+						if((buff[4]=='1')||(buff[4]=='9'))
+						{
+							 return 1;
+						}					
 			break;			 
 		case 'G':
 			 switch(buff[4])
