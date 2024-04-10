@@ -164,7 +164,7 @@ void ETMR3_IRQHandler(void)
 					 if(send_data_flag==0)
 			                   {
 			                     AMP_DATA_1;
-					  voice_tim_start(50000);  //delay_us(2000); //Delay_10us(200); 2ms
+					  voice_tim_start(2000);  //delay_us(50000); //Delay_10us(200); 2ms
 					  
 						send_data_flag=1;
 			                   }
@@ -287,9 +287,10 @@ void send_tts_command_control(void)  //  run 1 ms 命令之间隔5ms
 //				wt588h_send_step = 1;
 //				return;
 //			}
-			AUDIO_AMPLIFIER_WORK;
-			send_wt588h_init(0XE0|(tts.voice)|(tts.file<<8)); 	
-			wt588h_send_step=3;
+			
+			send_wt588h_init(0XE0|(tts.voice)|0xff00); 	
+			wt588h_send_step=4;
+		  flag_voice_end=0;
 			wt588h_send_delay=TTS_DELAY;
 		 // bak_voice=tts.voice;//cyw move 
 			start_heck_wt588h_exist();
@@ -300,6 +301,7 @@ void send_tts_command_control(void)  //  run 1 ms 命令之间隔5ms
 			{
 				  flag_voice_end =0;
 				  STEP3_FLAG = 1;
+				 AUDIO_AMPLIFIER_WORK;
 			}
 			if(STEP3_FLAG==1)
 			{
@@ -307,6 +309,7 @@ void send_tts_command_control(void)  //  run 1 ms 命令之间隔5ms
 			  //{
 				    
 				    wt588h_send_step = 0;
+				   
 				    STEP3_FLAG = 0;
 				    //if(tts.ack_flag == 1)
 						//{
@@ -326,10 +329,14 @@ void send_tts_command_control(void)  //  run 1 ms 命令之间隔5ms
 			if(flag_voice_end == 1)
 			{
 				sysprintf("flag_voice_end = 1\r\n");
+				send_wt588h_init((tts.file)); 	
 				flag_voice_end =0;
 				wt588h_send_delay=0;  //没发声音，则直接跳过
-				wt588h_send_step=2;
+				wt588h_send_step=3;
 				bak_voice=tts.voice;
+				wt588h_send_delay=TTS_DELAY;
+		 // bak_voice=tts.voice;//cyw move 
+			start_heck_wt588h_exist();
 			}
 			
 			break;
@@ -481,6 +488,7 @@ void check_wt588h_exist(void)   //1// 1 s run one
 				{
 					
 					systerm_error_status.bits.voice_error=1;
+					AUDIO_AMPLIFIER_SHUT_DOWN;
 				}
                    	}
 		}
