@@ -19,6 +19,7 @@
 #include "DIP_SW.h"
 #include "gpio.h"
 
+extern uint8_t wt588h_send_step;
 extern UART_T param;
 uint8_t *UART2_RX_BUFF;//[RX_BUFF_MAX];
 volatile uint16_t  RX_COUNT_IN = 0;
@@ -1695,7 +1696,7 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 					stop_tts_play( );
 					while(STOP_FLAG_CYW);
 						
-					
+					wt588h_send_step = 0;
 					if(type == COMM_DATA_UARST)
 			   code_protocol_ack(Tp_xor,0,NULL,0);//SEND_ACKnHEX(Tp_FSC,0,ack_buf);
 					

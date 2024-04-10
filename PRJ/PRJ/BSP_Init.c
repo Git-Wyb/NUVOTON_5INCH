@@ -1003,7 +1003,7 @@ void init_gpio(void)
 			 REG_OPERATE(REG_SYS_GPI_MFPH,0XF0000,clear);
 			GPIO_OpenBit(GPIOI,BIT12,DIR_INPUT,NO_PULL_UP);
 			
-			GPIO_EnableTriggerType(GPIOI, BIT12,RISING);
+			GPIO_EnableTriggerType(GPIOI, BIT12,BOTH_EDGE);
 	    GPIO_EnableInt(GPIOI, (GPIO_CALLBACK)GPIOICallback, 0);
 		 
 		 

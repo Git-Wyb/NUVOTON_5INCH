@@ -18,7 +18,7 @@
 //#define  AMP_DATA_TOGGLE 	 						HAL_GPIO_TogglePin(GPIOI,AMP_DATA_PIN)
 
 #define   TIM_WAY   1  //1 表示用定时器实现，0 用delay实现
-#define  STOP_PLAY    0XFEFE//0xFFFE  //FFFEH 停止语音播放 停止播放语音命令
+#define  STOP_PLAY    0XFFFE//0xFFFE  //FFFEH 停止语音播放 停止播放语音命令
 
 #define TTS_DELAY 10
 
@@ -287,7 +287,7 @@ void send_tts_command_control(void)  //  run 1 ms 命令之间隔5ms
 //				wt588h_send_step = 1;
 //				return;
 //			}
-			
+			 	
 			send_wt588h_init(0XE0|(tts.voice)|0xff00); 	
 			wt588h_send_step=4;
 		  flag_voice_end=0;
@@ -301,7 +301,7 @@ void send_tts_command_control(void)  //  run 1 ms 命令之间隔5ms
 			{
 				  flag_voice_end =0;
 				  STEP3_FLAG = 1;
-				 AUDIO_AMPLIFIER_WORK;
+				 //AUDIO_AMPLIFIER_WORK;
 			}
 			if(STEP3_FLAG==1)
 			{
@@ -329,7 +329,7 @@ void send_tts_command_control(void)  //  run 1 ms 命令之间隔5ms
 			if(flag_voice_end == 1)
 			{
 				sysprintf("flag_voice_end = 1\r\n");
-				send_wt588h_init((tts.file)); 	
+				send_wt588h_init((tts.file));
 				flag_voice_end =0;
 				wt588h_send_delay=0;  //没发声音，则直接跳过
 				wt588h_send_step=3;
@@ -502,6 +502,8 @@ vu32 GPIOICallback(UINT32 status, UINT32 userData)
 	 {
 		// Flag_int = 1;
 		 //sTime = time1ms_count;
+		 if(GPIO_ReadBit(GPIOI,BIT12))
+		 {
 		 set_wt588h_voice_state(0);
 		 tts.interval_time=time1ms_count;
 		 AUDIO_AMPLIFIER_SHUT_DOWN;
@@ -509,6 +511,11 @@ vu32 GPIOICallback(UINT32 status, UINT32 userData)
 		 #ifdef  SYSUARTPRINTF 
 		 sysprintf("VOICE END \r\n");
 		 #endif
+		 }
+		 else
+		 {
+			 AUDIO_AMPLIFIER_WORK;
+		 }
 		 
 	 }
 	  //清除中断标志位
