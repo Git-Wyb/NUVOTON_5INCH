@@ -1018,7 +1018,7 @@ int  connect_device(UDEV_T *udev)
 	  ret =usbh_get_device_descriptor(udev, &udev->descriptor);
 	  if(ret<0)
 	  {
-		      USB_debug("usbh_get_device_descriptor!!\n");
+		      USB_debug("usbh_get_device_descriptor NG!!\n");
           return ret;
 	   }
     
