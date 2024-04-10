@@ -1025,7 +1025,13 @@ int  connect_device(UDEV_T *udev)
 	 USB_debug("reset_device =>\n");
 	delay_us(10000 /* 1000*/);
 	
-    reset_device(udev);
+    ret =reset_device(udev);
+		  if(ret<0)
+	  {
+		      USB_debug("reset_device NG!!\n");
+          return ret;
+	   }
+		 
 
     delay_us(10000 /** 1000*/);
 
