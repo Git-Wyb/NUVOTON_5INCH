@@ -1317,7 +1317,12 @@ int CpyDirBmpFileToDir(char *udir,char *ndir,int flag)
 						if (flag == 1)
 						{
 							//if (CheckFile(nandFileName) == 0)
-							if(READ_TAB_FROMSDRAM((uint16_t)htoi(fileinfoooooo.fname),0,x_bmp)==0xffffffff)
+							if((((*(char *)(ndir))=='0')&&((uint16_t)htoi(fileinfoooooo.fname)>=0xff00))||
+								(((*(char *)(ndir))=='1')&&((uint16_t)htoi(fileinfoooooo.fname)<0xff00)))
+							{
+								continue;
+							}
+							else if(READ_TAB_FROMSDRAM((uint16_t)htoi(fileinfoooooo.fname),0,x_bmp)==0xffffffff)
 							
 							{
 								Cover_Flag = 1;
