@@ -1781,11 +1781,14 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 					tts.play_num=1;
 			  	}
 					
-					if(tts.interval>=100)
+					if(tts.interval>=100)//B1 MAX
 					{
 						tts.interval = tts.interval - 99;
 					}
-					
+					if(tts.interval>=100)//B2-BA adjust
+					{
+						tts.interval = tts.interval - 60;
+					}
 			   tts.interval_cnt=0; 
       			
 			

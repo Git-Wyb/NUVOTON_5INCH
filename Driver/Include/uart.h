@@ -43,7 +43,7 @@ extern "C"
   @{
 */	
 	
-#define UARTWRITESIZE    100//100 /*!< UART max. write size */
+#define UARTWRITESIZE    120//100 /*!< UART max. write size */
 
 #define UARTINTMODE      1   /*!< UART interrupt mode */
 #define UARTPOLLMODE     0   /*!< UART polling mode */

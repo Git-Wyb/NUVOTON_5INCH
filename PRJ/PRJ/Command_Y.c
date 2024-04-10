@@ -2056,6 +2056,11 @@ uint8_t GET_LOGODATA_Y5Y6_20170919(uint8_t *x_data,uint8_t x_FSC,uint8_t x_datas
 		  Tp_Flag_full = 1;
 			else
 			Tp_Flag_full = 0;
+			
+			if((Fieldx_Info[Tp_field].cycle==0)&&(Fieldx_Info[Tp_field].loop==0)&&(Fieldx_Info[Tp_field].num==0))
+			{
+				goto flag_blank;
+			}
 			//yy = Fieldx_Info[Tp_field].num;//ceshi
 			if(Tp_itemno_all >= LOGO_Y5Y6_str.ITEM_NOW)//???????
 			{
@@ -2299,7 +2304,8 @@ uint8_t GET_LOGODATA_Y5Y6_20170919(uint8_t *x_data,uint8_t x_FSC,uint8_t x_datas
 				else
 				{
 					//return 0;//??????
-					if(gs_AreaInfo[Tp_field].size%2==0)
+flag_blank:				
+					 if(gs_AreaInfo[Tp_field].size%2==0)
 						{
 						memset(x_data,0xff,Tp_onepacketlong);
 						}
