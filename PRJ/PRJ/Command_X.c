@@ -198,8 +198,8 @@ void	Save_Logo(void)
 				 *(uint8_t *)(BaseData_ARR+BASE_data_PowerOffMonth*9 +8) = 8;
 			   if(systerm_error_status.bits.lse_error==1)
 				 {
-					 para.last_poweroff_year = 99;//20170924
-									 para.last_poweroff_month = 99;//20170924
+					 para.last_poweroff_year = 0X99;//20170924
+									 para.last_poweroff_month = 0X99;//20170924
 				 }
 				 else
 				 {

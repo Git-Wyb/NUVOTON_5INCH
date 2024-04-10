@@ -52,8 +52,8 @@ void INIT_LOGO_DATA(DATACLASS_TYPE x_datatype,uint8_t x_field)
 				           sdram_field_offset1(Tp_field) = 0;//???????
 				           sdram_field_offset2(Tp_field) = 0xAA;
                    sdram_field_offset3(Tp_field) = 0xAA;
-									 para.last_poweroff_year = 99;//20170924
-									 para.last_poweroff_month = 99;//20170924
+									 para.last_poweroff_year = 0X99;//20170924
+									 para.last_poweroff_month = 0X99;//20170924
 									 if(gs_AreaInfo[Tp_field].type==ActionNumber_DATACLASS)
 									 {
                      Temp_data = 0xfffffffe;

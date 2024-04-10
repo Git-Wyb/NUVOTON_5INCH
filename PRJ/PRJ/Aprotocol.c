@@ -2030,8 +2030,8 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 				           sdram_field_offset1(Tp_field) = 0;//??�????
 				           sdram_field_offset2(Tp_field) = 0xAA;
                    sdram_field_offset3(Tp_field) = 0xAA;
-									 para.last_poweroff_year = 99;//20170924
-									 para.last_poweroff_month = 99;//20170924
+									 para.last_poweroff_year = 0X99;//20170924
+									 para.last_poweroff_month = 0X99;//20170924
 									 if(Tp_gs_AreaInfo[Tp_field].type==ActionNumber_DATACLASS)
                      *(__IO uint32_t*)(logodata_sdrambuffer_addr_arry[Tp_field]+4) = 0xfffffffe;						 
 									  para.no_vbat_pwr_on_cnt=1;
