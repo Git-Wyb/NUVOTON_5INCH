@@ -764,6 +764,7 @@ uint16_t Tp_month_losebat=0;
      if(para.no_vbat_pwr_on_cnt>60)	 	para.no_vbat_pwr_on_cnt=1;
 	}
 	sprintf((char *)(BaseData_ARR+BASE_data_Dataclass12RTCPowerOffTimer*9),"%08X",para.no_vbat_pwr_on_cnt);	
+	sprintf((char *)(BaseData_ARR+BASE_data_actioncount*9),"%08X",para.dataclass_1_2_action_count );
 	//??????????
 	if(systerm_error_status.bits.lse_error==1)	//??j?RTC????
 	{
