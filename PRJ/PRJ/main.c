@@ -291,7 +291,7 @@ int main(void)
    //send_wt588h_init(0xFEFE);
 	 //	delay_ms(500);
 	 
-	send_wt588h_init(0xFEFE);
+	send_wt588h_init(0xFFFE);
 		delay_ms(10);
 		
 		#ifdef  SYSUARTPRINTF  

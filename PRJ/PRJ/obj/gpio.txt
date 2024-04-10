@@ -38274,7 +38274,7 @@
         0x0002227c:    e5d00008    ....    LDRB     r0,[r0,#8]
         0x00022280:    ebff856b    k...    BL       Backlinght_Control_Init_HARDV4 ; 0x3834
         0x00022284:    eb0021df    .!..    BL       voice_tim_init ; 0x2aa08
-        0x00022288:    e59f00bc    ....    LDR      r0,[pc,#188] ; [0x2234c] = 0xfefe
+        0x00022288:    e59f00bc    ....    LDR      r0,[pc,#188] ; [0x2234c] = 0xfffe
         0x0002228c:    eb000fb2    ....    BL       send_wt588h_init ; 0x2615c
         0x00022290:    e3a0000a    ....    MOV      r0,#0xa
         0x00022294:    ebffdf0f    ....    BL       delay_ms ; 0x19ed8
@@ -38324,7 +38324,7 @@
         0x00022340:    b0000068    h...    DCD    2952790120
         0x00022344:    b0000020     ...    DCD    2952790048
         0x00022348:    00030178    x...    DCD    196984
-        0x0002234c:    0000fefe    ....    DCD    65278
+        0x0002234c:    0000fffe    ....    DCD    65534
         0x00022350:    0002ce00    ....    DCD    183808
         0x00022354:    0001c200    ....    DCD    115200
     $a
