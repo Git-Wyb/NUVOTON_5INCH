@@ -315,6 +315,9 @@ jump:
 		for (Tp_i = 0; Tp_i < 16;Tp_i++)
 	  {
 		    gs_AreaInfo[Tp_i].type = 0xff;
+			  gs_AreaInfo[Tp_i].addr=0;
+			  gs_AreaInfo[Tp_i].space=0;
+			  gs_AreaInfo[Tp_i].size=0;
 			  Fieldx_Info[Tp_i].cycle = 0;
 			  Fieldx_Info[Tp_i].loop = 0;
 			  Fieldx_Info[Tp_i].num = 0;

@@ -1761,6 +1761,9 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 						for (Tp_ii = 0; Tp_ii < 16;Tp_ii++)
 	         {
 		          Tp_gs_AreaInfo[Tp_ii].type = 0xff;
+						  Tp_gs_AreaInfo[Tp_ii].addr=0;
+			        Tp_gs_AreaInfo[Tp_ii].space=0;
+			        Tp_gs_AreaInfo[Tp_ii].size=0;
 	         }
 					  Tp_gs_AreaInfo[0].type=0x00;   //qdhai add 
 	          Tp_gs_AreaInfo[0].space=0x20000; //qdhai add
@@ -2739,9 +2742,20 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 					//AreaEraseCmd(LCD_E0,0);
            FIELD_ERASE_STEP = 1;
 				   FIELD_ERASE_FLAG = 0xffff;
-            
+          ack_buf[0] = 0;
+					for(Q0_i = 1;Q0_i <16;Q0_i++)
+					{
+						if(gs_AreaInfo[Q0_i].type<=7)
+						{
+							ack_buf[0]=0x1C;
+						}
+					}
+					if(ack_buf[0] !=0x1C)
+					{
+						ack_buf[0]=0xEF;
+					}
 					
-					ack_buf[0]=0x1C;
+				
 					command_xor=Tp_xor;////IMAGE_FCS = Tp_FSC;
 					//LED_LOGO_CONTROL_ON();
 					if(type == COMM_DATA_UARST)
@@ -2791,7 +2805,14 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 				   FIELD_ERASE_FLAG = filed_num;
 					
 					//LED_LOGO_CONTROL_ON();
+					if(gs_AreaInfo[filed_num].type<=7)
+					{
 					ack_buf[0]=0x1C;
+					}
+					else 
+					{
+					ack_buf[0]=0xEF;
+					}
 					command_xor=Tp_xor;////IMAGE_FCS = Tp_FSC;
 					//FIELD_ERASE_STEP = 1;
 					if(type == COMM_DATA_UARST)

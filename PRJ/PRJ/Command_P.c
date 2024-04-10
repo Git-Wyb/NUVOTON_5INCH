@@ -279,6 +279,9 @@ void NANDFLASH_BADMANAGE_INIT(void)
 		for (Tp_j = 0; Tp_j < 16;Tp_j++)
 	  {
 		    gs_AreaInfo[Tp_j].type = 0xff;
+			  gs_AreaInfo[Tp_j].addr=0;
+			  gs_AreaInfo[Tp_j].space=0;
+			  gs_AreaInfo[Tp_j].size=0;
 			  Fieldx_Info[Tp_j].cycle = 0;
 			  Fieldx_Info[Tp_j].loop = 0;
 			  Fieldx_Info[Tp_j].num = 0;
@@ -1743,6 +1746,8 @@ void nandflash_format(void)
 	
 	Clear_sdram(0x10);
 	SDRAM_TO_NANDFLASH(bmp_tab_BUFFER,image_tab__nandflash_start,4);
+	
+	
 	
 	systerm_error_status.bits.nandflash_error =0;
 	LOGO_ERR=0;
