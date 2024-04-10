@@ -653,7 +653,7 @@ void Printf_One_Line_FIELDnumber(void)
 			for(Tp_j=0;Tp_j<8;Tp_j++) writeTextBuff[strlen(writeTextBuff)]='0';
 			writeTextBuff[strlen(writeTextBuff)] = ',';
 		}
-		else if(gs_AreaInfo[Tp_i].type<=7)
+		else if((gs_AreaInfo[Tp_i].type<=7)&&(gs_AreaInfo[Tp_i].size<=99))
 		{
 			memset(Tp_char,0,8);
 			sprintf(Tp_char,"%d",gs_AreaInfo[Tp_i].size);
