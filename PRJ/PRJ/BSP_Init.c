@@ -835,6 +835,18 @@ sysprintf("AD INIT END\n\r");
 	while(1);
 }
 
+void rtc_time_deinit(void)
+{
+	    pwr_on_time_ground.u32Year = RTC_YEAR2000;
+	    pwr_on_time_ground.u32cMonth = 1;
+	    pwr_on_time_ground.u32cDay=1;
+			pwr_on_time_ground.u32cHour = 0;
+			pwr_on_time_ground.u32cMinute = 0;
+			pwr_on_time_ground.u32cSecond = 0;
+	    RTC_Write(RTC_CURRENT_TIME,&pwr_on_time_ground);
+	
+	    RTC_Read(RTC_CURRENT_TIME,&pwr_on_time_ground);
+}
 
 void rtc_init(void)
 {
@@ -848,11 +860,7 @@ void rtc_init(void)
 	  if((pwr_on_time_ground.u32Year==0x7d5)&&(pwr_on_time_ground.u32cMonth==1)&&(pwr_on_time_ground.u32cDay==1)&&
 			(pwr_on_time_ground.u32cHour == 0)&&(pwr_on_time_ground.u32cMinute==0)&&(pwr_on_time_ground.u32cSecond==0))
 		{
-			pwr_on_time_ground.u32Year = RTC_YEAR2000;
-			pwr_on_time_ground.u32cHour = 0;
-			pwr_on_time_ground.u32cMinute = 0;
-			pwr_on_time_ground.u32cSecond = 0;
-			RTC_Write(RTC_CURRENT_TIME,&pwr_on_time_ground);
+			rtc_time_deinit();
 		}
 }
 

@@ -138,6 +138,6 @@ void power_checkoff(void);
 void power_checkreset(void);
 void tim1ms_int_disable(void);
 void tim1ms_int_enable(void);
-
+void rtc_time_deinit(void);
 #endif
 
