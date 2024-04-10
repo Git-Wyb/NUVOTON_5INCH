@@ -832,7 +832,7 @@ void power_on_logo(void)
 				{
 					
 					vbat_pwr_on_ad_finish=1;
-					if(systerm_error_status.bits.lse_error==1) rtc_time_deinit();
+					/////if(systerm_error_status.bits.lse_error==1) rtc_time_deinit();
 					vbat_average_ad=vbat_ad_sum/vbat_ad_cnt;
 					BATTERY_ADCODE = vbat_average_ad;
 					vbat_ad_sum-=vbat_average_ad;
