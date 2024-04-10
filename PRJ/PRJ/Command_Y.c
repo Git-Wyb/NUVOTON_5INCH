@@ -1853,6 +1853,7 @@ int AreaDataToUsbCmd(char cmd, int idx)
 {
 	int i = 0;
 
+	
 	if (GetUsbMountFlag() == 0)
 	{
 		

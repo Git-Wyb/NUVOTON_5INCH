@@ -112,6 +112,7 @@ void AD_init_8V(void);
 void  protocol_uart_init(void);
 void Timer_1ms_Init(void);
 void usb_init(void);
+void usb_deinit(void);
 void nandflash_init(void);
 void SDRAM_DATA_INIT(void);
 void display_init(void);

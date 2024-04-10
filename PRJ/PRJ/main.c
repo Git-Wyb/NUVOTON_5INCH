@@ -229,7 +229,7 @@ int main(void)
 	*(uint8_t *)(display_layer_sdram.LCD_FRAME1_BUFFER+4));
 	#endif
 	 
-	  usb_init();
+	  usb_deinit();
 		
 
 		#ifdef  SYSUARTPRINTF  

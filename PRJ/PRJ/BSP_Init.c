@@ -85,6 +85,8 @@ extern  uint8_t  *UART2_TX_BUFF_NEW;
 extern uint8_t *RxBuffer ;//[NAND_PAGE_SIZE];
 extern uint8_t *TxBuffer ;//[NAND_PAGE_SIZE];
 uint8_t *RxBuffer_noshift;
+ uint8_t flag_usb_init=0;
+ extern int gs_usb_mount_flag;
  
 void  REG_OPERATE(uint32_t x_reg,uint32_t x_data,ENUM_REG x_type)
 {
@@ -224,10 +226,23 @@ void Timer_1ms_Init(void)
     sysStartTimer(TIMER0, 1000, PERIODIC_MODE);
 }
 
+void usb_deinit(void)
+{
+	 if(flag_usb_init==1)
+	 {
+	outpw(REG_SYS_GPE_MFPH, (inpw(REG_SYS_GPE_MFPH) & (~0xff000000)) );
+		 flag_usb_init = 0;
+	 }
+}
+
 
 void usb_init(void)
 {
-		//TCHAR       usb_path[] = { '3', ':', 0 };    /* USB drive started from 3 */
+	uint32_t Tp_count;
+  if(flag_usb_init==0)
+	{
+   flag_usb_init = 1;
+	//TCHAR       usb_path[] = { '3', ':', 0 };    /* USB drive started from 3 */
   REG_OPERATE(REG_CLK_HCLKEN,0x40000,clear);
 	
 	outpw(REG_CLK_HCLKEN, inpw(REG_CLK_HCLKEN) | 0x40000);//USBH EN
@@ -259,7 +274,20 @@ void usb_init(void)
 	*(uint8_t *)(display_layer_sdram.LCD_FRAME1_BUFFER+2), *(uint8_t *)(display_layer_sdram.LCD_FRAME1_BUFFER+3),
 	*(uint8_t *)(display_layer_sdram.LCD_FRAME1_BUFFER+4));
 #endif
-    usbh_pooling_hubs();
+
+    for(Tp_count=0;Tp_count<3000;Tp_count++)
+		{
+      			usbh_pooling_hubs();
+			     if(gs_usb_mount_flag==1)
+					 {
+						 break;
+					 }
+		}
+		if(Tp_count>=3000)
+		{
+			flag_usb_init = 0;
+		}
+		
 		#ifdef  SYSUARTPRINTF
 			sysprintf("LCD_FRAME1_BUFFER=%X,%X,%X,%X,%X\r\n",
 	*(uint8_t *)(display_layer_sdram.LCD_FRAME1_BUFFER),*(uint8_t *)(display_layer_sdram.LCD_FRAME1_BUFFER+1), 
@@ -269,8 +297,11 @@ void usb_init(void)
 	
 	//	RES = f_chdrive("3:");
 	//	sysprintf("%d-----",RES);
-   RES = f_mount(&usb_fatfs,"3:",1);          /* set default path */
-   sysprintf("%d-----",RES);
+  
+	 
+	 
+	 
+ }
 }
 
 

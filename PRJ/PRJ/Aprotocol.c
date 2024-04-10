@@ -1271,7 +1271,8 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 				}
 			    break;
 		 case 'P':
-					 command_xor=Tp_xor;
+					 usb_init();
+		       command_xor=Tp_xor;
 		       USB_IMAGE_TYPE = buff[4];
 		       USB_HAS_USABLE_IMG = 0;
 		       IMAGE_SEARCHED =0;
@@ -2470,7 +2471,7 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 //				    }
 //				    while(Tp_i);
 						//SaveAreaData( 0);//数据类型0~3 在提取到U盘时，要把内存和记录统一一下，所以提取时要保存一下
-						
+						usb_init();
 						i_return_flag = AreaDataToUsbCmd(LCD_Y0,filed_num);
 						
             if((systerm_error_status.bits.usb_unable_connect)||(systerm_error_status.bits.usb_canot_write_error))
@@ -2532,7 +2533,7 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 						}
 					//	SaveAreaData(0,filed_num );//数据类型0~3 在提取到U盘时，要把内存和记录统一一下，所以提取时要保存一下
 					//	SaveAreaData(0,0 );
-						
+						usb_init();
 						i_return_flag =  AreaDataToUsbCmd(LCD_Y1,filed_num);
 						
 						if((systerm_error_status.bits.usb_unable_connect)||(systerm_error_status.bits.usb_canot_write_error))
@@ -2844,7 +2845,9 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 			  //if(flag_usb!=4)   return 0;
 		    //if(USB_OVER_FLAG == 0) return 0;
 			  if(buff[5]!='*') return 0;//防止文件名多1位也回文
-		    if(buff[4]=='0')//程序数据写入
+		    
+			  usb_init();
+			  if(buff[4]=='0')//程序数据写入
 				{			
 				  if (GetUsbMountFlag() == 0)
 					{						
@@ -2873,6 +2876,7 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 		    //if(flag_usb!=4)   return 0;
 		    //if(USB_OVER_FLAG == 0) return 0;
 	      if(LOGO_DATA_OUT_FLAG!=3 )    return 0;   
+	      usb_init();
 		    switch(buff[4])
 				{
 				 case '0':

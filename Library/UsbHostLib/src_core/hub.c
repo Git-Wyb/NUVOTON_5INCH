@@ -20,14 +20,15 @@
 #include "usbh_lib.h"
 #include "hub.h"
 #include "display.h"
+#include "ff.h"
 
 /// @cond HIDDEN_SYMBOLS
 
 
 #define HUB_DBGMSG     sysprintf
 //#define HUB_DBGMSG(...)
-
-int gs_usb_mount_flag = 0xff;
+extern FATFS usb_fatfs;
+int gs_usb_mount_flag = 0;
 
 static HUB_DEV_T  g_hub_dev[MAX_HUB_DEVICE];
 
@@ -655,10 +656,11 @@ void usbh_hub_init(void)
   * @retval   0   No any hub port status changes found.
   * @retval   1   There's hub port status changes.
   */
+extern uint8_t flag_usb_init;
 int  usbh_pooling_hubs(void)
 {
     int   ret, change = 0;
-
+ if(flag_usb_init==0)  return 0;
 #ifdef ENABLE_EHCI
     do
     {
@@ -710,23 +712,29 @@ int  usbh_pooling_hubs(void)
 			if((_ohci->HcRhPortStatus[0]&0x01)||(_ohci->HcRhPortStatus[1]&0x01))
 			{
 			  gs_usb_mount_flag = 1;
+				 f_mount(&usb_fatfs,"3:",1);          /* set default path */
+   
 			}
 			else
 			{
-					if(gs_usb_mount_flag == 0xff)
-			   {
-   				gs_usb_mount_flag = 0;
-  				usb_init();
-  				usbh_pooling_hubs();
-				}
-				 else
-				 {
-					 gs_usb_mount_flag = 0;
-				 }
+				gs_usb_mount_flag = 0;
+				f_mount(NULL,"3:",1);
+//					if(gs_usb_mount_flag == 0xff)
+//			   {
+//   				gs_usb_mount_flag = 0;
+//  				usb_init();
+//  				usbh_pooling_hubs();
+//				}
+//				 else
+//				 {
+//					 gs_usb_mount_flag = 0;
+//				 }
 			}
+			#ifdef  SYSUARTPRINTF
 			sysprintf("USB STATUS change\r\n");
 			sysprintf("gs_usb_mount_flag=%x\r\n",gs_usb_mount_flag);
 			sysprintf("_ohci->HcRhPortStatus=%x,%x\r\n",_ohci->HcRhPortStatus[0],_ohci->HcRhPortStatus[1]);
+			#endif
 		}
 		
 #endif
