@@ -237,7 +237,7 @@ int main(void)
 	   #endif
 	  protocol_uart_init();
 	
-		rtc_init();
+		
 		
 		//AD_init();
 		
@@ -254,7 +254,8 @@ int main(void)
 
 	
 	  AD_init_vbat();
-	
+	  rtc_init();
+		
 		REG_OPERATE(REG_SYS_LVRDCR,1,clear);
 		#ifdef POWER_INT_MODE
 		

@@ -144,7 +144,7 @@ uint8_t get_vbat_ad_value(void)
 	}
 	else
 	{
-		if(systerm_error_status.bits.lse_error==1) rtc_time_deinit();
+		//if(systerm_error_status.bits.lse_error==1) rtc_time_deinit();
 		systerm_error_status.bits.vbat_error=0;  //lse_error 402 403 上电只检测一次，后面通信启动AD也不改变；
 	}
 

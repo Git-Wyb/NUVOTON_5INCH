@@ -59,7 +59,7 @@ extern uint32_t NANDFLASH_USER_INX;
 extern  BADMANAGE_TAB_TYPE_U badmanage_str[1];
 extern RTC_TIME_DATA_T pwr_on_time_ground;
 
-
+extern SYSTEMERRORSTATUS_TYPE  systerm_error_status;
 int nand_curr_device = -1;
 
 //uint8_t NAND_WRITE_BUF[2112];
@@ -898,6 +898,10 @@ void rtc_time_deinit(void)
 void rtc_init(void)
 {
 	//使能REC时钟
+	  get_vbat_ad_value();
+	  if(systerm_error_status.bits.lse_error==0)
+		{
+	
     RTC_EnableClock(TRUE);
     //RTC 初始化
     RTC_Init();
@@ -909,6 +913,7 @@ void rtc_init(void)
 		{
 			rtc_time_deinit();
 		}
+	  }
 }
 
 
