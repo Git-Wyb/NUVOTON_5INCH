@@ -547,19 +547,7 @@ void code_protocol_ack(uint8_t  x_xor,uint8_t len,uint8_t *buff,uint8_t type)  /
 	  //start_tim6(50000);
 		
 		
-		//在接收D8 D9 有后续命令，收到其它命令成取消
-	 if(command_D8_D9_time)
-	{
-         if(COMMAND_AP!='D')//IIC来的不管 20181108
-         	{
-                    //
-                    //bmp_protocol.num=0; //命令取消
-                    code_protocol_error(ERROR_TYPE_U1,(U1A02_ERROR>>16),(int16_t)U1A02_ERROR,ERROR_TYPE_SEND_3_TIMES); // 发送的次数至少
-				            command_D8_D9_time = 0;//20220401
-                    //return 1;
-         	}
 
-	}
 	
 	
 	SEND_data();
@@ -956,6 +944,21 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 	static	uint32_t Tp_index;
 	
 	
+	 		//在接收D8 D9 有后续命令，收到其它命令成取消
+	 if(command_D8_D9_time)
+	{
+         if(buff[3]!='D')//IIC来的不管 20181108
+         	{
+                    //
+                    //bmp_protocol.num=0; //命令取消
+                    code_protocol_error(ERROR_TYPE_U1,(U1A02_ERROR>>16),(int16_t)U1A02_ERROR,ERROR_TYPE_SEND_3_TIMES); // 发送的次数至少
+				            command_D8_D9_time = 0;//20220401
+                    return 1;
+         	}
+
+	}
+	 
+	 
 	COMMAND_AP = buff[3];
 	COMMAND_IN = TX_COUNT_IN;
 	
