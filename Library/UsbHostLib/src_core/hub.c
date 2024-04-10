@@ -21,6 +21,7 @@
 #include "hub.h"
 #include "display.h"
 #include "ff.h"
+#include "BSP_init.h"
 
 /// @cond HIDDEN_SYMBOLS
 
@@ -717,6 +718,10 @@ int  usbh_pooling_hubs(void)
 			}
 			else
 			{
+				if(gs_usb_mount_flag==1) 
+				{
+					usb_deinit();
+				}
 				gs_usb_mount_flag = 0;
 				f_mount(NULL,"3:",1);
 //					if(gs_usb_mount_flag == 0xff)
