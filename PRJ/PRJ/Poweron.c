@@ -63,12 +63,24 @@ uint8_t DECTOHEX(uint8_t x_data);
 
 void RTC_ground_to_app(RTC_TIME_DATA_T *ground,TIME_TYPE *app)
 {
+	if(systerm_error_status.bits.lse_error==0)
+	{
 	app->year = DECTOHEX(ground->u32Year - RTC_YEAR2000);
 	app->month = DECTOHEX(ground->u32cMonth);
 	app->day  = DECTOHEX(ground->u32cDay);
 	app->hour = DECTOHEX(ground->u32cHour);
 	app->minute = DECTOHEX(ground->u32cMinute);
 	app->second = DECTOHEX(ground->u32cSecond);
+	}
+	else
+	{
+		app->year = 0;
+		app->month = 0;
+		app->day = 0;
+		app->hour = 0x99;
+		app->minute = 0x99;
+		app->second = 0x99;
+	}
 }
 
 uint8_t get_vbat_ad_value(void)
@@ -881,7 +893,7 @@ void LOGO_handle(void)
 //	static  uint16_t   Tp_New_status = 0xffff;
 	
 	
-	if(get_timego(RTC_read_timer)>1000)
+	if(get_timego(RTC_read_timer)>=1000)
 	{
 	RTC_Read(RTC_CURRENT_TIME,&timeandday_now_ground);
 		
