@@ -1353,6 +1353,8 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 							 wait_send_over();
 							code_protocol_ack(Tp_xor, 1, ack_buf,0);
 						}
+						
+						usb_init();
 						//UsbWriteNandFlash((buff[4] & 0x0f), &Tp_bmp_filename, 0);
 						if (buff[4] >= '0' && buff[4] <= '9')
 						{
