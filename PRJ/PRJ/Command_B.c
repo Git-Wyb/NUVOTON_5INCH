@@ -29,7 +29,7 @@ uint8_t wt588h_send_step=0;
 volatile uint8_t flag_voice_end = 0;
 
 static  uint8_t  wt588h_start_check=0;
-static  uint8_t  wt588h_no_ack=0;
+volatile static  uint8_t  wt588h_no_ack=0;
 static  uint8_t  wt588h_start_check_cnt=0;
 
 static uint8_t wt588h_send_delay=0;
@@ -473,7 +473,7 @@ void check_wt588h_exist(void)   //1// 1 s run one
 	if(wt588h_start_check)
 		{
 			wt588h_start_check_cnt++;
-		      if(wt588h_start_check_cnt>60)   //播放完才有中断，这个要为声音最长时间才行
+		      if(wt588h_start_check_cnt>15)   //播放完才有中断，这个要为声音最长时间才行
                    	{
 				wt588h_start_check=0;
 				
