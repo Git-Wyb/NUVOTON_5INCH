@@ -2951,16 +2951,17 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 		switch(buff[4])
 		{
 			case '0':
-				if((buff[5]=='F')&&(buff[6]=='F')&&(buff[7]=='F'))
-				{
-					ack_buf[0] = 0x1C;
-					if(type == COMM_DATA_UARST)
-					code_protocol_ack(Tp_xor,1,ack_buf,0);
-				}
-				else
-				 {
-					  return 0;
-				 }
+				return 0;
+//				if((buff[5]=='F')&&(buff[6]=='F')&&(buff[7]=='F'))
+//				{
+//					ack_buf[0] = 0x1C;
+//					if(type == COMM_DATA_UARST)
+//					code_protocol_ack(Tp_xor,1,ack_buf,0);
+//				}
+//				else
+//				 {
+//					  return 0;
+//				 }
 			break;
 			case '1'://启动一次实时时钟采样
 				if((buff[5]=='F')&&(buff[6]=='F')&&(buff[7]=='F'))
@@ -3043,50 +3044,53 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 				switch(buff[5])
 				{
 					case '0':
-						if(buff[6]=='F'&&buff[7]=='F')
-						{
-							//////////////////////////////////rcc_mco_start( );
-							//HAL_RTCEx_SetCalibrationOutPut(&RTC_Handler,RTC_CALIBOUTPUT_1HZ);
-							//RTC_CalibOutputCmd(ENABLE);//使能基于外部32.768K的512HZ波形输出
-							//ack_buf[0] = (uint8_t)(RTC->CALIBR&0xff);
-							/////////////////////////////////ack_buf[0]=(uint8_t)(RTC->CALR&0xff);
-							if(type == COMM_DATA_UARST)
-							code_protocol_ack(Tp_xor,1,ack_buf,0);
-						}
-						else
-	   				      {
-	   					   return 0;
-	   				      }
+						return 0;
+//						if(buff[6]=='F'&&buff[7]=='F')
+//						{
+//							//////////////////////////////////rcc_mco_start( );
+//							//HAL_RTCEx_SetCalibrationOutPut(&RTC_Handler,RTC_CALIBOUTPUT_1HZ);
+//							//RTC_CalibOutputCmd(ENABLE);//使能基于外部32.768K的512HZ波形输出
+//							//ack_buf[0] = (uint8_t)(RTC->CALIBR&0xff);
+//							/////////////////////////////////ack_buf[0]=(uint8_t)(RTC->CALR&0xff);
+//							if(type == COMM_DATA_UARST)
+//							code_protocol_ack(Tp_xor,1,ack_buf,0);
+//						}
+//						else
+//	   				      {
+//	   					   return 0;
+//	   				      }
 					break;
 					case '1':
+						return 0;
 						//if(buff[7]!='F')  return 0;
-						if(convet_2_hex_ASCII_to_hex(buff+6)==0xFFFF) return 0;
-						if(convet_2_hex_ASCII_to_hex(buff+6)&0x60)    return 0;//有些位置不能有值
-						//RTC_CoarseCalibCmd(DISABLE);
-						//RTC_CoarseCalibConfig(convet_2_hex_ASCII_to_hex(buff+6),convet_2_hex_ASCII_to_hex(buff+6));//设置粗调的值
-						//RTC_CoarseCalibCmd(ENABLE);//使能粗校准
-                                         //
-						para.rtc_coarse_value=((convet_2_hex_ASCII_to_hex(buff+6))&0X80)|((convet_2_hex_ASCII_to_hex(buff+6))&0X1F);
+////						if(convet_2_hex_ASCII_to_hex(buff+6)==0xFFFF) return 0;
+////						if(convet_2_hex_ASCII_to_hex(buff+6)&0x60)    return 0;//有些位置不能有值
+////						//RTC_CoarseCalibCmd(DISABLE);
+////						//RTC_CoarseCalibConfig(convet_2_hex_ASCII_to_hex(buff+6),convet_2_hex_ASCII_to_hex(buff+6));//设置粗调的值
+////						//RTC_CoarseCalibCmd(ENABLE);//使能粗校准
+////                                         //
+////						para.rtc_coarse_value=((convet_2_hex_ASCII_to_hex(buff+6))&0X80)|((convet_2_hex_ASCII_to_hex(buff+6))&0X1F);
 
 						/////////////////////HAL_RTCEx_SetSmoothCalib(&RTC_Handler,RTC_SMOOTHCALIB_PERIOD_32SEC,RTC_SMOOTHCALIB_PLUSPULSES_RESET,para.rtc_coarse_value);
            ////////////////////// sprintf((char *)BaseData_ARR[BASE_data_RTCcoarse],"%08X",para.rtc_coarse_value);
 						//write_para( );
-					  
-						if(type == COMM_DATA_UARST)
-						code_protocol_ack(Tp_xor,0,NULL,0);//SEND_ACKnHEX(Tp_FSC,0,ack_buf);
+////					  
+////						if(type == COMM_DATA_UARST)
+////						code_protocol_ack(Tp_xor,0,NULL,0);//SEND_ACKnHEX(Tp_FSC,0,ack_buf);
 					break;
 					case '2':
-						if(buff[6]=='F'&&buff[7]=='F')
-						{
-						/////////////////////	rcc_mco_stop( );
-							//RTC_CalibOutputCmd(DISABLE);
-							if(type == COMM_DATA_UARST)
-							code_protocol_ack(Tp_xor,0,NULL,0);//SEND_ACKnHEX(Tp_FSC,0,ack_buf);
-						}
-						else
-	   				      {
-	   					   return 0;
-	   				      }
+						return 0;
+////						if(buff[6]=='F'&&buff[7]=='F')
+////						{
+////						/////////////////////	rcc_mco_stop( );
+////							//RTC_CalibOutputCmd(DISABLE);
+////							if(type == COMM_DATA_UARST)
+////							code_protocol_ack(Tp_xor,0,NULL,0);//SEND_ACKnHEX(Tp_FSC,0,ack_buf);
+////						}
+////						else
+////	   				      {
+////	   					   return 0;
+////	   				      }
 					break;
 
 					default:
@@ -3095,17 +3099,18 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 				}
 			break;
 			case '6':
-				if((buff[5]=='F')&&(buff[6]=='F')&&(buff[7]=='F'))//基板检查模式
-				{
-					//CHECK_str.HardwareCheck_Flag = 1;
-					//CHECK_str.HardwareCheck_Step = CHECK_IDLE;
+				return 0;
+//				if((buff[5]=='F')&&(buff[6]=='F')&&(buff[7]=='F'))//基板检查模式
+//				{
+//					//CHECK_str.HardwareCheck_Flag = 1;
+//					//CHECK_str.HardwareCheck_Step = CHECK_IDLE;
 
 
-				}
-				else
-			      {
-				   return 0;
-			      }
+//				}
+//				else
+//			      {
+//				   return 0;
+//			      }
 			break;	
 			
 			case '7':
