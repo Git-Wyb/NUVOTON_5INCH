@@ -19,7 +19,7 @@
 #include "usb.h"
 #include "usbh_lib.h"
 #include "hub.h"
-
+#include "display.h"
 
 /// @cond HIDDEN_SYMBOLS
 
@@ -425,7 +425,7 @@ static int do_port_reset(HUB_DEV_T *hub, int port)
             return ret;                     /* class command failed                       */
 
         t0 = get_ticks();                   /* get start time                             */
-        while (get_ticks() - t0 < (reset_time/10)+1)    /* time-out?                      */
+        while (get_timego(t0) < (reset_time/10)+1)    /* time-out?                      */
         {
             delay_us(5000);                 /* wait 5 ms                                  */
 

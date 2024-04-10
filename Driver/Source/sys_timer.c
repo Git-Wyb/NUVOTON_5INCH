@@ -159,8 +159,8 @@ UINT32 sysGetTicks(INT32 nTimeNo)
     switch (nTimeNo)
     {
         case TIMER0:
-            return _sys_uTimer0Count;
-
+            //return _sys_uTimer0Count;
+             return time1ms_count;
         case TIMER1:
             return _sys_uTimer1Count;
 

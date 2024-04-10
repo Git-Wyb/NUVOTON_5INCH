@@ -18,6 +18,7 @@
 #include "msc.h"
 #include "diskio.h"                // FATFS header
 
+#include "display.h"
 
 static int __tag = 0x10e24388;
 
@@ -51,7 +52,7 @@ int msc_bulk_transfer(MSC_T *msc, EP_INFO_T *ep, uint8_t *data_buff, int data_le
     t0 = get_ticks();
     while (utr->bIsTransferDone == 0)
     {
-        if (get_ticks() - t0 > timeout_ticks)
+        if (get_timego(t0) > timeout_ticks)
         {
             usbh_quit_utr(utr);
             free_utr(utr);

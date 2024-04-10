@@ -18,7 +18,7 @@
 #include "hub.h"
 
 #include "BSP_init.h"
-
+#include "display.h"
 
 /// @cond HIDDEN_SYMBOLS
 //#ifdef ENABLE_OHCI
@@ -327,7 +327,7 @@ int usbh_ctrl_xfer(UDEV_T *udev, uint8_t bmRequestType, uint8_t bRequest, uint16
     t0 = get_ticks();
     while (utr->bIsTransferDone == 0)
     {
-        if (get_ticks() - t0 > timeout)
+        if (get_timego(t0 ) > timeout)
         {
             usbh_quit_utr(utr);
             free_utr(utr);

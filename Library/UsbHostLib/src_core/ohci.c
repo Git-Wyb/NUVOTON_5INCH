@@ -20,6 +20,8 @@
 #include "hub.h"
 #include "ohci.h"
 
+#include "display.h"
+
 /// @cond HIDDEN_SYMBOLS
 
 //#define TD_debug   sysprintf
@@ -834,7 +836,7 @@ static int ohci_rh_port_reset(int port)
         _ohci->HcRhPortStatus[port] = USBH_HcRhPortStatus_PRS_Msk;
 
         t0 = get_ticks();
-        while (get_ticks() - t0 < (reset_time/10)+1)
+        while (get_timego(t0 )< (reset_time/10)+1)
         {
             /*
              *  If device is disconnected or port enabled, we can stop port reset.

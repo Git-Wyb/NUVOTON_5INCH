@@ -228,7 +228,8 @@ void Timer_1ms_Init(void)
 void usb_init(void)
 {
 		//TCHAR       usb_path[] = { '3', ':', 0 };    /* USB drive started from 3 */
-
+  REG_OPERATE(REG_CLK_HCLKEN,0x40000,clear);
+	
 	outpw(REG_CLK_HCLKEN, inpw(REG_CLK_HCLKEN) | 0x40000);//USBH EN
    // outpw(REG_CLK_PCLKEN0, inpw(REG_CLK_PCLKEN0) | 0x10000);//UART0 EN
 
