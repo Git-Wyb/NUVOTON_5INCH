@@ -957,7 +957,17 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
          	}
 
 	}
-	 
+	
+	 if((((buff[3]=='Y')&&(buff[4]!='6'))||(buff[3]!='Y'))
+		 
+	 &&
+		  
+		 (COMMAND_AP=='Y'))
+	{
+		LOGO_Y5Y6_str.AREA_NO = 0;
+		LOGO_Y5Y6_str.ITEM_NOW = 0;
+		LOGO_Y5Y6_str.DATA_Type = 0;
+	}
 	 
 	COMMAND_AP = buff[3];
 	COMMAND_IN = TX_COUNT_IN;
@@ -3252,12 +3262,7 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 		default:break;
 	}//switch (STATUS)
 	
-	if(buff[3]!='Y')
-	{
-		LOGO_Y5Y6_str.AREA_NO = 0;
-		LOGO_Y5Y6_str.ITEM_NOW = 0;
-		LOGO_Y5Y6_str.DATA_Type = 0;
-	}
+	
 	if(type == COMM_DATA_UARST)
 	{
 	   if(COMMAND_IN==TX_COUNT_IN) return 0;
