@@ -52,7 +52,7 @@ extern uint8_t *Image_Buf,*Image_Buf_bak;
 extern uint32_t logodata_sdrambuffer_addr_arry_bak[16];
 //extern uint8_t *Tp_Image_Buf;
 
-char SOFT_VERSION[] = "TBNUVA03";
+char SOFT_VERSION[] = "TBNUVA04";
  uint8_t flag_AB=0;
 
 uint8_t LOGO_ERR = 0;

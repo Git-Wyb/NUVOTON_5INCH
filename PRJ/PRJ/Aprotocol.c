@@ -2911,7 +2911,7 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 					  command_xor=Tp_xor;//IMAGE_FCS = Tp_FSC;
 					  if(type == COMM_DATA_UARST)
 					  {
-					   wait_send_over(); 
+					   //wait_send_over(); 
 						  code_protocol_ack(Tp_xor,1,ack_buf,0);		
 					  }
 						

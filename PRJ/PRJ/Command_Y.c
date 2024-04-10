@@ -592,14 +592,14 @@ void Printf_One_Line_ADDRANDSIZE(const char *x_name,uint8_t *x_sou,uint8_t x_lon
 	   (x_sou[(Tp_i*4)*(x_long+1)+8] =='0')
 	)
 	{
-				 writeTextBuff[strlen(writeTextBuff)]='F';
-		 writeTextBuff[strlen(writeTextBuff)]='F';
-		 writeTextBuff[strlen(writeTextBuff)]='F';
-		 writeTextBuff[strlen(writeTextBuff)]='F';
-		 writeTextBuff[strlen(writeTextBuff)]='F';
-		 writeTextBuff[strlen(writeTextBuff)]='F';
-		 writeTextBuff[strlen(writeTextBuff)]='F';
-		 writeTextBuff[strlen(writeTextBuff)]='F';
+				 writeTextBuff[strlen(writeTextBuff)]='0';
+		 writeTextBuff[strlen(writeTextBuff)]='0';
+		 writeTextBuff[strlen(writeTextBuff)]='0';
+		 writeTextBuff[strlen(writeTextBuff)]='0';
+		 writeTextBuff[strlen(writeTextBuff)]='0';
+		 writeTextBuff[strlen(writeTextBuff)]='0';
+		 writeTextBuff[strlen(writeTextBuff)]='0';
+		 writeTextBuff[strlen(writeTextBuff)]='0';
 		strcpy(writeTextBuff+strlen(writeTextBuff),char1_const);
 		continue;
 	}
@@ -640,7 +640,7 @@ void Printf_One_Line_FIELDnumber(void)
 	FRESULT res;
 	static uint32_t Tp_i =0;
 		static uint32_t Tp_j =0;
-		char * Tp_char;
+		char  Tp_char[8];
 		
 	memset(writeTextBuff,0,0x2000+1);
 	//strcpy(writeTextBuff,x_name);
@@ -650,18 +650,13 @@ void Printf_One_Line_FIELDnumber(void)
 	{
 		if(gs_AreaInfo[Tp_i].type==0xff)
 		{
-			for(Tp_j=0;Tp_j<8;Tp_j++) writeTextBuff[strlen(writeTextBuff)]='F';
+			for(Tp_j=0;Tp_j<8;Tp_j++) writeTextBuff[strlen(writeTextBuff)]='0';
 			writeTextBuff[strlen(writeTextBuff)] = ',';
 		}
-		else
+		else if(gs_AreaInfo[Tp_i].type<=7)
 		{
+			memset(Tp_char,0,8);
 			sprintf(Tp_char,"%d",gs_AreaInfo[Tp_i].size);
-			if(strlen(Tp_char)>8)
-			{
-				writeTextBuff[strlen(writeTextBuff)]='E';
-				writeTextBuff[strlen(writeTextBuff)]='r';
-				writeTextBuff[strlen(writeTextBuff)]='r';
-			}
 			for(Tp_j=0;Tp_j<8-strlen(Tp_char);Tp_j++)  writeTextBuff[strlen(writeTextBuff)]=' ';
 			for(Tp_j=0;Tp_j<strlen(Tp_char);Tp_j++)    writeTextBuff[strlen(writeTextBuff)]=*(Tp_char+Tp_j);
 			writeTextBuff[strlen(writeTextBuff)] = ',';
@@ -687,7 +682,7 @@ void Printf_One_Line_FIELDtype(void)
 	FRESULT res;
 	static uint32_t Tp_i =0;
 		static uint32_t Tp_j =0;
-		char * Tp_char;
+		char Tp_char[8];
 		
 	memset(writeTextBuff,0,0x2000+1);
 	strcpy(writeTextBuff,"FIELD DATA_CLASS  ,\0");
@@ -699,18 +694,14 @@ void Printf_One_Line_FIELDtype(void)
 	{
 		if(gs_AreaInfo[Tp_i].type==0xff)
 		{
-			for(Tp_j=0;Tp_j<8;Tp_j++) writeTextBuff[strlen(writeTextBuff)]='F';
+			for(Tp_j=0;Tp_j<6;Tp_j++) writeTextBuff[strlen(writeTextBuff)]='0';
+			for(Tp_j=0;Tp_j<2;Tp_j++) writeTextBuff[strlen(writeTextBuff)]='F';
 			writeTextBuff[strlen(writeTextBuff)] = ',';
 		}
-		else
+		else if(gs_AreaInfo[Tp_i].type<=7)
 		{
+			memset(Tp_char,0,8);
 			sprintf(Tp_char,"%d",gs_AreaInfo[Tp_i].type);
-			if(strlen(Tp_char)>8)
-			{
-				writeTextBuff[strlen(writeTextBuff)]='E';
-				writeTextBuff[strlen(writeTextBuff)]='r';
-				writeTextBuff[strlen(writeTextBuff)]='r';
-			}
 			for(Tp_j=0;Tp_j<8-strlen(Tp_char);Tp_j++)  writeTextBuff[strlen(writeTextBuff)]=' ';
 			for(Tp_j=0;Tp_j<strlen(Tp_char);Tp_j++)    writeTextBuff[strlen(writeTextBuff)]=*(Tp_char+Tp_j);
 			writeTextBuff[strlen(writeTextBuff)] = ',';
