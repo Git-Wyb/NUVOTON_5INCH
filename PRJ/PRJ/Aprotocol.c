@@ -1271,7 +1271,7 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 				}
 			    break;
 		 case 'P':
-					 usb_init();
+					 
 		       command_xor=Tp_xor;
 		       USB_IMAGE_TYPE = buff[4];
 		       USB_HAS_USABLE_IMG = 0;
@@ -1308,8 +1308,9 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 									wait_send_over();
 									code_protocol_ack(Tp_xor,1,ack_buf,0);	
 							}
-			
-				
+			        
+							usb_init();
+							
 							UsbWriteNandFlash(0x0e,Tp_bmp_filename, n);
 					 }
 					 else
@@ -1329,6 +1330,8 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 							    wait_send_over();
 							    code_protocol_ack(Tp_xor, 1, ack_buf,0);
 						   }
+							 
+							 usb_init();
 						
 						   if(buff[4] == '0')
 						   {
@@ -2846,7 +2849,7 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 		    //if(USB_OVER_FLAG == 0) return 0;
 			  if(buff[5]!='*') return 0;//防止文件名多1位也回文
 		    
-			  usb_init();
+			 
 			  if(buff[4]=='0')//程序数据写入
 				{			
 				  if (GetUsbMountFlag() == 0)
@@ -2869,6 +2872,8 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 					   wait_send_over(); 
 						code_protocol_ack(Tp_xor,1,ack_buf,0);		
 					}
+					
+					 usb_init();
           				
 				}
 				 break;
@@ -2876,7 +2881,7 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 		    //if(flag_usb!=4)   return 0;
 		    //if(USB_OVER_FLAG == 0) return 0;
 	      if(LOGO_DATA_OUT_FLAG!=3 )    return 0;   
-	      usb_init();
+	      
 		    switch(buff[4])
 				{
 				 case '0':
@@ -2890,6 +2895,8 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 				     	 wait_send_over();
 							 code_protocol_ack(Tp_xor,1,ack_buf,0);
 						 }
+						 
+						 usb_init();
 						 
 				   if (GetUsbMountFlag() == 0)
 					{						
@@ -2927,7 +2934,7 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 				     		 wait_send_over();
 								code_protocol_ack(Tp_xor,1,ack_buf,0);
 							}
-							
+							usb_init();
 					 if (GetUsbMountFlag() == 0)
 					{						
 						systerm_error_status.bits.usb_unable_connect = 1;

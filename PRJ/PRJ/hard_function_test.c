@@ -1569,9 +1569,11 @@ void hard_function_test(void)
 				         lcd_printf_new("Write image FF00 FF01 FF02");
 					badmanage_str->BAD_MANAGE_str.flag=0;
 					NANDFLASH_BADMANAGE_INIT();
+					usb_init();
 					while(gs_usb_mount_flag==0)//U?????????
 	        {
-		        SetZuobiao(10, 400 + 40);     
+		        
+						SetZuobiao(10, 400 + 40);     
 						lcd_printf_new("                       ");
 						SetZuobiao(10, 400 + 40);  
 				         lcd_printf_new("USB NO LOAD");
