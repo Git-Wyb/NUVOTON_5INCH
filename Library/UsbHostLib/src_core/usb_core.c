@@ -630,7 +630,7 @@ int usbh_get_device_descriptor(UDEV_T *udev, DESC_DEV_T *desc_buff)
 {
     uint32_t  read_len;
     int       ret, retry;
-    int       timeout = 5;
+    int       timeout = 20;
 
     for (retry = 0; retry < 3; retry++)
     {

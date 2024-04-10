@@ -33,7 +33,8 @@ int msc_bulk_transfer(MSC_T *msc, EP_INFO_T *ep, uint8_t *data_buff, int data_le
     UTR_T     *utr;
     uint32_t  t0;
     int       ret;
-
+    timeout_ticks = timeout_ticks*2;
+	  
     utr = alloc_utr(msc->iface->udev);
     if (!utr)
         return USBH_ERR_MEMORY_OUT;
