@@ -266,7 +266,8 @@ void Time50msProcess(void)
 }
 void Time1msProcess(void)
 {
-	    ppt_process( );
+	    
+	  ppt_process( );
 		// send_tts_command_control( ); 
 	   tts_time();
 	    led_log_wait_off( );
@@ -359,31 +360,33 @@ void OneSecondProcess(void)
 void TimeProcess(void)
 {
 //	 LOGO_DATA_OUT_FLAG = 3;
-	if(get_timego(Flag_Tim_1S)>1000)
+	if(get_timego(Flag_Tim_1S)>=1000)
 	{
 		Flag_Tim_1S = time1ms_count;
 		OneSecondProcess();
 	}
 		
-	if(get_timego(Flag_Tim_1ms)>1)
+	if(get_timego(Flag_Tim_1ms)>=1)
 	{
 		Flag_Tim_1ms = time1ms_count;
 		Time1msProcess();
+		
 	}
 	
-	if(get_timego(Flag_Tim_100ms)>100)
+	if(get_timego(Flag_Tim_100ms)>=100)
 	{
 		Flag_Tim_100ms = time1ms_count;
 		Time100msProcess();
+		//LED_POWER_TOGGLE();
 	}
 	
-	if(get_timego(Flag_Tim_500ms)>500)
+	if(get_timego(Flag_Tim_500ms)>=500)
 	{
 		Flag_Tim_500ms = time1ms_count;
 		Time500msProcess();
 	}
 	
-	if(get_timego(Flag_Tim_50ms)>50)
+	if(get_timego(Flag_Tim_50ms)>=50)
 	{
 		Flag_Tim_50ms = time1ms_count;
 		Time50msProcess();

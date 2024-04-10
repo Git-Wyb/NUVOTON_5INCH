@@ -11,6 +11,7 @@ typedef struct
 	int16_t file; //即声音文件序号
 	uint16_t interval;//间隔
 	uint16_t interval_cnt;
+	uint32_t interval_time;
 	int8_t voice;//间隔
 	uint8_t ack_flag;
 	uint8_t fcs_code;

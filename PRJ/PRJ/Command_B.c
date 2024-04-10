@@ -34,7 +34,7 @@ static  uint8_t  wt588h_start_check_cnt=0;
 
 static uint8_t wt588h_send_delay=0;
 static  uint8_t  wt588h_voice_state=0;  //// 表示1 在播放 0 表示播放完成
-
+uint32_t get_timego(uint32_t x_data_his);
 
 volatile static uint16_t  send_data_wt588h=0;
 volatile static uint8_t    send_data_cnt=0;
@@ -46,6 +46,8 @@ static  uint16_t  rev_command_delay=0;
 
 void tim1ms_int_enable(void);
 void tim1ms_int_disable(void);
+extern UINT32 volatile time1ms_count;
+
 
 void send_wt588h_init(uint16_t data)  //
 {
@@ -381,7 +383,8 @@ void tts_control(void)
 		wt588h_send_step=1;
 		wt588h_send_delay=0;
 		wt588h_voice_state=1;  	
-		tts.interval_cnt=tts.interval;	
+		tts.interval_cnt=tts.interval;//tts.interval;
+    	
 			Touch_int_disable();
 			tim1ms_int_disable();
 			//sysDisableInterrupt(TMR0_IRQn);
@@ -411,13 +414,15 @@ void tts_time(void)  // 1ms run one
 	#endif
 	if(wt588h_voice_state==0)
 	{
+  
 		if(tts.interval_cnt)//发完歌曲序列号才开始减
 		{
-		   tts.interval_cnt--;
+		   if(get_timego(tts.interval_time)>tts.interval_cnt)
+			    tts.interval_cnt=0;
 		   if(tts.interval_cnt==0)
 		   	{
-	                // tts.interval_cnt=tts.interval;
-				;
+//	                // tts.interval_cnt=tts.interval;
+//				;
 		   	}
 		}
 	}
@@ -490,6 +495,7 @@ vu32 GPIOICallback(UINT32 status, UINT32 userData)
 		// Flag_int = 1;
 		 //sTime = time1ms_count;
 		 set_wt588h_voice_state(0);
+		 tts.interval_time=time1ms_count;
 		 AUDIO_AMPLIFIER_SHUT_DOWN;
 //		 AMP_POWER_OFF;
 		 #ifdef  SYSUARTPRINTF 

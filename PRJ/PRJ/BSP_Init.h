@@ -25,6 +25,7 @@ typedef enum
  set} ENUM_REG;
 
  //LED
+ #define LED_POWER_TOGGLE()  GPIO_ReadBit(GPIOI,BIT5)?LED_POWER_ON():LED_POWER_OFF();
  #define LED_POWER_ON()  GPIO_Clr(GPIOI, BIT5)
  #define LED_POWER_OFF() GPIO_Set(GPIOI, BIT5)
  #define LED_LOGO_ON()   GPIO_Clr(GPIOI, BIT6)
