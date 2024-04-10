@@ -235,8 +235,7 @@ void usb_deinit(void)
 	 }
 }
 
-
-void usb_init(void)
+void usb_reinit(void)
 {
 	uint32_t Tp_count;
   if(flag_usb_init==0)
@@ -275,7 +274,7 @@ void usb_init(void)
 	*(uint8_t *)(display_layer_sdram.LCD_FRAME1_BUFFER+4));
 #endif
 
-    for(Tp_count=0;Tp_count<280000;Tp_count++)
+    for(Tp_count=0;Tp_count<3000;Tp_count++)
 		{
       			usbh_pooling_hubs();
 			     if(gs_usb_mount_flag==1)
@@ -283,7 +282,7 @@ void usb_init(void)
 						 break;
 					 }
 		}
-		if(Tp_count>=280000)
+		if(Tp_count>=3000)
 		{
 			usb_deinit();
 			//flag_usb_init = 0;
@@ -303,6 +302,21 @@ void usb_init(void)
 	 
 	 
  }
+}
+void usb_init(void)
+{
+	uint8_t Tp_count;
+	
+	for(Tp_count=0;Tp_count<5;Tp_count++)
+	{
+	  
+		if(gs_usb_mount_flag==1) break;
+	    usb_reinit();
+	}
+	
+	 #ifdef  SYSUARTPRINTF
+		sysprintf("usb_reinit=%d\r\n",Tp_count);
+		#endif
 }
 
 

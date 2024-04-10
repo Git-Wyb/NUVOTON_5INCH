@@ -335,7 +335,7 @@ int main(void)
 //	*(uint8_t *)(display_layer_sdram.LCD_FRAME1_BUFFER+2), *(uint8_t *)(display_layer_sdram.LCD_FRAME1_BUFFER+3),
 //	*(uint8_t *)(display_layer_sdram.LCD_FRAME1_BUFFER+4));
 	 
-	//if(0)
+//	if(0)
 		if(READ_WORKMODE==WORK_FUNCTION)
 		{
 		while(1)
