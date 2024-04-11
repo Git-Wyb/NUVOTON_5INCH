@@ -2220,14 +2220,23 @@ uint8_t GET_LOGODATA_Y5Y6_20170919(uint8_t *x_data,uint8_t x_FSC,uint8_t x_datas
 					if(LOGO_Y5Y6_str.ITEM_NOW>=(Tp_block_all*Tp_itemno_oneblock))
 					{
 						//return 0;//????????
-						if(gs_AreaInfo[Tp_field].size%2==0)
+						//if(gs_AreaInfo[Tp_field].size%2==0)
+						if(0)
 						{
 						memset(x_data,0xff,Tp_onepacketlong);
 						}
 						else
 						{
+							if(gs_AreaInfo[Tp_field].size%2==1)
+							{
 						memset(x_data,0,Tp_onepacketlong*2);	
 						memset(x_data,'F',Tp_onepacketlong*2-1);
+							}
+							else
+							{
+								memset(x_data,0,Tp_onepacketlong*2);	
+						memset(x_data,'F',Tp_onepacketlong*2);
+							}
 						}
 					//	LED_LOGO_CONTROL_ON();
 					   if(x_datasource == COMM_DATA_UARST)
