@@ -1720,41 +1720,41 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 			tts.play_num=convet_1_hex_ASCII_to_hex(&buff[5]);
 			
 			
-//			tts.voice=(((buff[6]-'1')*2)&0x0f);
+			tts.voice=(buff[6]&0x0f);
 //			if(buff[6]=='9') tts.voice=0xf;
-			switch(buff[6])
-			{
-				case '1':
-					       tts.voice=0x1;
-					       break;
-				case '2':
-					       tts.voice=0x2;
-					       break;
-				case '3':
-					       tts.voice=0x4;
-					       break;
-				case '4':
-					       tts.voice=0x6;
-					       break;
-				case '5':
-					       tts.voice=0x8;
-					       break;
-				case '6':
-					       tts.voice=0xA;
-					       break;
-				case '7':
-					       tts.voice=0xC;
-					       break;
-				case '8':
-					       tts.voice=0xE;
-					       break;
-				case '9':
-					       tts.voice=0xF;
-					       break;
-					default:
-						     tts.voice=0x0;
-						     break;
-			}
+//			switch(buff[6])
+//			{
+//				case '1':
+//					       tts.voice=0x1;
+//					       break;
+//				case '2':
+//					       tts.voice=0x2;
+//					       break;
+//				case '3':
+//					       tts.voice=0x4;
+//					       break;
+//				case '4':
+//					       tts.voice=0x6;
+//					       break;
+//				case '5':
+//					       tts.voice=0x8;
+//					       break;
+//				case '6':
+//					       tts.voice=0xA;
+//					       break;
+//				case '7':
+//					       tts.voice=0xC;
+//					       break;
+//				case '8':
+//					       tts.voice=0xE;
+//					       break;
+//				case '9':
+//					       tts.voice=0xF;
+//					       break;
+//					default:
+//						     tts.voice=0x0;
+//						     break;
+//			}
 			
 			//���������Ż��ߴ���״̬����������Ե��� 8 ��������FFE0H ��С��FFE7H �������
 			//��Volume:����Խ������Խ�󡣡�1������9�������趨����5���Ǳ�׼��

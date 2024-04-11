@@ -287,13 +287,27 @@ void send_tts_command_control(void)  //  run 1 ms 命令之间隔5ms
 //				wt588h_send_step = 1;
 //				return;
 //			}
-			 	
+			 	if(bak_voice!=tts.voice)
+				{
 			send_wt588h_init(0XE0|(tts.voice)|0xff00); 	
 			wt588h_send_step=4;
 		  flag_voice_end=0;
 			wt588h_send_delay=TTS_DELAY;
 		 // bak_voice=tts.voice;//cyw move 
 			start_heck_wt588h_exist();
+				}
+				else
+				{
+					sysprintf("flag_voice_end = 1\r\n");
+				send_wt588h_init((tts.file));
+				flag_voice_end =0;
+				wt588h_send_delay=0;  //没发声音，则直接跳过
+				wt588h_send_step=3;
+				bak_voice=tts.voice;
+				wt588h_send_delay=TTS_DELAY;
+		 // bak_voice=tts.voice;//cyw move 
+			start_heck_wt588h_exist();
+				}
 			
 			break;
 		case 3:
