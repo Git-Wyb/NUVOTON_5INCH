@@ -125,7 +125,7 @@ void wait_send_over(void)
 	uint32_t Tp_count=0x20000;
 	while(Tp_count--)
 	{
-		if(uart2_send_finish_state == 0)
+		//if(uart2_send_finish_state == 0)
 		{
 			break;
 		}
