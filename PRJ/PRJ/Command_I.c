@@ -11,7 +11,8 @@
 #include "Aprotocol.h"
 #include "rtc.h"
 
-  uint16_t  led_log_on_cnt=0;
+  uint32_t  led_log_on_cnt=0;
+	uint8_t    led_log_on_flag = 0;
 uint8_t FLAG_IIC_DATA_CHANGE = 0;
 volatile uint16_t  TX_COUNT_IN_IIC = 0;
 volatile uint16_t  TX_COUNT_OUT_IIC = 0;
@@ -27,6 +28,7 @@ extern uint32_t logodata_basedata_BUFFER,logodata_field1_BUFFER,logodata_field2_
 					logodata_field10_BUFFER,logodata_field11_BUFFER,logodata_field12_BUFFER,logodata_field13_BUFFER,logodata_field14_BUFFER,\
 					logodata_field15_BUFFER;
 extern TIME_TYPE timeandday_now_app;
+extern UINT32 volatile time1ms_count;
 
 uint32_t CharToHex(char *x_char)
 {
@@ -58,8 +60,8 @@ uint32_t CharToHex(char *x_char)
 void led_log_on(uint16_t time_ms) //
 {	
 	LED_LOGO_ON( );
-	led_log_on_cnt=time_ms;
-	
+	led_log_on_cnt=time1ms_count;
+	led_log_on_flag=1;
 }
 
 void code_protocol_ack_IIC(uint8_t  x_xor,uint8_t len,uint8_t *buff,uint8_t type)  //SEND_ACKnHEX   type =0 buff Ϊhex�������ת��ASCII ;  type=1 ����ת

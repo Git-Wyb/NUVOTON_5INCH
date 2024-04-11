@@ -1213,6 +1213,6 @@ void power_checkreset(void)
 ////////////////////////		
 ////////////////////////	}
     REG_OPERATE(REG_CLK_PCLKEN0,1<<1,set);//ENABLE WWDT
-    WWDT_Open(WWDT_PRESCALER_2048,0x3f,TRUE);//Լ1.35S��λ
+    WWDT_Open(WWDT_PRESCALER_2048,0x1f,TRUE);//Լ1.35S��λ
 		//outpw(REG_WWDT_RLDCNT,0x5AA5);
 }

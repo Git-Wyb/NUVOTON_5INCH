@@ -24,7 +24,8 @@ uint8_t pwr_on_cnt=3;
 extern char  USB_IMAGE_TYPE;
 extern uint8_t  USB_HAS_USABLE_IMG;
 extern uint8_t IMAGE_SEARCHED ;
-extern  uint16_t  led_log_on_cnt;
+extern  uint32_t  led_log_on_cnt;
+extern  uint8_t  led_log_on_flag;
 extern uint8_t updata_hex_fromSW2;
 extern uint16_t command_D8_D9_time;
 uint8_t err_code_buff[9];
@@ -239,13 +240,10 @@ void err_module_send_control(void)  // 1 ms run
 void led_log_wait_off(void ) // 1 ms run 
 {	
 	
-	if(led_log_on_cnt)
+	if((get_timego(led_log_on_cnt)>300)&&(led_log_on_flag==1))
 		{
-			led_log_on_cnt--;
-			if(led_log_on_cnt==0)
-			{
-				LED_LOGO_OFF( );
-			}
+			  LED_LOGO_OFF( );
+			  led_log_on_flag = 0;
 		}
 }
 
