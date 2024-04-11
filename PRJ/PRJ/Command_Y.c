@@ -2065,7 +2065,8 @@ uint8_t GET_LOGODATA_Y5Y6_20170919(uint8_t *x_data,uint8_t x_FSC,uint8_t x_datas
 					 
 					 
 					 Tp_requie_sdramaddr = Tp_now_sdramaddr - LOGO_Y5Y6_str.ITEM_NOW*Tp_onepacketlong;
-			     if(gs_AreaInfo[Tp_field].size%2==0)
+			    // if(gs_AreaInfo[Tp_field].size%2==0)
+					 if(0)
 					 {
 					 memcpy(x_data,(uint8_t *)(Tp_requie_sdramaddr+6),Tp_onepacketlong-6);
 					 memcpy(x_data+Tp_onepacketlong-6,(uint8_t *)(Tp_requie_sdramaddr),6);
@@ -2092,16 +2093,27 @@ uint8_t GET_LOGODATA_Y5Y6_20170919(uint8_t *x_data,uint8_t x_FSC,uint8_t x_datas
 						 {
 						 for(Tp_i=0;Tp_i<(Tp_onepacketlong-6);Tp_i++)
 						 sprintf((char *)(x_data+2*Tp_i),"%02X",*(uint8_t *)(Tp_requie_sdramaddr+6+Tp_i));
+						 if(gs_AreaInfo[Tp_field].size%2==1)
+						 {
 						 sprintf((char *)(x_data+2*Tp_i-1),"%02X%02X%02X%02X%02X%02X%c",*(uint8_t *)(Tp_requie_sdramaddr),
 							                            *(uint8_t *)(Tp_requie_sdramaddr+1),*(uint8_t *)(Tp_requie_sdramaddr+2),
 																						*(uint8_t *)(Tp_requie_sdramaddr+3),*(uint8_t *)(Tp_requie_sdramaddr+4),
 																							 *(uint8_t *)(Tp_requie_sdramaddr+5),'\0');
+					   }
+						 else
+						 {
+							sprintf((char *)(x_data+2*Tp_i),"%02X%02X%02X%02X%02X%02X%c",*(uint8_t *)(Tp_requie_sdramaddr),
+							                            *(uint8_t *)(Tp_requie_sdramaddr+1),*(uint8_t *)(Tp_requie_sdramaddr+2),
+																						*(uint8_t *)(Tp_requie_sdramaddr+3),*(uint8_t *)(Tp_requie_sdramaddr+4),
+																							 *(uint8_t *)(Tp_requie_sdramaddr+5),'\0'); 
+						 }
 					  }
 					 }
 					// LED_LOGO_CONTROL_ON();
 					 if(x_datasource == COMM_DATA_UARST)
 					 {
-				       if(gs_AreaInfo[Tp_field].size%2==0)//????????
+				       //if(gs_AreaInfo[Tp_field].size%2==0)//????????
+						   if(0)    
 						      code_protocol_ack(x_FSC,Tp_onepacketlong,x_data,0);
 							 else//?????????
 								  code_protocol_ack(x_FSC,strlen((char *)x_data),x_data,1);
@@ -2109,7 +2121,8 @@ uint8_t GET_LOGODATA_Y5Y6_20170919(uint8_t *x_data,uint8_t x_FSC,uint8_t x_datas
 					 }
 			     if(x_datasource == COMM_DATA_IIC)//IIC
 					 {
-				       if(gs_AreaInfo[Tp_field].size%2==0)//????????
+				       //if(gs_AreaInfo[Tp_field].size%2==0)//????????
+						   if(0)   
 						     code_protocol_ack_IIC(x_FSC,Tp_onepacketlong,x_data,0); 	
 							 else
 							   code_protocol_ack_IIC(x_FSC,strlen((char *)x_data),x_data,1); 	
@@ -2129,7 +2142,8 @@ uint8_t GET_LOGODATA_Y5Y6_20170919(uint8_t *x_data,uint8_t x_FSC,uint8_t x_datas
 					   Tp_requie_sdramaddr = Tp_requie_sdramaddr%Tp_itemno_oneblock;
 					   Tp_requie_sdramaddr = Tp_requie_sdramaddr*Tp_onepacketlong;
 					   Tp_requie_sdramaddr = logodata_sdrambuffer_addr_arry[Tp_field] + Tp_requie_sdramaddr;
-					  if(gs_AreaInfo[Tp_field].size%2==0)
+					  //if(gs_AreaInfo[Tp_field].size%2==0)
+					 if(0)
 					 {
    					 memcpy(x_data,(uint8_t *)(Tp_requie_sdramaddr+6),Tp_onepacketlong-6);
 					   memcpy(x_data+Tp_onepacketlong-6,(uint8_t *)(Tp_requie_sdramaddr),6);
@@ -2156,11 +2170,20 @@ uint8_t GET_LOGODATA_Y5Y6_20170919(uint8_t *x_data,uint8_t x_FSC,uint8_t x_datas
 						 {
 						 for(Tp_i=0;Tp_i<(Tp_onepacketlong-6);Tp_i++)
 						 sprintf((char *)(x_data+2*Tp_i),"%02X",*(uint8_t *)(Tp_requie_sdramaddr+6+Tp_i));
-						
+						if(gs_AreaInfo[Tp_field].size%2==1)
+						{
 						 sprintf((char *)(x_data+2*Tp_i-1),"%02X%02X%02X%02X%02X%02X%c",*(uint8_t *)(Tp_requie_sdramaddr),
 							                            *(uint8_t *)(Tp_requie_sdramaddr+1),*(uint8_t *)(Tp_requie_sdramaddr+2),
 																						*(uint8_t *)(Tp_requie_sdramaddr+3),*(uint8_t *)(Tp_requie_sdramaddr+4),
 																							 *(uint8_t *)(Tp_requie_sdramaddr+5),'\0');
+					  }
+						else
+						{
+							 sprintf((char *)(x_data+2*Tp_i),"%02X%02X%02X%02X%02X%02X%c",*(uint8_t *)(Tp_requie_sdramaddr),
+							                            *(uint8_t *)(Tp_requie_sdramaddr+1),*(uint8_t *)(Tp_requie_sdramaddr+2),
+																						*(uint8_t *)(Tp_requie_sdramaddr+3),*(uint8_t *)(Tp_requie_sdramaddr+4),
+																							 *(uint8_t *)(Tp_requie_sdramaddr+5),'\0');
+						}
 					  }
 					 }
 					   //???????
@@ -2169,7 +2192,8 @@ uint8_t GET_LOGODATA_Y5Y6_20170919(uint8_t *x_data,uint8_t x_FSC,uint8_t x_datas
 					  // LED_LOGO_CONTROL_ON();
 					   if(x_datasource == COMM_DATA_UARST)
 					   {
-				       if(gs_AreaInfo[Tp_field].size%2==0)//????????
+				       //if(gs_AreaInfo[Tp_field].size%2==0)//????????
+							 if(0)  
 							   code_protocol_ack(x_FSC,Tp_onepacketlong,x_data,0);
 							 else
 								 code_protocol_ack(x_FSC,strlen((char *)x_data),x_data,1);
@@ -2177,7 +2201,8 @@ uint8_t GET_LOGODATA_Y5Y6_20170919(uint8_t *x_data,uint8_t x_FSC,uint8_t x_datas
 					   }
 			       if(x_datasource == COMM_DATA_IIC)//IIC
 					   {
-				       if(gs_AreaInfo[Tp_field].size%2==0)//????????
+				       //if(gs_AreaInfo[Tp_field].size%2==0)//????????
+							 if(0)   
 							    code_protocol_ack_IIC(x_FSC,Tp_onepacketlong,x_data,0);
 							 else
 								  code_protocol_ack_IIC(x_FSC,strlen((char *)x_data),x_data,1);
@@ -2207,15 +2232,17 @@ uint8_t GET_LOGODATA_Y5Y6_20170919(uint8_t *x_data,uint8_t x_FSC,uint8_t x_datas
 					//	LED_LOGO_CONTROL_ON();
 					   if(x_datasource == COMM_DATA_UARST)
 					   {
-				       if(gs_AreaInfo[Tp_field].size%2==0)//????????
-							    code_protocol_ack(x_FSC,Tp_onepacketlong,x_data,0);
+				       //if(gs_AreaInfo[Tp_field].size%2==0)//????????
+							  if(0)  
+							     code_protocol_ack(x_FSC,Tp_onepacketlong,x_data,0);
 							 else
 								  code_protocol_ack(x_FSC,strlen((char *)x_data),x_data,1);
 						   return 1;
 					   }
 			       if(x_datasource == COMM_DATA_IIC)//IIC
 					   {
-				       if(gs_AreaInfo[Tp_field].size%2==0)//????????
+				       //if(gs_AreaInfo[Tp_field].size%2==0)//????????
+							  if(0)  
 							    code_protocol_ack_IIC(x_FSC,Tp_onepacketlong,x_data,0);
                else
                   code_protocol_ack_IIC(x_FSC,strlen((char *)x_data),x_data,1); 								 
@@ -2237,7 +2264,8 @@ uint8_t GET_LOGODATA_Y5Y6_20170919(uint8_t *x_data,uint8_t x_FSC,uint8_t x_datas
 					//???SDRAM??
 					Tp_requie_sdramaddr = (Tp_block_all*Tp_itemno_oneblock - (LOGO_Y5Y6_str.ITEM_NOW - Tp_itemno_all))%Tp_itemno_oneblock;
 					Tp_requie_sdramaddr = Tp_requie_sdramaddr*Tp_onepacketlong + logodata_sdrambuffer_addr_arry[Tp_field];
-					 if(gs_AreaInfo[Tp_field].size%2==0)
+					 //if(gs_AreaInfo[Tp_field].size%2==0)
+					if(0)
 					 {
 					memcpy(x_data,(uint8_t *)(Tp_requie_sdramaddr+6),Tp_onepacketlong-6);
 					memcpy(x_data+Tp_onepacketlong-6,(uint8_t *)(Tp_requie_sdramaddr),6);
@@ -2264,10 +2292,20 @@ uint8_t GET_LOGODATA_Y5Y6_20170919(uint8_t *x_data,uint8_t x_FSC,uint8_t x_datas
 						 {
 						 for(Tp_i=0;Tp_i<(Tp_onepacketlong-6);Tp_i++)
 						 sprintf((char *)(x_data+2*Tp_i),"%02X",*(uint8_t *)(Tp_requie_sdramaddr+6+Tp_i));
+							 if(gs_AreaInfo[Tp_field].size%2==1)
+							 {
 						 sprintf((char *)(x_data+2*Tp_i-1),"%02X%02X%02X%02X%02X%02X%c",*(uint8_t *)(Tp_requie_sdramaddr),
 							                            *(uint8_t *)(Tp_requie_sdramaddr+1),*(uint8_t *)(Tp_requie_sdramaddr+2),
 																						*(uint8_t *)(Tp_requie_sdramaddr+3),*(uint8_t *)(Tp_requie_sdramaddr+4),
 																							 *(uint8_t *)(Tp_requie_sdramaddr+5),'\0');
+					    }
+							 else
+							 {
+								 sprintf((char *)(x_data+2*Tp_i),"%02X%02X%02X%02X%02X%02X%c",*(uint8_t *)(Tp_requie_sdramaddr),
+							                            *(uint8_t *)(Tp_requie_sdramaddr+1),*(uint8_t *)(Tp_requie_sdramaddr+2),
+																						*(uint8_t *)(Tp_requie_sdramaddr+3),*(uint8_t *)(Tp_requie_sdramaddr+4),
+																							 *(uint8_t *)(Tp_requie_sdramaddr+5),'\0');
+							 }
 					   }
 					 }
 					//???????
@@ -2276,15 +2314,17 @@ uint8_t GET_LOGODATA_Y5Y6_20170919(uint8_t *x_data,uint8_t x_FSC,uint8_t x_datas
 					// LED_LOGO_CONTROL_ON();
 					 if(x_datasource == COMM_DATA_UARST)
 					 {
-				     if(gs_AreaInfo[Tp_field].size%2==0)//????????
-						    code_protocol_ack(x_FSC,Tp_onepacketlong,x_data,0);
+				     //if(gs_AreaInfo[Tp_field].size%2==0)//????????
+						 if(0)   
+						     code_protocol_ack(x_FSC,Tp_onepacketlong,x_data,0);
 						 else 
 							  code_protocol_ack(x_FSC,strlen((char *)x_data),x_data,1);
 						 return 1;
 					 }
 			     if(x_datasource == COMM_DATA_IIC)//IIC
 					 {
-				     if(gs_AreaInfo[Tp_field].size%2==0)//????????
+				     //if(gs_AreaInfo[Tp_field].size%2==0)//????????
+						 if(0)   
 						    code_protocol_ack_IIC(x_FSC,Tp_onepacketlong,x_data,0); 
              else
                 code_protocol_ack_IIC(x_FSC,strlen((char *)x_data),x_data,1);  							 
@@ -2296,20 +2336,30 @@ uint8_t GET_LOGODATA_Y5Y6_20170919(uint8_t *x_data,uint8_t x_FSC,uint8_t x_datas
 				{
 					//return 0;//??????
 flag_blank:				
-					 if(gs_AreaInfo[Tp_field].size%2==0)
+					 //if(gs_AreaInfo[Tp_field].size%2==0)
+					  if(0)
 						{
 						memset(x_data,0xff,Tp_onepacketlong);
 						}
 						else
 						{
+							if(gs_AreaInfo[Tp_field].size%2==1)
+							{
 						memset(x_data,0,Tp_onepacketlong*2);	
 						memset(x_data,'F',Tp_onepacketlong*2-1);
+							}
+							else
+							{
+						memset(x_data,0,Tp_onepacketlong*2);	
+						memset(x_data,'F',Tp_onepacketlong*2);
+							}
 						}
 					
 					//LED_LOGO_CONTROL_ON();
 					   if(x_datasource == COMM_DATA_UARST)
 					   {
-				       if(gs_AreaInfo[Tp_field].size%2==0)//????????
+				       //if(gs_AreaInfo[Tp_field].size%2==0)//????????
+							 if(0)
 							 {
 							    code_protocol_ack(x_FSC,Tp_onepacketlong,x_data,0);
 							 }
@@ -2321,7 +2371,8 @@ flag_blank:
 					   }
 			       if(x_datasource == COMM_DATA_IIC)//IIC
 					   {
-				       if(gs_AreaInfo[Tp_field].size%2==0)//????????
+				       //if(gs_AreaInfo[Tp_field].size%2==0)//????????
+							 if(0)
 							 {
 							 code_protocol_ack_IIC(x_FSC,Tp_onepacketlong,x_data,0); 
 							 }
