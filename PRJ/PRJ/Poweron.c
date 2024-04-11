@@ -834,6 +834,7 @@ void record_pwr_on_msg(void)
   {		
 	   RTC_Read(RTC_CURRENT_TIME,&pwr_on_time_ground);
 		 RTC_ground_to_app(&pwr_on_time_ground,&pwr_on_time_app);
+		 
 	}
 	else
 	{
@@ -845,6 +846,8 @@ void record_pwr_on_msg(void)
 		pwr_on_time_app.second = 0x99;
 		
 	}
+	
+	RTC_ground_to_app(&pwr_on_time_ground,&timeandday_now_app);
 }
 
 void power_on_logo(void)
