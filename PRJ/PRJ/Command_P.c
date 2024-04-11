@@ -961,7 +961,7 @@ int cpoy_file(char *pSrc, char *pDst)
 						//	Image_Buf[i -i/3] =Tp_lcdlow;	
 						//	Image_Buf[i -i/3+1]=Tp_lcdhigh;
 				} 
-				memcpy(bmpBuf_kkk,Tp_Image_Buf,1600);
+				memcpy(bmpBuf_kkk,Tp_Image_Buf,Tp_img_width*2);
 	  }
 
 	
@@ -984,7 +984,7 @@ int cpoy_file(char *pSrc, char *pDst)
 						
 
 					} 
-					 memcpy(bmpBuf_kkk,Tp_Image_Buf,1600);
+					 memcpy(bmpBuf_kkk,Tp_Image_Buf,Tp_oneline_long);
 	  }
 		
 		for(i=0;i<(Tp_img_width*2)/2;i+=2)
@@ -994,7 +994,8 @@ int cpoy_file(char *pSrc, char *pDst)
 			*(uint8_t *)(bmpBuf_kkk+i+1) = *(uint8_t *)(bmpBuf_kkk+j);
 			 *(uint8_t *)(bmpBuf_kkk+j) = Tp_data;
 			
-			j = Tp_img_width*2 - 1 -(i+1);
+			//j = Tp_img_width*2 - 1 -(i+1);
+			j--;
 			Tp_data = *(uint8_t *)(bmpBuf_kkk+i);
 			*(uint8_t *)(bmpBuf_kkk+i) = *(uint8_t *)(bmpBuf_kkk+j);
 			 *(uint8_t *)(bmpBuf_kkk+j) = Tp_data;			
