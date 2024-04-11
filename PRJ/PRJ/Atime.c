@@ -13,6 +13,7 @@
 #include "Poweron.h"
 #include "ff.h"
 #include "Aprotocol.h"
+#include "nand_nand.h"
 
 
 uint32_t  Flag_Tim_100ms,Flag_Tim_500ms,Flag_Tim_50ms,Flag_Tim_1ms,Flag_Tim_1S;
@@ -34,6 +35,36 @@ extern DOWNLOAD_TYPE  download;
 E_INT_STATUS tim1ms_control=int_enable;
 void sysTimer0ISR();
 extern volatile uint8_t command_D8_D9_flag;
+extern BADMANAGE_TAB_TYPE_U badmanage_str[1];
+static uint32_t NAND_CHECK;
+static uint8_t Tp_version[9]={0};
+extern  uint8_t *BaseData_ARR;
+
+uint32_t  NAND_BMP_Read_checksum(void)
+{
+	uint32_t Tp_checksum = 0;
+	uint32_t PageNum = 0;
+	uint32_t Tp_index = 131072;
+	static unsigned char buf[2048] = {0};
+  uint16_t Tp_i;
+	
+	
+	while(Tp_index<badmanage_str->BAD_MANAGE_str.NANDFLASH_CUSTOMER_INX)
+	{
+		memset(buf,0,2048);
+		PageNum = Tp_index/2048;
+		NAND_ReadPage(PageNum,0,buf,2048);
+		for(Tp_i=0;Tp_i<2048;Tp_i++)
+		{
+			Tp_checksum+= buf[Tp_i];
+		}
+		Tp_index+=2048;
+		
+		
+	}
+	return Tp_checksum;
+}
+
 
 void code_protocol_error_and_start(int8_t type,uint8_t Value_1,uint16_t Value_2) 
 {
@@ -313,7 +344,18 @@ void OneSecondProcess(void)
 					
 				// ClearLayerData(3);//Çå³ýÏÔÊ¾ÇøÓò
 				// Backlinght_Control_Init_HARDV4(128);
-				
+				if((READ_PIN_SW1_1==SW_ON)&&(READ_PIN_SW1_2==SW_ON)&&(READ_PIN_SW1_3==SW_ON)&&(READ_PIN_SW1_4==SW_ON)&&(READ_PIN_SW5==SW_ON)&&(READ_PIN_SW1_6==SW_ON))
+				{
+					
+					NAND_CHECK = NAND_BMP_Read_checksum();
+	        SetZuobiao(10, 400 + 60);
+		      lcd_printf_new("NAND Chechsum = 0x%x         ",NAND_CHECK);
+					SetZuobiao(10, 400 + 20);
+					memcpy(Tp_version,BaseData_ARR+BMP_Ver_index*9,8);
+					lcd_printf_new("BMP VERSION   = %8s         ",Tp_version);
+					
+	        while(1);
+				}
 					
 				if(READ_PIN_SW1_2==SW_ON)
 	      {
