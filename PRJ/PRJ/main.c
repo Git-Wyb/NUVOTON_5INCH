@@ -239,7 +239,7 @@ int main(void)
 	  protocol_uart_init();
 	
 		
-		
+		rtc_init();
 		//AD_init();
 		
 		//#ifdef POWER_AD_MODE
@@ -255,7 +255,7 @@ int main(void)
 
 	
 	  AD_init_vbat();
-	  rtc_init();
+	  
 		
 		REG_OPERATE(REG_SYS_LVRDCR,1,clear);
 		#ifdef POWER_INT_MODE
@@ -337,7 +337,7 @@ int main(void)
 //	*(uint8_t *)(display_layer_sdram.LCD_FRAME1_BUFFER+2), *(uint8_t *)(display_layer_sdram.LCD_FRAME1_BUFFER+3),
 //	*(uint8_t *)(display_layer_sdram.LCD_FRAME1_BUFFER+4));
 	 
-	//	if(0)
+		//if(0)
 	if(READ_WORKMODE==WORK_FUNCTION)
 		{
 		while(1)

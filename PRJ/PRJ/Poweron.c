@@ -65,7 +65,7 @@ void RTC_ground_to_app(RTC_TIME_DATA_T *ground,TIME_TYPE *app)
 {
 	if(systerm_error_status.bits.lse_error==0)
 	{
-	RTC_Read(RTC_CURRENT_TIME,ground);
+	
 	app->year = DECTOHEX(ground->u32Year - RTC_YEAR2000);
 	app->month = DECTOHEX(ground->u32cMonth);
 	app->day  = DECTOHEX(ground->u32cDay);
@@ -832,7 +832,7 @@ void record_pwr_on_msg(void)
 {
   if(systerm_error_status.bits.lse_error==0)
   {		
-	   //RTC_Read(RTC_CURRENT_TIME,&pwr_on_time_ground);
+	   RTC_Read(RTC_CURRENT_TIME,&pwr_on_time_ground);
 		 RTC_ground_to_app(&pwr_on_time_ground,&pwr_on_time_app);
 	}
 	else
@@ -909,7 +909,7 @@ void LOGO_handle(void)
 	if(get_timego(RTC_read_timer)>=1000)
 	{
 	
-		
+		RTC_Read(RTC_CURRENT_TIME,&timeandday_now_ground);
 		RTC_read_timer = time1ms_count;
 		RTC_ground_to_app(&timeandday_now_ground,&timeandday_now_app);
 	//	sysprintf("f_mkdir=%X\r\n",timeandday_now);

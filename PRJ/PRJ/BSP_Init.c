@@ -898,8 +898,8 @@ void rtc_time_deinit(void)
 void rtc_init(void)
 {
 	//Ê¹ÄÜRECÊ±ÖÓ
-	  get_vbat_ad_value();
-	  if(systerm_error_status.bits.lse_error==0)
+	 // get_vbat_ad_value();
+	/////  if((systerm_error_status.bits.lse_error==0)||(READ_WORKMODE==WORK_TEST))
 		{
 	
     RTC_EnableClock(TRUE);
