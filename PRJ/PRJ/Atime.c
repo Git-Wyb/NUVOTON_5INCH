@@ -17,7 +17,7 @@
 
 
 uint32_t  Flag_Tim_100ms,Flag_Tim_500ms,Flag_Tim_50ms,Flag_Tim_1ms,Flag_Tim_1S;
-extern uint32_t time1ms_count;
+extern volatile uint32_t time1ms_count;
 extern uint8_t LOGO_DATA_OUT_FLAG;
 void tts_time(void) ;
 uint8_t pwr_on_cnt=3;

@@ -103,7 +103,9 @@ vu32 GPIOECallback(UINT32 status, UINT32 userData)
 	 {
 		 Flag_int = 1;
 		 sTime = time1ms_count;
+		 #ifdef SYSUARTPRINTF
 		 sysprintf("TOUCH INT \r\n");
+		 #endif
 	 }
 	  //清除中断标志位
     GPIO_ClrISRBit(GPIOE,status);

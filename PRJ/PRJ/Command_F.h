@@ -11,5 +11,6 @@ int AreaReadCmdF(char cmd, int filed, int idx, char *buf, int *len);
 //void RTC_CLKOUT(RTC_TICK x_tick);
 void RTC_CLKOUT(void);
 void RTC_CLKSTOP(void);
+void Display_checksum(void);
 #endif
 

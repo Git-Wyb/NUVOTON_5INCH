@@ -34,7 +34,7 @@ extern uint8_t* BaseData_ARR;
 extern uint32_t logodata_basedata_BUFFER;
 extern LAYER_SDRAM_STR display_layer_sdram;
 uint32_t AD_8V_timer;
-extern uint32_t time1ms_count;
+extern volatile uint32_t time1ms_count;
 uint32_t get_timego(uint32_t x_data_his);
 extern uint16_t flag_logo_change;
 extern uint32_t logodata_sdrambuffer_addr_arry_bak[16];
@@ -44,6 +44,10 @@ uint8_t COMMAND_N=0;
 
 void LVD_IRQHandler(void)
 {
+	//inpw(REG_SYS_MISCISR);
+	//REG_OPERATE(REG_SYS_MISCISR,1,clear);
+	
+	
 while(1);
 	//	sysprintf("\r\n--------------LVD INIT------------------\r\n");
 //	REG_OPERATE(REG_SYS_MISCISR,1,clear);
@@ -87,11 +91,30 @@ void LVD_init_irq(void)
 	REG_OPERATE(REG_SYS_LVRDCR,(1<<9)|(1<<8),set);
 	REG_OPERATE(REG_SYS_MISCISR,1,set);
 	REG_OPERATE(REG_SYS_MISCIER,1,set);
-//	
+	
 	 sysInstallISR(IRQ_LEVEL_7, LVD_IRQn, (PVOID)LVD_IRQHandler);
    sysEnableInterrupt(LVD_IRQn);
    sysSetLocalInterrupt(ENABLE_IRQ);
 	REG_OPERATE(REG_SYS_LVRDCR,1,clear);
+	
+
+	
+	
+////	REG_OPERATE(REG_SYS_LVRDCR,(1<<9),clear);
+////	//REG_OPERATE(REG_SYS_LVRDCR,(1<<8),set);
+////	
+////		sysInstallISR(IRQ_LEVEL_7, LVD_IRQn, (PVOID)LVD_IRQHandler);
+////   sysEnableInterrupt(LVD_IRQn);
+////   sysSetLocalInterrupt(ENABLE_IRQ);
+////	 REG_OPERATE(REG_SYS_MISCISR,1,clear);
+////	 REG_OPERATE(REG_SYS_MISCIER,1,set);
+	
+	
+	//REG_OPERATE(REG_SYS_LVRDCR,(1<<8)|1,set);
+	
+	
+	
+	 
 }
 
 void LVD_init_scan(void)
@@ -197,7 +220,7 @@ void power_save(void)
    //REG_OPERATE(REG_CLK_PCLKEN0,1<<16,clear);//UART0  sysuart
 	// REG_OPERATE(REG_CLK_PCLKEN0,1<<17,clear);//UART1
 	// REG_OPERATE(REG_CLK_PCLKEN0,1<<7,clear);//TIM2 CLK DISABLE
-		#ifdef  SYSUARTPRINTF
+		#if defined  SYSUARTPRINTF || defined SYSUARTPRINTF_lowpower
 		REG_OPERATE(REG_CLK_PCLKEN0,(1<<7)|(1<<17),clear);
 	#else
 	REG_OPERATE(REG_CLK_PCLKEN0,(1<<7)|(1<<16)|(1<<17),clear);
@@ -272,6 +295,9 @@ void LOW_POWER_cyw(void)
 	 #ifdef DEBUG_PG3 
 	  GPIO_Clr(GPIOG,BIT3);
 	#endif
+	#ifdef  SYSUARTPRINTF_lowpower
+		sysprintf("----POWER OFF \r\n");
+		#endif
 
 	power_save( );
 	
@@ -507,12 +533,17 @@ void LOW_POWER_cyw(void)
 		#ifdef  SYSUARTPRINTF  
 		sysprintf("\r\n--------------logo save over------------------\r\n");
 		#endif
+		
+		#ifdef  SYSUARTPRINTF_lowpower
+		sysprintf("----APP END,START WWDT Reset \r\n");
+		#endif
+		
 		#ifdef DEBUG_PG3 
 		GPIO_Set(GPIOG,BIT3);
 		#endif
 		#ifdef POWER_INT_MODE
 		power_checkreset();
-		#endif
+        #endif
 		 while(1)
 	   	{
           

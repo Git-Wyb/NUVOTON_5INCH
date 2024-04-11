@@ -148,8 +148,9 @@ void uart2_init_download(uint32_t bound)
         uartprintf("���ý����ж�ģʽʧ��115200!\n");
     }
 		
-		
+		#ifdef SYSUARTPRINTF
 		uartprintf("uartset 115200\n");
+		#endif
 //		 len = strlen((PINT8) TX_Test);
 //		 uartWrite(param.ucUartNo, TX_Test, len);
 		
@@ -204,8 +205,9 @@ retval = uartOpen(&param);
 		
 		
 		//REG_OPERATE(REG_UART1_IER,0x09,clear);
-		
+		#ifdef SYSUARTPRINTF
 		uartprintf("uartset 38400\n");
+		#endif
 		  //���ڷ������� ����� ��ͣ�����
 		// len = strlen((PINT8) TX_Test);
 		// uartWrite(param.ucUartNo, TX_Test, len);
@@ -220,7 +222,7 @@ retval = uartOpen(&param);
 void Timer_1ms_Init(void)
 {
 			 /*--- init timer ---*/
-	   #ifdef DEBUG
+	   #ifdef SYSUARTPRINTF
 	   sysprintf("Init Timer0 1ms");
 	   #endif
     sysSetTimerReferenceClock (TIMER0, 12000000);
@@ -722,13 +724,16 @@ void display_init(void)
 	 #ifdef DEBUG
   if(u8FrameBufPtr == NULL)
 	{
+		#ifdef SYSUARTPRINTF
 		sysprintf("��ȡ�Դ��ַָ��ʧ��!!\n");
-		
+		#endif
 	}
 	else
 	{
+		#ifdef SYSUARTPRINTF
 		sysprintf("%X\r\n", (void *)u8FrameBufPtr);
 		sysprintf("%X\r\n", *(uint32_t *)u8FrameBufPtr);
+		#endif
 		 //*((uint32_t  *)0x3D7A40) = 0x55555555;
 		//memset((void *)u8FrameBufPtr,0x55,800*480*2);
 		//return 0;
@@ -755,10 +760,13 @@ void display_init(void)
 	display_layer_sdram.LCD_FRAME1_BUFFER = display_layer_sdram.LCD_FRAME1_BUFFER|0x80000000;
 	display_layer_sdram.LCD_FRAME2_BUFFER = display_layer_sdram.LCD_FRAME2_BUFFER|0x80000000;
 	display_layer_sdram.LCD_FRAME3_BUFFER = display_layer_sdram.LCD_FRAME3_BUFFER|0x80000000;
-	
+	#ifdef SYSUARTPRINTF
 	sysprintf("LCD_CACHE_BUFFER=%X LCD_FRAME_BUFFER=%X LCD_FRAME1_BUFFER=%X LCD_FRAME2_BUFFER=%X LCD_FRAME3_BUFFER=%X \r\n",
+	
+	
 	display_layer_sdram.LCD_CACHE_BUFFER, display_layer_sdram.LCD_FRAME_BUFFER, 
 	display_layer_sdram.LCD_FRAME1_BUFFER, display_layer_sdram.LCD_FRAME2_BUFFER,display_layer_sdram.LCD_FRAME3_BUFFER);
+	#endif
 	
 	memset((void *)display_layer_sdram.LCD_FRAME_BUFFER,0x00,800*480*2);
 	memset((void *)display_layer_sdram.LCD_FRAME1_BUFFER,0x00,800*480*2);
@@ -858,7 +866,9 @@ void AD_init(void)
 		
 	//outpw(REG_ADC_CONF,ADC_CONF_VBATEN);
 	///////////////REG_OPERATE(REG_ADC_IER,ADC_IER_MIEN,set);
+#ifdef SYSUARTPRINTF
 sysprintf("AD INIT END\n\r");
+#endif
 	do
 	{
 		REG_OPERATE(REG_ADC_CTL,ADC_CTL_MST,set);
@@ -1203,5 +1213,6 @@ void power_checkreset(void)
 ////////////////////////		
 ////////////////////////	}
     REG_OPERATE(REG_CLK_PCLKEN0,1<<1,set);//ENABLE WWDT
-    WWDT_Open(WWDT_PRESCALER_2048,0xf,TRUE);//Լ1.35S��λ
+    WWDT_Open(WWDT_PRESCALER_2048,0x3f,TRUE);//Լ1.35S��λ
+		//outpw(REG_WWDT_RLDCNT,0x5AA5);
 }

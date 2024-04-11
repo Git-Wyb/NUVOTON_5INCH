@@ -151,7 +151,9 @@ void AD_init_vbat(void)
 						 outpw(REG_ADC_ISR,inpw(REG_ADC_ISR));
 	//outpw(REG_ADC_CONF,ADC_CONF_VBATEN);
 	///////////////REG_OPERATE(REG_ADC_IER,ADC_IER_MIEN,set);
+#ifdef SYSUARTPRINTF
 sysprintf("AD INIT END\n\r");
+#endif
 	//do
 	//{
 

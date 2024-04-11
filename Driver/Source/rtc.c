@@ -242,7 +242,9 @@ UINT32 RTC_Init (void)
         if ( inp32(REG_RTC_INIT) & 0x01 )
         {
             /* Check RTC_INIR[0] to find out RTC reset signal */
-					 sysprintf("RTC_ACTIVE1\r\n");
+					 #ifdef SYSUARTPRINTF
+					sysprintf("RTC_ACTIVE1\r\n");
+					#endif
             break;
         }
     }
@@ -256,7 +258,9 @@ UINT32 RTC_Init (void)
         if ( inp32(REG_RTC_INIT) & 0x01 )
         {
             /* Check RTC_INIR[0] to find out RTC reset signal */
+					#ifdef SYSUARTPRINTF
 					sysprintf("RTC_ACTIVE2\r\n");
+					#endif
             break;
         }
     }

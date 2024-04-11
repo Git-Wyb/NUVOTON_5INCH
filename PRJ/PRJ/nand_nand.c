@@ -128,19 +128,25 @@ uint32_t NAND_ReadID(void)
 	//REG_OPERATE(REG_NANDINTSTS,1<<10,set);
 	
 	NAND_ID[0] = inpw(REG_NANDDATA)&0x000000ff;
-	
+	#ifdef SYSUARTPRINTF
 	sysprintf("%x\r\n",NAND_ID[0]);
+	#endif
 	NAND_ID[1]= inpw(REG_NANDDATA)&0x000000ff;
-	
+	#ifdef SYSUARTPRINTF
 	sysprintf("%x\r\n",NAND_ID[1]);
+	#endif
 	NAND_ID[2] = inpw(REG_NANDDATA)&0x000000ff;
-	
+	#ifdef SYSUARTPRINTF
 	sysprintf("%x\r\n",NAND_ID[2] );
+	#endif
 	NAND_ID[3] = inpw(REG_NANDDATA)&0x000000ff;
+	#ifdef SYSUARTPRINTF
 	sysprintf("%x\r\n",NAND_ID[3]);
-	
+	#endif
 	NAND_ID[4] = inpw(REG_NANDDATA)&0x000000ff;
+	#ifdef SYSUARTPRINTF
 	sysprintf("%x\r\n",NAND_ID[4]);
+	#endif
 	
 	//REG_OPERATE(REG_NANDCTL,1<<16,set);
 	//REG_OPERATE(REG_NANDCTL,1<<17,clear);

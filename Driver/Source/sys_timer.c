@@ -89,7 +89,7 @@ void sysTimer0ISR()
 	       #endif
 			 /////////////////// _sys_uTimer0Count++;
 			  time1ms_count++;
-			  time1ms_count_forrun++;
+			 time1ms_count_forrun++;
 			  protocol_D8_D9_command_time_dealwith();
         outpw(REG_TMR_TISR, 0x01); /* clear TIF0 */
        ////////////////if (_sys_uTimer0Count >= 0xfffffff)

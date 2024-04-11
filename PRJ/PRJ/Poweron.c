@@ -886,8 +886,9 @@ void power_on_logo(void)
 					LOGO_DATA_OUT_FLAG ++;//over change
 //////////					AD_init_8V();		
 				//	LVD_disable();
+				  #ifdef SYSUARTPRINTF
 					sysprintf("\r\n--------------8V AD on------------------\r\n");
-
+           #endif
 				}
       }
 }

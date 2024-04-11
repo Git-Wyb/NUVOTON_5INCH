@@ -191,6 +191,7 @@ void vpostLCMInit(uint32_t u32DisplayPanelID)
     outpw(REG_LCM_CRTC_HSYNC,   curDisplayDev.u32Reg_CRTCHSYNC);
     outpw(REG_LCM_CRTC_VR,      curDisplayDev.u32Reg_CRTCVR);
 	
+	#ifdef  SYSUARTPRINTF 
 	  sysprintf("curDisplayDev.u32CmdLow=%x\r\n",curDisplayDev.u32CmdLow);
     sysprintf("curDisplayDev.u32Cmd16t18=%x\r\n",curDisplayDev.u32Cmd16t18);
 		 sysprintf("curDisplayDev.u32CmdBusWidth=%x\r\n",curDisplayDev.u32CmdBusWidth);
@@ -205,6 +206,7 @@ void vpostLCMInit(uint32_t u32DisplayPanelID)
 		sysprintf("curDisplayDev.u32Reg_CRTCVR=%x\r\n",curDisplayDev.u32Reg_CRTCVR);
 		
 			sysprintf("REG_LCM_DEV_CTRL=%x\r\n",inpw(REG_LCM_DEV_CTRL));//
+			#endif
 }
 
 /**

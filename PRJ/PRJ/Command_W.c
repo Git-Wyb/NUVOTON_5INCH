@@ -182,14 +182,22 @@ int AreaWriteCmd(char cmd, int field, int idx,void *data,int len)		//√¸¡Ó FILED 
 			*(uint8_t *)(BaseData_ARR+idx*9+8) = len;
 			memset(BaseData_ARR+idx*9,0,8);
 			memcpy(BaseData_ARR+idx*9, data, len);
+			#ifdef SYSUARTPRINTF
 			sysprintf("1.BaseData_ARR[idx] = %s\r\n",(char *)(BaseData_ARR+idx*9));
+			#endif
 			Updata_Basedata_No0_cyw();
+			#ifdef SYSUARTPRINTF
 			sysprintf("2.BaseData_ARR[idx] = %s\r\n",(char *)(BaseData_ARR+idx*9));
+			#endif
 			basedata_ram_to_sdram();
+			#ifdef SYSUARTPRINTF
 			sysprintf("3.BaseData_ARR[idx] = %s\r\n",(char *)(BaseData_ARR+idx*9));
+			#endif
 			SDRAM_TO_NANDFLASH(logodata_basedata_BUFFER,baseA_data__nandflash_start,1);
 			SDRAM_TO_NANDFLASH(logodata_basedata_BUFFER,baseB_data__nandflash_start,1);
+			#ifdef SYSUARTPRINTF
 			sysprintf("4.BaseData_ARR[idx] = %s\r\n",(char *)(BaseData_ARR+idx*9));
+			#endif
 			
 			if((idx==Master_Ver_index)||(idx==BMP_Ver_index)||(idx==PCB_Checked_5inch)||(idx==VBAT_FLAG_5inch))
 			{

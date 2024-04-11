@@ -94,7 +94,7 @@ uint32_t get_ticks(void)
 
 
 FRESULT TP_res;
-extern uint32_t time1ms_count;
+extern volatile uint32_t  time1ms_count;
 uint32_t Tp_data = 0;
 #ifdef SYSUARTPRINTF_p
 
@@ -131,6 +131,14 @@ int main(void)
 	
 	  //ϵͳ���Դ��ڳ�ʼ�� ����0 115200
     sysInitializeUART();
+		
+		
+		
+		
+		#ifdef  SYSUARTPRINTF_lowpower
+		sysprintf("----APP start\r\n");
+		#endif
+		
 	#ifdef  SYSUARTPRINTF 
     sysprintf("REG_CLK_PCLKEN0=%x\r\n",REG_CLK_PCLKEN0);
 	  sysprintf("\r\n--------------GPIO_LEDʵ��------------------\r\n");
@@ -306,7 +314,11 @@ int main(void)
 		#endif
 		/////delay_ms(5000);
     LVD_init_irq();
-		
+//		power_checkreset();
+//		while(1)
+//		{
+//		outpw(REG_WWDT_RLDCNT,0x5AA5);
+//		}
 		#ifdef  SYSUARTPRINTF  
 		sysprintf("ALL INIT END\r\n",para.lcd_back_light.brightness);
 		#endif
@@ -360,7 +372,7 @@ int main(void)
 		{
 		while(1)
 		{
-      TimeProcess( );
+	TimeProcess( );
      if(pwr_on_cnt==0)
 		{
 			// sysFlushCache(I_D_CACHE);

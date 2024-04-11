@@ -188,7 +188,9 @@ int AreaReadCmdF(char cmd, int filed, int idx, char *buf, int *len)
 	case 0:
 		if (cmd == LCD_F7)
 		{
+			#ifdef SYSUARTPRINTF
 			sysprintf("BaseData_ARR[idx] = %s\r\n",(char *)(BaseData_ARR+idx*9));
+			#endif
 			if (idx < BASE_data_4byte_end)
 			{
 				//pAreaBase = (BaseAreaAll *)addr;

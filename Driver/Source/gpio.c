@@ -39,7 +39,9 @@ void GPIO_IRQHandler(void)
 {
     UINT32 reg; 
     INT32 i,mask;
+	 #ifdef SYSUARTPRINTF
 	  sysprintf("gpio irq come\r\n");
+	#endif
     reg = inpw(REG_AIC_ISRH); 
     mask = 0x02000000; /* INT56 */
     reg = inpw(REG_GPIO_ISR);

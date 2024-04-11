@@ -262,7 +262,7 @@ void sysprintf(PINT8 pcStr,...)
 {
 
 //#ifdef  SYSUARTPRINTF  
-#if defined SYSUARTPRINTF || defined SYSUARTPRINTF_p
+#if defined SYSUARTPRINTF || defined SYSUARTPRINTF_p || defined SYSUARTPRINTF_lowpower
 	INT8  *argP;
 
 
