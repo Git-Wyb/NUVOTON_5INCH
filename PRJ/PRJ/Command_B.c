@@ -232,7 +232,7 @@ void ETMR3_IRQHandler(void)
 
 void start_heck_wt588h_exist(void)
 {
-	if(wt588h_start_check==0)
+	//if(wt588h_start_check==0)
 		{
 			wt588h_start_check=1;
 		       wt588h_no_ack=0;
@@ -505,7 +505,7 @@ void check_wt588h_exist(void)   //1// 1 s run one
                    	{
 				wt588h_start_check=0;
 				
-				if(wt588h_no_ack!=2)
+				if(wt588h_no_ack<2)
 				{
 					
 					systerm_error_status.bits.voice_error=1;
