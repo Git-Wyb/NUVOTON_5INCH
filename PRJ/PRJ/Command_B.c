@@ -242,8 +242,9 @@ void start_heck_wt588h_exist(void)
 
 void send_tts_command_control(void)  //  run 1 ms 命令之间隔5ms
 {
- static  int8_t bak_voice=0xff;  //声音没变，只发一次
+ static  int8_t bak_voice_finish=0xff,bak_voice_start=0xff;  //声音没变，只发一次
 	static uint8_t STEP3_FLAG;
+	static int16_t  bak_file;
 	
 	if((wt588h_send_delay==0)&&(wt588h_send_step))
 	{
@@ -278,6 +279,8 @@ void send_tts_command_control(void)  //  run 1 ms 命令之间隔5ms
 			 // sysprintf("wt588h_send_step = 2\r\n");
 				wt588h_send_delay=0;  //没发声音，则直接跳过
 				wt588h_send_step=2;
+				bak_voice_start = tts.voice;
+				bak_file = tts.file;
 			}
 		//	wt588h_send_step=2;
 			break;
@@ -287,9 +290,9 @@ void send_tts_command_control(void)  //  run 1 ms 命令之间隔5ms
 //				wt588h_send_step = 1;
 //				return;
 //			}
-			 	if(bak_voice!=tts.voice)
+			 	if(bak_voice_start!=bak_voice_finish)
 				{
-			send_wt588h_init(0XE0|(tts.voice)|0xff00); 	
+			send_wt588h_init(0XE0|(bak_voice_start)|0xff00); 	
 			wt588h_send_step=4;
 		  flag_voice_end=0;
 			wt588h_send_delay=TTS_DELAY;
@@ -299,11 +302,11 @@ void send_tts_command_control(void)  //  run 1 ms 命令之间隔5ms
 				else
 				{
 					sysprintf("flag_voice_end = 1\r\n");
-				send_wt588h_init((tts.file));
+				send_wt588h_init((bak_file));
 				flag_voice_end =0;
 				wt588h_send_delay=0;  //没发声音，则直接跳过
 				wt588h_send_step=3;
-				bak_voice=tts.voice;
+			//	bak_voice=tts.voice;
 				wt588h_send_delay=TTS_DELAY;
 		 // bak_voice=tts.voice;//cyw move 
 			start_heck_wt588h_exist();
@@ -323,7 +326,7 @@ void send_tts_command_control(void)  //  run 1 ms 命令之间隔5ms
 			  //{
 				    
 				    wt588h_send_step = 0;
-				   
+				    
 				    STEP3_FLAG = 0;
 				    //if(tts.ack_flag == 1)
 						//{
@@ -343,11 +346,12 @@ void send_tts_command_control(void)  //  run 1 ms 命令之间隔5ms
 			if(flag_voice_end == 1)
 			{
 				sysprintf("flag_voice_end = 1\r\n");
-				send_wt588h_init((tts.file));
+				send_wt588h_init((bak_file));
 				flag_voice_end =0;
 				wt588h_send_delay=0;  //没发声音，则直接跳过
 				wt588h_send_step=3;
-				bak_voice=tts.voice;
+				bak_voice_finish = bak_voice_start;
+				//bak_voice=tts.voice;
 				wt588h_send_delay=TTS_DELAY;
 		 // bak_voice=tts.voice;//cyw move 
 			start_heck_wt588h_exist();
