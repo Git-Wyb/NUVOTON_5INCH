@@ -495,13 +495,15 @@ void code_protocol_ack(uint8_t  x_xor,uint8_t len,uint8_t *buff,uint8_t type)  /
 	uint16_t n = 0;  
   uint8_t Tp_i = 0;	
 	//static uint8_t    tx_buff_uart2_temp[TX_BUFF_UART2_MAX_LEN]={0};     //���ջ���,���USART_REC_LEN���ֽ�.
-  static uint8_t   * tx_buff_uart2_temp,* tx_buff_uart2_temp_noshift;
+  static uint8_t   * tx_buff_uart2_temp=0,* tx_buff_uart2_temp_noshift=0;
 	uint16_t        tx_buff_uart2_num_temp=0;
 	
-	
+	if(tx_buff_uart2_temp==0)
+	{
 	tx_buff_uart2_temp_noshift = malloc(TX_BUFF_UART2_MAX_LEN+64);
 	tx_buff_uart2_temp = (uint8_t *)((32+(uint8_t   *)shift_pointer((uint32_t)tx_buff_uart2_temp_noshift,32)));
 	tx_buff_uart2_temp = (uint8_t *)((uint32_t)tx_buff_uart2_temp|0x80000000);
+	}
 	if(tx_buff_uart2_temp_noshift==0) return;
 	
 	tx_buff_uart2_temp[0]='@';
@@ -553,7 +555,7 @@ void code_protocol_ack(uint8_t  x_xor,uint8_t len,uint8_t *buff,uint8_t type)  /
 	
 	SEND_data();
 	
-	if(tx_buff_uart2_temp_noshift) free(tx_buff_uart2_temp_noshift);
+	//if(tx_buff_uart2_temp_noshift) free(tx_buff_uart2_temp_noshift);
 }
 
 void protocol_D8_D9_command_time_dealwith(void)  //1// 1ms run one

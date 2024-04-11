@@ -375,7 +375,7 @@ int BackupDeviceData(void)
 	Image_Buf = (uint8_t *)(shift_pointer((uint32_t)Image_Buf,32)+32);
 	Image_Buf = (uint8_t *)((uint32_t)Image_Buf|0x80000000);
 	}
-	if(Image_Buf==0)
+	if(Image_Buf_bak==0)
 	{
 		return 1;
 	}
@@ -504,7 +504,7 @@ int BackupDeviceData(void)
 //			}
 //		}
 
-    if(Image_Buf)  {free(Image_Buf_bak);Image_Buf=0;Image_Buf_bak=0;}
+    if(Image_Buf_bak)  {free(Image_Buf_bak);Image_Buf=0;Image_Buf_bak=0;}
 		return 1;
 }
 

@@ -895,8 +895,8 @@ void power_on_logo(void)
 
 void MEM_CLEAR(void)
 {
-	if(bmpBuf_kkk!=0) {free(bmpBuf_kkk_bak);bmpBuf_kkk=0;bmpBuf_kkk_bak=0;}
-	 if(Image_Buf!=0)  {free(Image_Buf_bak);Image_Buf=0;Image_Buf_bak=0;}
+	if(bmpBuf_kkk_bak!=0) {free(bmpBuf_kkk_bak);bmpBuf_kkk=0;bmpBuf_kkk_bak=0;}
+	 if(Image_Buf_bak!=0)  {free(Image_Buf_bak);Image_Buf=0;Image_Buf_bak=0;}
 	//if(Tp_Image_Buf) free(Tp_Image_Buf);
 }
 

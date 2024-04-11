@@ -776,7 +776,7 @@ int cpoy_file(char *pSrc, char *pDst)
 	bmpBuf_kkk = 	(uint8_t *)(shift_pointer((uint32_t)bmpBuf_kkk,32)+32);
 	bmpBuf_kkk = (uint8_t *)((uint32_t)bmpBuf_kkk|0x80000000	);
 	}
-	if(bmpBuf_kkk==0)
+	if(bmpBuf_kkk_bak==0)
 	{
 		#ifdef SYSUARTPRINTF_p
 	 sysprintf("bmpBuf_kkk = %08X,bmpBuf_kkk_bak= %08X, malloc NG\r\n",bmpBuf_kkk,bmpBuf_kkk_bak);
