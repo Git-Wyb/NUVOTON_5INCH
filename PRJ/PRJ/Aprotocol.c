@@ -1544,7 +1544,7 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 					break;
 				case '1':
 					if(buff[5]!='*') return 0;//��ֹ�ļ�����1λҲ����
-					get_vbat_ad_value(); 
+				//	get_vbat_ad_value(); 
 				 	if((systerm_error_status.bits.lse_error==1) || (systerm_error_status.bits.rtc_no_bat_after_no_set)) //if(0)  //if(SYSTEM_ERR_STATUS->bits.VBAT_error==1)	//��ǰΪRTCû�е�
 					{
 						ack_buf[0] = 0;

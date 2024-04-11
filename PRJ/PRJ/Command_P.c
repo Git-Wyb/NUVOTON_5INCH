@@ -956,7 +956,7 @@ int cpoy_file(char *pSrc, char *pDst)
 						*(uint8_t *)(Tp_Image_Buf+(Tp_oneline_long/3)*2-(i/3)*2-2) =Tp_lcdlow;	
 						*(uint8_t *)(Tp_Image_Buf+(Tp_oneline_long/3)*2-(i/3)*2-1) =Tp_lcdhigh;
 						#ifdef  SYSUARTPRINTF
-					   sysprintf("Tp_lcdlow=%d,Tp_lcdhigh=%d\r\n",Tp_lcdlow,Tp_lcdhigh);
+					  // sysprintf("Tp_lcdlow=%d,Tp_lcdhigh=%d\r\n",Tp_lcdlow,Tp_lcdhigh);
 					#endif
 						//	Image_Buf[i -i/3] =Tp_lcdlow;	
 						//	Image_Buf[i -i/3+1]=Tp_lcdhigh;

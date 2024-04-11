@@ -899,7 +899,7 @@ void rtc_init(void)
 {
 	//Ê¹ÄÜRECÊ±ÖÓ
 	  get_vbat_ad_value();
-	  if(systerm_error_status.bits.lse_error==0)
+	  if((systerm_error_status.bits.lse_error==0)&&((READ_WORKMODE==WORK_FUNCTION)))
 		{
 	
     RTC_EnableClock(TRUE);
@@ -907,12 +907,23 @@ void rtc_init(void)
     RTC_Init();
 	
 	  RTC_Read(RTC_CURRENT_TIME,&pwr_on_time_ground);
+			
+			#ifdef  SYSUARTPRINTF  
+				sysprintf("SYS_TIME=%d,%d,%d,%d,%d,%d\r\n",pwr_on_time_ground.u32Year,pwr_on_time_ground.u32cMonth,pwr_on_time_ground.u32cDay,pwr_on_time_ground.u32cHour
+			,pwr_on_time_ground.u32cMinute,pwr_on_time_ground.u32cSecond);
+			#endif
+			
 		///RTC_ground_to_app(&pwr_on_time_ground,&pwr_on_time_app);
 	  if((pwr_on_time_ground.u32Year==0x7d5)&&(pwr_on_time_ground.u32cMonth==1)&&(pwr_on_time_ground.u32cDay==1)&&
 			(pwr_on_time_ground.u32cHour == 0)&&(pwr_on_time_ground.u32cMinute==0)&&(pwr_on_time_ground.u32cSecond==0))
 		{
 			rtc_time_deinit();
 		}
+//		else if((pwr_on_time_ground.u32cMonth>12)||(pwr_on_time_ground.u32cDay>31)||(pwr_on_time_ground.u32cHour>23)||(pwr_on_time_ground.u32cMinute>59)||(pwr_on_time_ground.u32cSecond>59))
+//		{
+//			rtc_time_deinit();
+//		}	
+		
 	  }
 }
 
