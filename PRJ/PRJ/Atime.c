@@ -344,7 +344,7 @@ void OneSecondProcess(void)
 					
 				// ClearLayerData(3);//«Â≥˝œ‘ æ«¯”Ú
 				// Backlinght_Control_Init_HARDV4(128);
-				if((READ_PIN_SW1_1==SW_ON)&&(READ_PIN_SW1_2==SW_ON)&&(READ_PIN_SW1_3==SW_ON)&&(READ_PIN_SW1_4==SW_ON)&&(READ_PIN_SW5==SW_ON)&&(READ_PIN_SW1_6==SW_ON))
+				if((READ_PIN_SW1_1==SW_ON)&&(READ_PIN_SW1_2==SW_ON)&&(READ_PIN_SW1_3==SW_ON)&&(READ_PIN_SW1_4==SW_ON)&&(READ_PIN_SW1_6==SW_ON))
 				{
 					
 					NAND_CHECK = NAND_BMP_Read_checksum();
