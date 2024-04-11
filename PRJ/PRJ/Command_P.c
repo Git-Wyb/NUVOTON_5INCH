@@ -431,12 +431,13 @@ uint8_t SDRAM_TO_NANDFLASH(uint32_t x_sdram_start,uint32_t x_nandflash_start,uin
 		if(WriteReadAddr.Page %64 == 0)
 			NAND_EraseBlock(WriteReadAddr.Page/64);
 		
-		for(x_delay = 0;x_delay<2048;x_delay++)
-		{
-			TxBuffer[x_delay] = *(__IO uint8_t*) (x_sdram_start+Tp_i*NAND_PAGE_SIZE+x_delay);
-		}
+//		for(x_delay = 0;x_delay<2048;x_delay++)
+//		{
+//			TxBuffer[x_delay] = *(__IO uint8_t*) (x_sdram_start+Tp_i*NAND_PAGE_SIZE+x_delay);
+//		}
+		//memcpy();
 		
-	//	memcpy(TxBuffer,(void *)(x_sdram_start+Tp_i*NAND_PAGE_SIZE),2048);
+		memcpy(TxBuffer,(void *)(x_sdram_start+Tp_i*NAND_PAGE_SIZE),2048);
 		//for(x_delay = 0;x_delay<2048;x_delay++);
 		
 		if(NAND_WritePage(WriteReadAddr.Page,0,TxBuffer, NAND_PAGE_SIZE))

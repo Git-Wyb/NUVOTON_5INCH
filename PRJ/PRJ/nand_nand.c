@@ -269,10 +269,11 @@ u8 NAND_WritePage(u32 PageNum,u16 ColNum,u8 *pBuffer,u16 NumByteToWrite)
 	outpw(REG_NANDADDR, ((inpw(REG_NANDADDR)&0x7fffff00))|((u8)(PageNum>>8)));
 	outpw(REG_NANDADDR, ((inpw(REG_NANDADDR)&0x7fffff00))|((u8)(PageNum>>16)));
 	outpw(REG_NANDADDR, ((inpw(REG_NANDADDR)&0xffffff00)|0x80000000)|((u8)(PageNum>>24)));
-	delay_us(30);
+	delay_us(1);
+	
 	for(Tp_i=0;Tp_i<NumByteToWrite;Tp_i++)
-	  outpw(REG_NANDDATA,(inpw(REG_NANDDATA)&0xffffff00)|pBuffer[Tp_i]);
-	//delay_us(300);
+	   outpw(REG_NANDDATA,pBuffer[Tp_i]);
+	
 	outpw(REG_NANDCMD,inpw(REG_NANDCMD)&0xffffff00|(uint8_t)NAND_CMD_PAGEPROG);
 	
 	//while(nuc970_dev_ready()==0);

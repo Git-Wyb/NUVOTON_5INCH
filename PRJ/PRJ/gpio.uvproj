@@ -420,11 +420,6 @@
           <GroupName>src</GroupName>
           <Files>
             <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\main.c</FilePath>
-            </File>
-            <File>
               <FileName>DISPLAY.C</FileName>
               <FileType>1</FileType>
               <FilePath>.\DISPLAY.C</FilePath>
@@ -433,6 +428,11 @@
               <FileName>diskio.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\diskio.c</FilePath>
+            </File>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\main.c</FilePath>
             </File>
             <File>
               <FileName>Aprotocol.c</FileName>
