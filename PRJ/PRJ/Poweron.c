@@ -71,6 +71,11 @@ void RTC_ground_to_app(RTC_TIME_DATA_T *ground,TIME_TYPE *app)
 	app->hour = DECTOHEX(ground->u32cHour);
 	app->minute = DECTOHEX(ground->u32cMinute);
 	app->second = DECTOHEX(ground->u32cSecond);
+  if((app->year>0x99)||(app->month>0x12)||(app->day>0x31)||(app->hour>0x23)||(app->minute>0x59)||(app->second>0x59))
+	{
+		systerm_error_status.bits.lse_error=1;
+	}
+		
 	}
 	else
 	{
