@@ -759,9 +759,18 @@ int cpoy_file(char *pSrc, char *pDst)
 	static uint8_t  Tp_high;
 	uint32_t Tp_i;
 	static uint32_t Tp_addr;
+	
+	#ifdef SYSUARTPRINTF_p
+	 sysprintf("cpoy_file_start\r\n");
+	#endif
+	
+	
     sysFlushCache(I_D_CACHE);
 	if(bmpBuf_kkk==0)
 	{
+	#ifdef SYSUARTPRINTF_p
+	 sysprintf("bmpBuf_kkk = %08X,bmpBuf_kkk_bak= %08X,malloc\r\n",bmpBuf_kkk,bmpBuf_kkk_bak);
+	#endif	
 	bmpBuf_kkk = (uint8_t *)(((uint32_t )malloc(IMAGE_BUFFER_SIZE+64)));
 	bmpBuf_kkk_bak = bmpBuf_kkk;
 	bmpBuf_kkk = 	(uint8_t *)(shift_pointer((uint32_t)bmpBuf_kkk,32)+32);
@@ -769,8 +778,15 @@ int cpoy_file(char *pSrc, char *pDst)
 	}
 	if(bmpBuf_kkk==0)
 	{
+		#ifdef SYSUARTPRINTF_p
+	 sysprintf("bmpBuf_kkk = %08X,bmpBuf_kkk_bak= %08X, malloc NG\r\n",bmpBuf_kkk,bmpBuf_kkk_bak);
+	 #endif
 		return 1;
 	}
+	
+	#ifdef SYSUARTPRINTF_p
+	 sysprintf("bmpBuf_kkk = %08X,bmpBuf_kkk_bak= %08X, malloc OK\r\n",bmpBuf_kkk,bmpBuf_kkk_bak);
+	 #endif
 	
 //	if(Tp_Image_Buf==0)
 //	{
@@ -784,14 +800,26 @@ int cpoy_file(char *pSrc, char *pDst)
 //	}
 		if(Tp_Image_Buf_noshift==0)
 	{
+		
+		#ifdef SYSUARTPRINTF_p
+	  sysprintf("Tp_Image_Buf = %08X,Tp_Image_Buf_noshift= %08X,malloc\r\n",Tp_Image_Buf,Tp_Image_Buf_noshift);
+  	#endif	
 		Tp_Image_Buf_noshift = (uint8_t *)(((uint32_t )malloc(1600)+64));
 		Tp_Image_Buf = 	(uint8_t *)(shift_pointer((uint32_t)Tp_Image_Buf_noshift,32)+32);
 	  Tp_Image_Buf = (uint8_t *)((uint32_t)Tp_Image_Buf|0x80000000	);
 	}
 	if(Tp_Image_Buf_noshift==0)
 	{
+		#ifdef SYSUARTPRINTF_p
+	  sysprintf("Tp_Image_Buf = %08X,Tp_Image_Buf_noshift= %08X, malloc NG\r\n",Tp_Image_Buf,Tp_Image_Buf_noshift);
+	  #endif
 		return 1;
 	}
+	
+	#ifdef SYSUARTPRINTF_p
+	 sysprintf("Tp_Image_Buf = %08X,Tp_Image_Buf_noshift= %08X, malloc OK\r\n",Tp_Image_Buf,Tp_Image_Buf_noshift);
+	 #endif
+	
 	gs_CpyInfo.total++;
 	
 		if((USB_IMAGE_TYPE=='0')||(USB_IMAGE_TYPE=='1')||(USB_IMAGE_TYPE=='2')||(USB_IMAGE_TYPE=='3'))
@@ -800,10 +828,16 @@ int cpoy_file(char *pSrc, char *pDst)
 	if((USB_IMAGE_TYPE=='A')||(USB_IMAGE_TYPE=='B')||(USB_IMAGE_TYPE=='C')||(USB_IMAGE_TYPE=='D')||(USB_IMAGE_TYPE=='E'))
 	x_order = (uint16_t)htoi(pSrc+3); 
 	
-	
+		#ifdef SYSUARTPRINTF_p
+	 sysprintf("bmp_name=%04X.bmp\r\n",x_order);
+	#endif
 	
 	result = f_open(&fsrc, pSrc, FA_READ);
+	
+	#ifdef SYSUARTPRINTF
 	sysprintf("f_open result=%d\r\n",result);
+	#endif
+	
 	if(result!=FR_OK)
 	{
 		systerm_error_status.bits.image_filenobmp_error=1;
@@ -1076,8 +1110,43 @@ int cpoy_file(char *pSrc, char *pDst)
 	#endif
 	//if(bmpBuf_kkk) free(bmpBuf_kkk);
   //if(Tp_Image_Buf) free(Tp_Image_Buf);
-  if(bmpBuf_kkk) {free(bmpBuf_kkk_bak);bmpBuf_kkk=0;}
-  if(Tp_Image_Buf_noshift) free(Tp_Image_Buf_noshift);
+  if(bmpBuf_kkk) 
+  {
+		#ifdef SYSUARTPRINTF_p
+	 sysprintf("bmpBuf_kkk=%08X,bmpBuf_kkk_bak=%08X, free\r\n",bmpBuf_kkk,bmpBuf_kkk_bak);
+	 #endif
+		free(bmpBuf_kkk_bak);
+		bmpBuf_kkk=0;
+		
+	}
+	else
+	{
+		#ifdef SYSUARTPRINTF_p
+	 sysprintf("bmpBuf_kkk=%08X,bmpBuf_kkk_bak=%08X, not free\r\n",bmpBuf_kkk,bmpBuf_kkk_bak);
+	 #endif
+	}
+	
+  if(Tp_Image_Buf_noshift) 
+	{	
+		#ifdef SYSUARTPRINTF_p
+	 sysprintf("Tp_Image_Buf=%08X,Tp_Image_Buf_noshift=%08X, free\r\n",Tp_Image_Buf,Tp_Image_Buf_noshift);
+	 #endif
+	free(Tp_Image_Buf_noshift);
+	}
+	else
+	{
+		#ifdef SYSUARTPRINTF_p
+	 sysprintf("Tp_Image_Buf=%08X,Tp_Image_Buf_noshift=%08X, not free\r\n",Tp_Image_Buf,Tp_Image_Buf_noshift);
+	 #endif
+	}
+	
+	
+	#ifdef SYSUARTPRINTF_p
+	 sysprintf("cpoy_file_end\r\n");
+	#endif
+	
+	
+	
 	return 0;
 }
 

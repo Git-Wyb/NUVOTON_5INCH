@@ -261,7 +261,8 @@ INT32 sysInitializeUART(void)
 void sysprintf(PINT8 pcStr,...)
 {
 
-#ifdef  SYSUARTPRINTF  
+//#ifdef  SYSUARTPRINTF  
+#if defined SYSUARTPRINTF || defined SYSUARTPRINTF_p
 	INT8  *argP;
 
 

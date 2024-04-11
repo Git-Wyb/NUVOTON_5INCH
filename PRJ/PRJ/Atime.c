@@ -69,20 +69,43 @@ void NAND_BMP_Read_checksum(void)
 		uint32_t Tp_addr;
 	  uint32_t Tp_bmp_TAB[3]={0};
 		
+		#ifdef SYSUARTPRINTF_p
+	 sysprintf("Read_checksum_start\r\n");
+	#endif
 		
 	CHECK_SUM_NAND = 0;
 	
 	if(bmpBuf_kkk==0)
 	{
+	#ifdef SYSUARTPRINTF_p
+	 sysprintf("bmpBuf_kkk=%08X, malloc\r\n",bmpBuf_kkk);
+	 #endif	
+		
 	bmpBuf_kkk = (uint8_t *)(((uint32_t )malloc(IMAGE_BUFFER_SIZE+64)));
 	bmpBuf_kkk_bak = bmpBuf_kkk;
 	bmpBuf_kkk = 	(uint8_t *)(shift_pointer((uint32_t)bmpBuf_kkk,32)+32);
 	bmpBuf_kkk = (uint8_t *)((uint32_t)bmpBuf_kkk|0x80000000	);
 	}
+	else
+	{
+			#ifdef SYSUARTPRINTF_p
+	 sysprintf("bmpBuf_kkk=%08X,bmpBuf_kkk_bak=%08X, not malloc\r\n",bmpBuf_kkk,bmpBuf_kkk_bak);
+	 #endif	
+	}
+	
 	if(bmpBuf_kkk==0)
 	{
+		#ifdef SYSUARTPRINTF_p
+	 sysprintf("bmpBuf_kkk=%08X,bmpBuf_kkk_bak=%08X, malloc NG\r\n",bmpBuf_kkk,bmpBuf_kkk_bak);
+	 #endif	
 		return;
 	}	
+	else
+	{
+		#ifdef SYSUARTPRINTF_p
+	 sysprintf("bmpBuf_kkk=%08X,bmpBuf_kkk_bak=%08X, malloc ok\r\n",bmpBuf_kkk,bmpBuf_kkk_bak);
+	 #endif	
+	}
 		
 	while(Tp_i<0XFF00)
 	{
@@ -95,11 +118,27 @@ void NAND_BMP_Read_checksum(void)
 	//sprintf(display_checksum,"NAND Chechsum = 0x%08X",CHECK_SUM_NAND);
   //LCD_DisplayStringLine(30,display_checksum);
 	
-	if(bmpBuf_kkk) {free(bmpBuf_kkk_bak);bmpBuf_kkk=0;}
+	if(bmpBuf_kkk) 
+  {
+		#ifdef SYSUARTPRINTF_p
+	 sysprintf("bmpBuf_kkk=%08X,bmpBuf_kkk_bak=%08X, free\r\n",bmpBuf_kkk,bmpBuf_kkk_bak);
+	 #endif	
+	free(bmpBuf_kkk_bak);
+	bmpBuf_kkk=0;
+	}
+	else
+  {
+		#ifdef SYSUARTPRINTF_p
+	 sysprintf("bmpBuf_kkk=%08X,bmpBuf_kkk_bak=%08X, not free\r\n",bmpBuf_kkk,bmpBuf_kkk_bak);
+	 #endif	
+	}
 	
 	
    checksum_flag = 1;
 	
+	#ifdef SYSUARTPRINTF_p
+	 sysprintf("Read_checksum_end\r\n");
+	#endif
 	
 }
 

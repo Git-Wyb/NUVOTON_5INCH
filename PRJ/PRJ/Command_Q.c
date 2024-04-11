@@ -43,6 +43,11 @@ int CpyNandToSdramCMd(char cmd, uint16_t *fileName,int cnt)
 			//	sysSetGlobalInterrupt(DISABLE_ALL_INTERRUPTS);
 				free((void*)(((*(uint32_t *)(SDRAM_Q_TAB + 8 *Tp_idx + 4))&~0x80000000)));
 			//	sysSetGlobalInterrupt(ENABLE_ALL_INTERRUPTS);
+				#ifdef SYSUARTPRINTF_p
+				sysprintf("clear Q=%X\r\n",Tp_idx);
+				sysprintf("free addr=%x\r\n",(((*(uint32_t *)(SDRAM_Q_TAB + 8 *Tp_idx + 4))&~0x80000000))); 
+				#endif
+				
 				#ifdef  SYSUARTPRINTF
 				sysprintf("clear Q=%X\r\n",Tp_idx);
 				sysprintf("free addr=%x\r\n",*(uint32_t *)(SDRAM_Q_TAB + 8 *Tp_idx + 4)); 
@@ -70,8 +75,17 @@ int CpyNandToSdramCMd(char cmd, uint16_t *fileName,int cnt)
 		   }
 		
 			gs_Sdram_wrtie_pos = ((uint32_t )malloc((size_tab[0]+size_tab[0]%2 )* size_tab[1] * 2+64));
+			 #ifdef SYSUARTPRINTF_p
+			 sysprintf("Q_fileName=%04X,gs_Sdram_wrtie_pos_noshift=%08X\r\n",*fileName,gs_Sdram_wrtie_pos); 
+			 #endif
+			 
 			 //free((void *)gs_Sdram_wrtie_pos);
 			 *(uint32_t *)(SDRAM_Q_SHIFT_TAB + 4 **fileName ) = (32+shift_pointer(gs_Sdram_wrtie_pos,32))|0x80000000;
+			 
+			  #ifdef SYSUARTPRINTF_p
+			 sysprintf("Q_fileName=%04X,gs_Sdram_wrtie_pos_shift=%08X\r\n",*(uint32_t *)(SDRAM_Q_SHIFT_TAB + 4 **fileName )); 
+			 #endif
+			 
 		//	gs_Sdram_wrtie_pos =  shift_pointer(gs_Sdram_wrtie_pos,32);
 		//	gs_Sdram_wrtie_pos|=0x80000000;
 			if(gs_Sdram_wrtie_pos==NULL)//·Å²»ÏÂ

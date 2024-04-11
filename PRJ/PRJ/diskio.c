@@ -85,7 +85,10 @@ DRESULT disk_read (
 ////				}
 
         fatfs_win_buff = (BYTE *)((unsigned int)fatfs_win_buff_pool | 0x80000000);
+			  #ifdef SYSUARTPRINTF
 				sysprintf("fatfs_win_buff=0x%8x\r\n",fatfs_win_buff); 
+			  #endif
+			
         ret = (DRESULT) usbh_umas_read(pdrv, sector, count, fatfs_win_buff);
         memcpy(buff, fatfs_win_buff, count * sec_size);
     }
