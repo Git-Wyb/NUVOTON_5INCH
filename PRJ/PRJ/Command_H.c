@@ -115,13 +115,22 @@ void delay_us1(int usec)
 void set_download_task(uint8_t a)
 {
 	download.task=a;
+	if(tx_buff_uart2_noshift==0)
+	{
 	tx_buff_uart2_noshift = malloc(TX_BUFF_UART2_MAX_LEN+64);
 	tx_buff_uart2 = (uint8_t *)((32+(uint8_t   *)shift_pointer((uint32_t)tx_buff_uart2_noshift,32)));
 	tx_buff_uart2 = (uint8_t *)((uint32_t)tx_buff_uart2|0x80000000);
+	}
 	
+	if(rrx_buff_uart2_noshift==0)
+	{
 	rrx_buff_uart2_noshift = malloc(RX_BUFF_UART2_MAX_LEN+64);
 	rrx_buff_uart2 = (uint8_t *)((32+(uint8_t   *)shift_pointer((uint32_t)rrx_buff_uart2_noshift,32)));
 	rrx_buff_uart2 = (uint8_t *)((uint32_t)rrx_buff_uart2|0x80000000);
+	}
+	
+	if((tx_buff_uart2_noshift==0)||(rrx_buff_uart2_noshift==0)) download.task=0;
+		
 }
 
 //这个是专门下程序的接口
@@ -1004,8 +1013,8 @@ over_flag:
 		}
 		UART_TX_REAL = 0;
 		UART_TX_WANT = 0;
-		if(tx_buff_uart2_noshift) free(tx_buff_uart2_noshift);
-		if(rrx_buff_uart2_noshift) free(rrx_buff_uart2_noshift);
+		if(tx_buff_uart2_noshift) {free(tx_buff_uart2_noshift);tx_buff_uart2_noshift=0;tx_buff_uart2=0;}
+		if(rrx_buff_uart2_noshift) {free(rrx_buff_uart2_noshift);rrx_buff_uart2_noshift=0;rrx_buff_uart2=0;}
 		
 		Touch_int_enable();
 		 download.start =0;	

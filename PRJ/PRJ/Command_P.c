@@ -1115,8 +1115,9 @@ int cpoy_file(char *pSrc, char *pDst)
 		#ifdef SYSUARTPRINTF_p
 	 sysprintf("bmpBuf_kkk=%08X,bmpBuf_kkk_bak=%08X, free\r\n",bmpBuf_kkk,bmpBuf_kkk_bak);
 	 #endif
-		free(bmpBuf_kkk_bak);
-		bmpBuf_kkk=0;
+	//	free(bmpBuf_kkk_bak);
+	//	bmpBuf_kkk=0;
+	//	bmpBuf_kkk_bak=0;
 		
 	}
 	else
@@ -1131,7 +1132,9 @@ int cpoy_file(char *pSrc, char *pDst)
 		#ifdef SYSUARTPRINTF_p
 	 sysprintf("Tp_Image_Buf=%08X,Tp_Image_Buf_noshift=%08X, free\r\n",Tp_Image_Buf,Tp_Image_Buf_noshift);
 	 #endif
-	free(Tp_Image_Buf_noshift);
+	//free(Tp_Image_Buf_noshift);
+	//	Tp_Image_Buf_noshift =0;
+	//	Tp_Image_Buf=0;
 	}
 	else
 	{

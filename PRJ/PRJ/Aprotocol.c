@@ -652,7 +652,9 @@ void COMM_check(void)
 			   if(number>=3)//��ʾ�����Ѿ�����
 				 {
 					 COMM_STEP = LEN_JUDGE;
+					 #ifdef SYSUARTPRINTF
 					 sysprintf("COMM_STEP = LEN_JUDGE\r\n");
+					 #endif
 					 return;
 				 }
 				 if(get_timego(WAIT_LEN_TIMER)>3)//����ֵ38400bps 3��B ����ֵ625us
@@ -1984,6 +1986,10 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
           	Temp_logodata_BUFFER = 32+shift_pointer(Temp_logodata_BUFFER,32);
 	          Temp_logodata_BUFFER = Temp_logodata_BUFFER|0X80000000;
 						 if(Temp_logodata_BUFFER) memset((void *)Temp_logodata_BUFFER,0,(0x20000));
+							
+							#ifdef SYSPRINTF_p
+							sysprintf("logodata_sdrambuffer_addr_arry = %08X,logodata_sdrambuffer_addr_arry_bak= %08X,Icommand_mallco\r\n",logodata_sdrambuffer_addr_arry[Tp_field],logodata_sdrambuffer_addr_arry_bak[Tp_field]);
+							#endif
 						}
 						else
 						{

@@ -504,7 +504,7 @@ int BackupDeviceData(void)
 //			}
 //		}
 
-    if(Image_Buf)  {free(Image_Buf_bak);Image_Buf=0;}
+    if(Image_Buf)  {free(Image_Buf_bak);Image_Buf=0;Image_Buf_bak=0;}
 		return 1;
 }
 

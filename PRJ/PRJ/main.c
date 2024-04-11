@@ -96,6 +96,11 @@ uint32_t get_ticks(void)
 FRESULT TP_res;
 extern uint32_t time1ms_count;
 uint32_t Tp_data = 0;
+#ifdef SYSUARTPRINTF_p
+
+extern  uint8_t *bmpBuf_kkk,*bmpBuf_kkk_bak;
+#endif
+
 /******************************������************************/
 int main(void)
 {
@@ -330,7 +335,20 @@ int main(void)
 	 }
 	 #endif
 	 
-	
+	#ifdef SYSUARTPRINTF_p
+//	 while(1)
+//	 {
+//	 	bmpBuf_kkk = (uint8_t *)(((uint32_t )malloc(2048+64)));
+//	 bmpBuf_kkk_bak = bmpBuf_kkk;
+//	bmpBuf_kkk = 	(uint8_t *)(shift_pointer((uint32_t)bmpBuf_kkk,32)+32);
+//	bmpBuf_kkk = (uint8_t *)((uint32_t)bmpBuf_kkk|0x80000000	);
+//	 sysprintf("bmpBuf_kkk = %08X,bmpBuf_kkk_bak= %08X,mallco\r\n",bmpBuf_kkk,bmpBuf_kkk_bak);
+//		 
+//		if(bmpBuf_kkk_bak!=0) free(bmpBuf_kkk_bak);
+//	 sysprintf("bmpBuf_kkk = %08X,bmpBuf_kkk_bak= %08X,free\r\n",bmpBuf_kkk,bmpBuf_kkk_bak);
+//		 
+//	 }
+		 #endif
 		
 //				sysprintf("LCD_FRAME1_BUFFER=%X,%X,%X,%X,%X\r\n",
 //	*(uint8_t *)(display_layer_sdram.LCD_FRAME1_BUFFER),*(uint8_t *)(display_layer_sdram.LCD_FRAME1_BUFFER+1), 

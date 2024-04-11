@@ -83,7 +83,7 @@ int CpyNandToSdramCMd(char cmd, uint16_t *fileName,int cnt)
 			 *(uint32_t *)(SDRAM_Q_SHIFT_TAB + 4 **fileName ) = (32+shift_pointer(gs_Sdram_wrtie_pos,32))|0x80000000;
 			 
 			  #ifdef SYSUARTPRINTF_p
-			 sysprintf("Q_fileName=%04X,gs_Sdram_wrtie_pos_shift=%08X\r\n",*(uint32_t *)(SDRAM_Q_SHIFT_TAB + 4 **fileName )); 
+			 sysprintf("gs_Sdram_wrtie_pos_shift=%08X\r\n",*(uint32_t *)(SDRAM_Q_SHIFT_TAB + 4 **fileName )); 
 			 #endif
 			 
 		//	gs_Sdram_wrtie_pos =  shift_pointer(gs_Sdram_wrtie_pos,32);

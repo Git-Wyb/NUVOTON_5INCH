@@ -10,12 +10,119 @@
 #include "BSP_init.h"
 #include "rtc.h"
 #include "etimer.h"
+#include "lcd.h"
 
 extern uint32_t logodata_sdrambuffer_addr_arry[16];
 extern  BADMANAGE_TAB_TYPE_U badmanage_str[1];
 extern AreaConfig gs_AreaInfo[16],Tp_gs_AreaInfo[16];
 extern uint8_t* BaseData_ARR;
 extern FieldArea3All_cyw *pArea3;
+extern uint32_t CHECK_SUM_NAND;
+uint8_t checksum_flag=0;
+extern uint8_t *bmpBuf_kkk,*bmpBuf_kkk_bak;
+uint32_t shift_pointer(uint32_t ptr, uint32_t align);
+
+
+void Display_checksum(void)
+{
+		char Tp_version[9]={0};
+	     if(checksum_flag == 1)
+			 {
+
+	        SetZuobiao(10, 400 + 60);
+		      lcd_printf_new("NAND Chechsum = 0x%08X         ",CHECK_SUM_NAND);
+					SetZuobiao(10, 400 + 20);
+					memcpy(Tp_version,(char *)(BaseData_ARR+BMP_Ver_index*9),8);
+					lcd_printf_new("BMP VERSION   = %8s         ",Tp_version);
+					SetZuobiao(10, 400 + 40);
+					memcpy(Tp_version,(char *)(BaseData_ARR+Master_Ver_index*9),8);
+					lcd_printf_new("MAIN VERSION   = %8s         ",Tp_version);
+					SetZuobiao(10, 400);
+					memcpy(Tp_version,(char *)(BaseData_ARR+LCD_Ver_index*9),8);
+					lcd_printf_new("LCD VERSION   = %8s         ",Tp_version);
+			 }
+}
+
+
+void NAND_BMP_Read_checksum(void)
+{
+	uint16_t Tp_i=0;
+		uint32_t Tp_addr;
+	  uint32_t Tp_bmp_TAB[3]={0};
+		
+		#ifdef SYSUARTPRINTF_p
+	 sysprintf("Read_checksum_start\r\n");
+	#endif
+		
+	CHECK_SUM_NAND = 0;
+	
+	if(bmpBuf_kkk==0)
+	{
+	#ifdef SYSUARTPRINTF_p
+	 sysprintf("bmpBuf_kkk=%08X, malloc\r\n",bmpBuf_kkk);
+	 #endif	
+		
+	bmpBuf_kkk = (uint8_t *)(((uint32_t )malloc(IMAGE_BUFFER_SIZE+64)));
+	bmpBuf_kkk_bak = bmpBuf_kkk;
+	bmpBuf_kkk = 	(uint8_t *)(shift_pointer((uint32_t)bmpBuf_kkk,32)+32);
+	bmpBuf_kkk = (uint8_t *)((uint32_t)bmpBuf_kkk|0x80000000	);
+	}
+	else
+	{
+			#ifdef SYSUARTPRINTF_p
+	 sysprintf("bmpBuf_kkk=%08X,bmpBuf_kkk_bak=%08X, not malloc\r\n",bmpBuf_kkk,bmpBuf_kkk_bak);
+	 #endif	
+	}
+	
+	if(bmpBuf_kkk==0)
+	{
+		#ifdef SYSUARTPRINTF_p
+	 sysprintf("bmpBuf_kkk=%08X,bmpBuf_kkk_bak=%08X, malloc NG\r\n",bmpBuf_kkk,bmpBuf_kkk_bak);
+	 #endif	
+		return;
+	}	
+	else
+	{
+		#ifdef SYSUARTPRINTF_p
+	 sysprintf("bmpBuf_kkk=%08X,bmpBuf_kkk_bak=%08X, malloc ok\r\n",bmpBuf_kkk,bmpBuf_kkk_bak);
+	 #endif	
+	}
+		
+	while(Tp_i<0XFF00)
+	{
+	   Tp_addr = READ_TAB_FROMSDRAM(Tp_i,1,Tp_bmp_TAB);
+	   Tp_i++;
+		 if(Tp_addr!=0Xffffffff)
+		 check_sum_nand(Tp_addr*2048,Tp_bmp_TAB[0],Tp_bmp_TAB[1]);
+	}
+	
+	//sprintf(display_checksum,"NAND Chechsum = 0x%08X",CHECK_SUM_NAND);
+  //LCD_DisplayStringLine(30,display_checksum);
+	
+	if(bmpBuf_kkk) 
+  {
+		#ifdef SYSUARTPRINTF_p
+	 sysprintf("bmpBuf_kkk=%08X,bmpBuf_kkk_bak=%08X, free\r\n",bmpBuf_kkk,bmpBuf_kkk_bak);
+	 #endif	
+	free(bmpBuf_kkk_bak);
+		bmpBuf_kkk_bak=0;
+	bmpBuf_kkk=0;
+	}
+	else
+  {
+		#ifdef SYSUARTPRINTF_p
+	 sysprintf("bmpBuf_kkk=%08X,bmpBuf_kkk_bak=%08X, not free\r\n",bmpBuf_kkk,bmpBuf_kkk_bak);
+	 #endif	
+	}
+	
+	
+   checksum_flag = 1;
+	
+	#ifdef SYSUARTPRINTF_p
+	 sysprintf("Read_checksum_end\r\n");
+	#endif
+	
+}
 
 
 //ERR OUTPUT 1HZ
