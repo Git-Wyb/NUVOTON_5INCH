@@ -572,12 +572,12 @@ void SDRAM_DATA_INIT(void)
 		#endif
 	 //free(RxBuffer_noshift);
 	 
-	 TxBuffer = (uint8_t  *)(uint32_t )(malloc((NAND_PAGE_SIZE)+64));
-	 TxBuffer = (uint8_t  *)(uint32_t )((32+shift_pointer((uint32_t)TxBuffer,32))|0x80000000);
-	  memset(TxBuffer,0,NAND_PAGE_SIZE);
-	 	#ifdef  SYSUARTPRINTF  
-		sysprintf("TxBuffer mallco=0x%x\r\n",TxBuffer);
-		#endif
+//	 TxBuffer = (uint8_t  *)(uint32_t )(malloc((NAND_PAGE_SIZE)+64));
+//	 TxBuffer = (uint8_t  *)(uint32_t )((32+shift_pointer((uint32_t)TxBuffer,32))|0x80000000);
+//	  memset(TxBuffer,0,NAND_PAGE_SIZE);
+//	 	#ifdef  SYSUARTPRINTF  
+//		sysprintf("TxBuffer mallco=0x%x\r\n",TxBuffer);
+//		#endif
 	
 	
 	BaseData_ARR =  (uint8_t *)((uint32_t)malloc((164*9)+64));

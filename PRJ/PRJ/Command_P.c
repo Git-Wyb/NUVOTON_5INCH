@@ -31,7 +31,7 @@ extern uint8_t  USB_HAS_USABLE_IMG;
  BADMANAGE_TAB_TYPE_U badmanage_str[1]={0};
  
 uint8_t *RxBuffer =0;//[NAND_PAGE_SIZE];
-uint8_t *TxBuffer =0;//[NAND_PAGE_SIZE];
+//uint8_t *TxBuffer =0;//[NAND_PAGE_SIZE];
  
  uint8_t *BaseData_ARR=0;//[164][9]={0};
 extern  int gs_usb_mount_flag;
@@ -402,6 +402,8 @@ void BAD_BLOCK_MARK(uint16_t x_block)
 	
 }
 
+
+static uint8_t  TX_NEW[2048];
 uint8_t SDRAM_TO_NANDFLASH(uint32_t x_sdram_start,uint32_t x_nandflash_start,uint16_t x_block_num)
 {
 	NAND_ADDRESS_STR WriteReadAddr;
@@ -437,10 +439,10 @@ uint8_t SDRAM_TO_NANDFLASH(uint32_t x_sdram_start,uint32_t x_nandflash_start,uin
 //		}
 		//memcpy();
 		
-		memcpy(TxBuffer,(void *)(x_sdram_start+Tp_i*NAND_PAGE_SIZE),2048);
+		memcpy(TX_NEW,(void *)(x_sdram_start+Tp_i*NAND_PAGE_SIZE),2048);
 		//for(x_delay = 0;x_delay<2048;x_delay++);
 		
-		if(NAND_WritePage(WriteReadAddr.Page,0,TxBuffer, NAND_PAGE_SIZE))
+		if(NAND_WritePage(WriteReadAddr.Page,0,TX_NEW, NAND_PAGE_SIZE))
 		{
 			#ifdef  SYSUARTPRINTF 
 			sysprintf("BAD BLOCK MARK");
@@ -469,7 +471,7 @@ uint8_t SDRAM_TO_NANDFLASH(uint32_t x_sdram_start,uint32_t x_nandflash_start,uin
 		}
 		
 		NAND_ReadPage(WriteReadAddr.Page,0,RxBuffer, NAND_PAGE_SIZE);
-		if(memcmp(TxBuffer,RxBuffer,NAND_PAGE_SIZE)!=0)
+		if(memcmp(TX_NEW,RxBuffer,NAND_PAGE_SIZE)!=0)
 		{
 			#ifdef  SYSUARTPRINTF 
 			sysprintf("BAD BLOCK MARK");
