@@ -10,13 +10,14 @@
 #include "BSP_init.h"
 #include "rtc.h"
 #include "etimer.h"
-#include "lcd.h"
+#include "display.h"
 
 extern uint32_t logodata_sdrambuffer_addr_arry[16];
 extern  BADMANAGE_TAB_TYPE_U badmanage_str[1];
 extern AreaConfig gs_AreaInfo[16],Tp_gs_AreaInfo[16];
 extern uint8_t* BaseData_ARR;
 extern FieldArea3All_cyw *pArea3;
+uint32_t CHECK_SUM_NAND_1;
 extern uint32_t CHECK_SUM_NAND;
 uint8_t checksum_flag=0;
 extern uint8_t *bmpBuf_kkk,*bmpBuf_kkk_bak;
@@ -30,7 +31,7 @@ void Display_checksum(void)
 			 {
 
 	        SetZuobiao(10, 400 + 60);
-		      lcd_printf_new("NAND Chechsum = 0x%08X         ",CHECK_SUM_NAND);
+		      lcd_printf_new("NAND Chechsum = 0x%08X         ",CHECK_SUM_NAND_1);
 					SetZuobiao(10, 400 + 20);
 					memcpy(Tp_version,(char *)(BaseData_ARR+BMP_Ver_index*9),8);
 					lcd_printf_new("BMP VERSION   = %8s         ",Tp_version);
@@ -95,6 +96,8 @@ void NAND_BMP_Read_checksum(void)
 		 if(Tp_addr!=0Xffffffff)
 		 check_sum_nand(Tp_addr*2048,Tp_bmp_TAB[0],Tp_bmp_TAB[1]);
 	}
+	
+	CHECK_SUM_NAND_1 = CHECK_SUM_NAND;
 	
 	//sprintf(display_checksum,"NAND Chechsum = 0x%08X",CHECK_SUM_NAND);
   //LCD_DisplayStringLine(30,display_checksum);
