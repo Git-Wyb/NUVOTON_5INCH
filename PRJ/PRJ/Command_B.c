@@ -290,6 +290,7 @@ void send_tts_command_control(void)  //  run 1 ms 命令之间隔5ms
 //				wt588h_send_step = 1;
 //				return;
 //			}
+		
 			 	if(bak_voice_start!=bak_voice_finish)
 				{
 			send_wt588h_init(0XE0|(bak_voice_start)|0xff00); 	
@@ -301,6 +302,7 @@ void send_tts_command_control(void)  //  run 1 ms 命令之间隔5ms
 				}
 				else
 				{
+					AUDIO_AMPLIFIER_WORK;
 					sysprintf("flag_voice_end = 1\r\n");
 				send_wt588h_init((bak_file));
 				flag_voice_end =0;
@@ -345,6 +347,7 @@ void send_tts_command_control(void)  //  run 1 ms 命令之间隔5ms
 			sysprintf("wt588h_send_step = 4\r\n");
 			if(flag_voice_end == 1)
 			{
+				AUDIO_AMPLIFIER_WORK;
 				sysprintf("flag_voice_end = 1\r\n");
 				send_wt588h_init((bak_file));
 				flag_voice_end =0;
