@@ -898,9 +898,7 @@ void rtc_time_deinit(void)
 void rtc_init(void)
 {
 	//使能REC时钟
-	 // get_vbat_ad_value();
-	/////  if((systerm_error_status.bits.lse_error==0)||(READ_WORKMODE==WORK_TEST))
-		{
+	
 	
     RTC_EnableClock(TRUE);
     //RTC 初始化
@@ -920,13 +918,8 @@ void rtc_init(void)
 			rtc_time_deinit();
 		}
 		
-//		if((pwr_on_time_ground.u32cMonth>12)||(pwr_on_time_ground.u32cDay>31)||(pwr_on_time_ground.u32cHour>23)||(pwr_on_time_ground.u32cMinute>59)||(pwr_on_time_ground.u32cSecond>59))
-//		{
-//			rtc_time_deinit();
-//		}	
-		
-	  }
 }
+
 
 
 

@@ -289,9 +289,9 @@ UINT32 RTC_Init (void)
         return E_RTC_ERR_EIO;
     }
 
-//    sysInstallISR(IRQ_LEVEL_1, RTC_IRQn, (PVOID)RTC_ISR);
-//    sysSetLocalInterrupt(ENABLE_IRQ);
-//    sysEnableInterrupt(RTC_IRQn);
+    sysInstallISR(IRQ_LEVEL_1, RTC_IRQn, (PVOID)RTC_ISR);
+    sysSetLocalInterrupt(ENABLE_IRQ);
+    sysEnableInterrupt(RTC_IRQn);
 
     return E_RTC_SUCCESS;
 }
