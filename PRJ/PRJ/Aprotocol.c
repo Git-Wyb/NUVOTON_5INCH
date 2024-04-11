@@ -70,7 +70,7 @@ uint16_t flag_logo_change=0;
 volatile  uint32_t UART_TX_REAL=0,UART_TX_WANT=0;																
 //extern uint8_t *TX_Test;
 extern uint8_t checksum_flag;
- 
+extern int gs_layFlag ;
 																
 typedef enum COMM_HANDLE_STATUS
 {
@@ -3302,8 +3302,15 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 								case '1':
 									  if(type == COMM_DATA_UARST)
 								      code_protocol_ack(Tp_xor,0,NULL,0);
-                       checksum_flag = 0;	
-                      DisPlayLayer(LCD_FF, 0xff, 0xff); 									
+                       checksum_flag = 0;
+                      if(gs_layFlag==0)
+											{												
+										  Clear_sdram(0x40);
+											}
+											else
+											{
+                      DisPlayLayer(LCD_FF, 0xff, 0xff); 	
+											}												
 									break;
 								default:
 									return 0;

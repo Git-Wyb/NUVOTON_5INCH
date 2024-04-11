@@ -638,7 +638,10 @@ void SDRAM_DATA_INIT(void)
 	NAND_ReadPage(backup_tab_nandflash_start,0,(uint8_t *)badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
 	//sprintf("badmanage_str->BAD_MANAGE_str.NANDFLASH_USER_INX=%x,read\n\r",badmanage_str->BAD_MANAGE_str.NANDFLASH_USER_INX);
 	//NANDFLASH_BADMANAGE_INIT();
-	if((READ_PIN_SW1_6!=SW_ON)&&(badmanage_str->BAD_MANAGE_str.flag!=BAD_BLOCK_LOCK)) 
+	#ifdef  SYSUARTPRINTF 
+	sysprintf("READ_PIN_SW1_6=0x%x,badmanage_str->BAD_MANAGE_str.flag=0x%08x\r\n",READ_PIN_SW1_6,badmanage_str->BAD_MANAGE_str.flag);
+	#endif
+	if((READ_PIN_SW1_6!=SW_ON)&&(badmanage_str->BAD_MANAGE_str.flag!=BAD_BLOCK_LOCK)&&(READ_WORKMODE==WORK_FUNCTION)) 
 	{		
 	power_checkreset();
 	//HAL_NVIC_SystemReset( );

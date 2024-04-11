@@ -40,6 +40,8 @@ typedef enum
 	BACK_light_50_2,
 	BACK_light_100_2_re,
 	BACK_light_100_2,
+	BACK_light_100_2_ree,
+	BACK_light_100_2_reee,
 	LCD_forward_direction,
 	LCD_forward_wait,
 	LCD_positive_direction,

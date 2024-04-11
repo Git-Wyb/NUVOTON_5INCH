@@ -1006,9 +1006,25 @@ void hard_function_test(void)
 						 SetZuobiao(10, 400 + 40);
 						 lcd_printf_new("LCD_BACKLIGHT=100%");
 						 Backlinght_Control_Init_HARDV4(0);
-						 test_e = LCD_forward_direction;
+						 test_e = BACK_light_100_2_ree;
 					 }
 				    break;
+			case BACK_light_100_2_ree:
+				    if(touch_send_imm==0)
+					 {
+						 test_e = BACK_light_100_2_reee;
+						 Flag_int = 0;
+					 }
+				    break;
+			case BACK_light_100_2_reee:
+				    if(Flag_int==1)
+					 {
+						 Flag_int = 0;
+						 FT5x06_RD_Reg(0, buf, 42);
+						 SetZuobiao(10, 400 + 40);
+						 test_e = LCD_forward_direction;
+					 }
+				    break;		 
 			case LCD_forward_direction:
 				   if(touch_send_imm==0)
 					 {
@@ -1070,6 +1086,7 @@ void hard_function_test(void)
 	          _ClipBR=x+width+((y+height)<<16);
 	          ge2dSpriteBlt_Screen(x,y,width, height,(uint8_t *)(bmp_layer1_BUFFER ), (uint8_t *)(bmp_LCD_BUFFER));
             _ClipEnable = FALSE;
+						// memset((void *)gs_tpInfo,0,sizeof(gs_tpInfo));
 			      test_e = Touch_middle_re;
 					 }
 							//touch_dev_poll();
@@ -1937,7 +1954,8 @@ void hard_function_test(void)
 							}
 				 break;
 			 case powersave_end:
-				 power_save();
+				TEST_NANDFLASH();
+			  power_save();
 			  REG_OPERATE(REG_CLK_PCLKEN0,1<<1,set);//ENABLE WWDT
 				WWDT_Open(WWDT_PRESCALER_2048,0x3f,TRUE);
 				 break;

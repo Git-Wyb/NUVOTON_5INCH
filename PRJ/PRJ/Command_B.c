@@ -501,11 +501,11 @@ void check_wt588h_exist(void)   //1// 1 s run one
 	if(wt588h_start_check)
 		{
 			wt588h_start_check_cnt++;
-		      if(wt588h_start_check_cnt>1)   //播放完才有中断，这个要为声音最长时间才行
+		      if(wt588h_start_check_cnt>15)   //播放完才有中断，这个要为声音最长时间才行
                    	{
 				wt588h_start_check=0;
 				
-				if(wt588h_no_ack==0)
+				if(wt588h_no_ack!=2)
 				{
 					
 					systerm_error_status.bits.voice_error=1;
@@ -528,6 +528,7 @@ vu32 GPIOICallback(UINT32 status, UINT32 userData)
 		 set_wt588h_voice_state(0);
 		 tts.interval_time=time1ms_count;
 		 AUDIO_AMPLIFIER_SHUT_DOWN;
+		 wt588h_no_ack++;	 
 //		 AMP_POWER_OFF;
 		 #ifdef  SYSUARTPRINTF 
 		 sysprintf("VOICE END \r\n");
@@ -535,7 +536,7 @@ vu32 GPIOICallback(UINT32 status, UINT32 userData)
 		 }
 		 else
 		 {
-			 wt588h_no_ack = 1;
+			 wt588h_no_ack++;
 			 AUDIO_AMPLIFIER_WORK;
 		 }
 		 

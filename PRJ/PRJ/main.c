@@ -280,7 +280,7 @@ int main(void)
     W25Q128_init();
     
 		nandflash_init();
-   	SDRAM_DATA_INIT();
+    SDRAM_DATA_INIT();
 		
 	
   
@@ -368,7 +368,7 @@ int main(void)
 //	*(uint8_t *)(display_layer_sdram.LCD_FRAME1_BUFFER+4));
 	 
 		//if(0)
-	if(READ_WORKMODE==WORK_FUNCTION)
+	 if(READ_WORKMODE==WORK_FUNCTION)
 		{
 		while(1)
 		{
