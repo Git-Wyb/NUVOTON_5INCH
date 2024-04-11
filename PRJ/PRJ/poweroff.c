@@ -269,7 +269,11 @@ void LOW_POWER_cyw(void)
 	  //ADC_Poweroff_Init();
 	
 	 /////////////////  sysDisableInterrupt(LVD_IRQn);
-	  power_save( );
+	 #ifdef DEBUG_PG3 
+	  GPIO_Clr(GPIOG,BIT3);
+	#endif
+
+	power_save( );
 	
 	if(LOGO_ERR == 1) goto HDLEFLAG;
 	if(COMMAND_N == 1) goto HDLEFLAG;
@@ -390,13 +394,13 @@ void LOW_POWER_cyw(void)
 					break;
 				case ActionRecord_DATACLASS:
 				 	 
-				if(LOGO_DOUBLE_VISIT == Tp_field) //???¶?????¼
+				if(LOGO_DOUBLE_VISIT == Tp_field) //???ï¿½?????ï¿½
 				{
 					Tp_addr = (gs_AreaInfo[Tp_field].addr+logodata_2gbit_change_addr)/2048 + Fieldx_Info[Tp_field].cycle*64;		
 			    NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr,1);
 				}
 				
-				    if(systerm_error_status.bits.lse_error==1)	//??j?RTCû???
+				    if(systerm_error_status.bits.lse_error==1)	//??j?RTCï¿½???
 						 {
 					*(__IO uint8_t*)(logodata_sdrambuffer_addr_arry[Tp_field]+(Fieldx_Info[Tp_field].num*MAX_LOGO_ALLTEST_ONEPACKET(Tp_field))%0x20000)=0xEF;
 					*(__IO uint8_t*)(logodata_sdrambuffer_addr_arry[Tp_field]+(Fieldx_Info[Tp_field].num*MAX_LOGO_ALLTEST_ONEPACKET(Tp_field))%0x20000+1)=0;
@@ -503,14 +507,16 @@ void LOW_POWER_cyw(void)
 		#ifdef  SYSUARTPRINTF  
 		sysprintf("\r\n--------------logo save over------------------\r\n");
 		#endif
-		
+		#ifdef DEBUG_PG3 
+		GPIO_Set(GPIOG,BIT3);
+		#endif
 		#ifdef POWER_INT_MODE
 		power_checkreset();
 		#endif
 		 while(1)
 	   	{
           
-		      //if(get_main_pwr_ad_value()>=VOLT_WORK)  //;  //Ö±µ½Ã»µç
+		      //if(get_main_pwr_ad_value()>=VOLT_WORK)  //;  //Ö±ï¿½ï¿½Ã»ï¿½ï¿½
 		      	{
                              //reset
                              //HAL_NVIC_SystemReset( );
@@ -527,12 +533,12 @@ vu32 GPIOHCallback(UINT32 status, UINT32 userData)
 	// sysprintf("i am here,status=%d\r\n",status);
 	if(status & BIT5)
 	 {
-	   //Çå³ýÖÐ¶Ï±êÖ¾Î»
+	   //ï¿½ï¿½ï¿½ï¿½Ð¶Ï±ï¿½Ö¾Î»
     GPIO_ClrISRBit(GPIOH,status);
 		 GPIO_DisableInt(GPIOH);
 		 LOW_POWER_cyw();
 	 }
-	  //Çå³ýÖÐ¶Ï±êÖ¾Î»
+	  //ï¿½ï¿½ï¿½ï¿½Ð¶Ï±ï¿½Ö¾Î»
     GPIO_ClrISRBit(GPIOH,status);
     return 0;
 }

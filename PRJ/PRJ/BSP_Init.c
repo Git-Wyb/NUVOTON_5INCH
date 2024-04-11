@@ -23,6 +23,7 @@
 #include "poweroff.h"
 #include "wwdt.h"
 #include "Aprotocol.h"
+#include "DIP_SW.h"
 
 
 //usb
@@ -36,7 +37,7 @@ FATFS usb_fatfs;
 
 //uart
 #define uartprintf      sysprintf
-//////static UINT8 TX_Test[] = "ÄãºÃ ¿á¿Í£¡£¡ \r\n";
+//////static UINT8 TX_Test[] = "ï¿½ï¿½ï¿½ ï¿½ï¿½Í£ï¿½ï¿½ï¿½ \r\n";
 //nandflash
 #define CONFIG_SYS_MAX_NAND_DEVICE  1
 
@@ -134,17 +135,17 @@ void uart2_init_download(uint32_t bound)
 
 	 // #ifdef DEBUG
 	  if(retval != 0) {
-        uartprintf("´®¿Ú´ò¿ªÊ§°Ü115200!\n");
+        uartprintf("ï¿½ï¿½ï¿½Ú´ï¿½Ê§ï¿½ï¿½115200!\n");
     }
 
     retval = uartIoctl(param.ucUartNo, UART_IOC_SETTXMODE, UARTINTMODE, 0);
     if (retval != 0) {
-        uartprintf("ÉèÖÃ·¢ËÍÖÐ¶ÏÄ£Ê½Ê§°Ü115200!\n");
+        uartprintf("ï¿½ï¿½ï¿½Ã·ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½Ä£Ê½Ê§ï¿½ï¿½115200!\n");
     }
 
     retval = uartIoctl(param.ucUartNo, UART_IOC_SETRXMODE, UARTINTMODE, 0);
     if (retval != 0) {
-        uartprintf("ÉèÖÃ½ÓÊÕÖÐ¶ÏÄ£Ê½Ê§°Ü115200!\n");
+        uartprintf("ï¿½ï¿½ï¿½Ã½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½Ä£Ê½Ê§ï¿½ï¿½115200!\n");
     }
 		
 		
@@ -187,17 +188,17 @@ void  protocol_uart_init(void)
 retval = uartOpen(&param);
 
  	  if(retval != 0) {
-        uartprintf("´®¿Ú´ò¿ªÊ§°Ü!\n");
+        uartprintf("ï¿½ï¿½ï¿½Ú´ï¿½Ê§ï¿½ï¿½!\n");
     }
 		
 		
     retval = uartIoctl(param.ucUartNo, UART_IOC_SETRXMODE, UARTINTMODE, 0);
     if (retval != 0) {
-        uartprintf("ÉèÖÃ½ÓÊÕÖÐ¶ÏÄ£Ê½Ê§°Ü!\n");
+        uartprintf("ï¿½ï¿½ï¿½Ã½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½Ä£Ê½Ê§ï¿½ï¿½!\n");
     }
 		   retval = uartIoctl(param.ucUartNo, UART_IOC_SETTXMODE, UARTPOLLMODE, 0);
     if (retval != 0) {
-        uartprintf("ÉèÖÃ·¢ËÍÖÐ¶ÏÄ£Ê½Ê§°Ü!\n");
+        uartprintf("ï¿½ï¿½ï¿½Ã·ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½Ä£Ê½Ê§ï¿½ï¿½!\n");
     }
 
 		
@@ -205,7 +206,7 @@ retval = uartOpen(&param);
 		//REG_OPERATE(REG_UART1_IER,0x09,clear);
 		
 		uartprintf("uartset 38400\n");
-		  //´®¿Ú·¢ËÍÊý¾Ý ¡°ÄãºÃ ¿á¿Í£¡£¡¡±
+		  //ï¿½ï¿½ï¿½Ú·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Í£ï¿½ï¿½ï¿½ï¿½ï¿½
 		// len = strlen((PINT8) TX_Test);
 		// uartWrite(param.ucUartNo, TX_Test, len);
 		#endif
@@ -634,7 +635,16 @@ void SDRAM_DATA_INIT(void)
 	
 	NAND_ReadPage(backup_tab_nandflash_start,0,(uint8_t *)badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
 	//sprintf("badmanage_str->BAD_MANAGE_str.NANDFLASH_USER_INX=%x,read\n\r",badmanage_str->BAD_MANAGE_str.NANDFLASH_USER_INX);
-	NANDFLASH_BADMANAGE_INIT();
+	//NANDFLASH_BADMANAGE_INIT();
+	if((READ_PIN_SW1_6!=SW_ON)&&(badmanage_str->BAD_MANAGE_str.flag!=BAD_BLOCK_LOCK)) 
+	{		
+	power_checkreset();
+	//HAL_NVIC_SystemReset( );
+	while(1);
+	
+	}
+	
+	
 	NANDFLASH_TO_SDRAM(bmp_tab_BUFFER,image_tab__nandflash_start,4);
 //	NAND_EraseBlock(baseB_data__nandflash_start/64);
 //	NAND_EraseBlock(baseA_data__nandflash_start/64);
@@ -654,10 +664,10 @@ void SDRAM_DATA_INIT(void)
 	Tp_addr = READ_TAB_FROMSDRAM(0,1,bmp_TAB);
 	if(Tp_addr==0xffff)
 	{
-		//Ã»ÓÐÕâÕÅÍ¼
+		//Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼
 		return;
 	}
-	if((bmp_TAB[0]!=800)||(bmp_TAB[1]!=480))//²»Ö§³ÖµÄ¸ñÊ½
+	if((bmp_TAB[0]!=800)||(bmp_TAB[1]!=480))//ï¿½ï¿½Ö§ï¿½ÖµÄ¸ï¿½Ê½
 	{
 		return;
 	}		
@@ -672,7 +682,7 @@ void display_init(void)
 	
 	
 	
-		 // ÅäÖÃÒý½Å¸´ÓÃµ½LCM
+		 // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¸ï¿½ï¿½Ãµï¿½LCM
 		//GPG6 (CLK), GPG7 (HSYNC)
 		outpw(REG_SYS_GPG_MFPL, (inpw(REG_SYS_GPG_MFPL)& ~0xFF000000) | 0x22000000);
 		//GPG8 (VSYNC), GPG9 (DEN)
@@ -684,7 +694,7 @@ void display_init(void)
 		//GPD8~D15 (DATA16~23)
 		outpw(REG_SYS_GPD_MFPH, 0x22222222);
 			
-	  //Ê¹ÄÜ LCD clock
+	  //Ê¹ï¿½ï¿½ LCD clock
 		//outpw(REG_CLK_DIVCTL1, (inpw(REG_CLK_DIVCTL1) & ~0xff1f) | 0x718);//37.5M	
 	  //outpw(REG_CLK_DIVCTL1, (inpw(REG_CLK_DIVCTL1) & ~0xff1f) | 0x818);//33.3M	
 	  outpw(REG_CLK_DIVCTL1, (inpw(REG_CLK_DIVCTL1) & ~0xff1f) | 0x918);//30M	
@@ -695,24 +705,24 @@ void display_init(void)
 	  //outpw(REG_CLK_DIVCTL1, (inpw(REG_CLK_DIVCTL1) & ~0xff1f) | 0xe18);	//20M	
 		//20M UPLLFOUT=300 
 		//UCLKOUT=300/1=300  UCLKOut = UPLLFout /(LCD_SDIV + 1).
-		//UCLK±»Ñ¡ÎªÒº¾§µÄÊ±ÖÓLCD_srcCLK
+		//UCLKï¿½ï¿½Ñ¡ÎªÒºï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½LCD_srcCLK
 		//ECLKlcd = LCD_SrcCLK / (LCD_N + 1).
 		//ECLKlcd = 300/15=20M;
 		
-	 //LCD³õÊ¼»¯
+	 //LCDï¿½ï¿½Ê¼ï¿½ï¿½
 	  vpostLCMInit(0);
-	 //ÉèÖÃËõ·Å±ÈÀý1:1
+	 //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å±ï¿½ï¿½ï¿½1:1
 	  vpostVAScalingCtrl(1, 0, 1, 0, VA_SCALE_INTERPOLATION);
-	//ÉèÖÃ ÏñËØ¸ñÊ½RGB565
+	//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ø¸ï¿½Ê½RGB565
     vpostSetVASrc(VA_SRC_RGB565);
 		
-		// »ñÈ¡ÏÔ´æµØÖ·Ö¸Õë
+		// ï¿½ï¿½È¡ï¿½Ô´ï¿½ï¿½Ö·Ö¸ï¿½ï¿½
 	u8FrameBufPtr = vpostGetFrameBuffer();
 	
 	 #ifdef DEBUG
   if(u8FrameBufPtr == NULL)
 	{
-		sysprintf("»ñÈ¡ÏÔ´æµØÖ·Ö¸ÕëÊ§°Ü!!\n");
+		sysprintf("ï¿½ï¿½È¡ï¿½Ô´ï¿½ï¿½Ö·Ö¸ï¿½ï¿½Ê§ï¿½ï¿½!!\n");
 		
 	}
 	else
@@ -897,11 +907,11 @@ void rtc_time_deinit(void)
 
 void rtc_init(void)
 {
-	//Ê¹ÄÜRECÊ±ÖÓ
+	//Ê¹ï¿½ï¿½RECÊ±ï¿½ï¿½
 	
 	
     RTC_EnableClock(TRUE);
-    //RTC ³õÊ¼»¯
+    //RTC ï¿½ï¿½Ê¼ï¿½ï¿½
     RTC_Init();
 	
 	  RTC_Read(RTC_CURRENT_TIME,&pwr_on_time_ground);
@@ -1020,19 +1030,24 @@ void init_gpio(void)
 		 //PF13 PF14 tool reset
 		 download_gpio_set_input( );
 		 
+		  #ifdef DEBUG_PG3 
+		 REG_OPERATE(REG_SYS_GPG_MFPL,0XF000,clear);
+			GPIO_OpenBit(GPIOG,BIT3,DIR_OUTPUT,PULL_UP);
+		 GPIO_Set(GPIOG,BIT3);
+		 #endif
 		 
 //    GPIO_OpenBit(GPIOB,BIT5, DIR_OUTPUT, PULL_UP);
-//    //µãÁÁLED0ºÍLED1
+//    //ï¿½ï¿½ï¿½ï¿½LED0ï¿½ï¿½LED1
 //	  GPIO_Clr(GPIOB, BIT4|BIT5);
-//	  sysprintf("µãÁÁLED0ºÍLED1....\r\n");
+//	  sysprintf("ï¿½ï¿½ï¿½ï¿½LED0ï¿½ï¿½LED1....\r\n");
 //	  delay_ms(2000);
-//	  //¹Ø±ÕLED0ºÍLED1
+//	  //ï¿½Ø±ï¿½LED0ï¿½ï¿½LED1
 //	  GPIO_Set(GPIOB,BIT4|BIT5);
-//		sysprintf("¹Ø±ÕLED0ºÍLED1....\r\n");
+//		sysprintf("ï¿½Ø±ï¿½LED0ï¿½ï¿½LED1....\r\n");
 //	  delay_ms(2000);
 //		
-//		//LED0ºÍLED1½»ÌæÉÁË¸
-//		sysprintf("LED0ºÍLED1½»ÌæÉÁË¸....CYW\r\n");
+//		//LED0ï¿½ï¿½LED1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë¸
+//		sysprintf("LED0ï¿½ï¿½LED1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë¸....CYW\r\n");
 }
 
 void Touch_tim_init(void)
@@ -1188,5 +1203,5 @@ void power_checkreset(void)
 ////////////////////////		
 ////////////////////////	}
     REG_OPERATE(REG_CLK_PCLKEN0,1<<1,set);//ENABLE WWDT
-    WWDT_Open(WWDT_PRESCALER_2048,0xf,TRUE);//Ô¼1.35Sºó¸´Î»
+    WWDT_Open(WWDT_PRESCALER_2048,0xf,TRUE);//Ô¼1.35Sï¿½ï¿½Î»
 }

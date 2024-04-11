@@ -27,7 +27,7 @@ extern uint8_t IMAGE_SEARCHED ;
 //uint32_t NANDFLASH_USER_INX; 
 extern uint8_t  USB_HAS_USABLE_IMG;
  uint8_t flag_checksum =1;
- uint16_t CHECK_SUM_USB=0,CHECK_SUM_NAND=0;
+ uint32_t CHECK_SUM_USB=0,CHECK_SUM_NAND=0;
  BADMANAGE_TAB_TYPE_U badmanage_str[1]={0};
  
 uint8_t *RxBuffer =0;//[NAND_PAGE_SIZE];

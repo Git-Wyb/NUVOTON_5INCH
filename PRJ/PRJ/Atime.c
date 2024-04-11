@@ -39,30 +39,71 @@ extern BADMANAGE_TAB_TYPE_U badmanage_str[1];
 static uint32_t NAND_CHECK;
 static uint8_t Tp_version[9]={0};
 extern  uint8_t *BaseData_ARR;
+extern uint32_t CHECK_SUM_NAND;
+uint8_t checksum_flag=0;
+extern uint8_t *bmpBuf_kkk,*bmpBuf_kkk_bak;
+uint32_t shift_pointer(uint32_t ptr, uint32_t align);
 
-uint32_t  NAND_BMP_Read_checksum(void)
+
+void Display_checksum(void)
 {
-	uint32_t Tp_checksum = 0;
-	uint32_t PageNum = 0;
-	uint32_t Tp_index = 131072;
-	static unsigned char buf[2048] = {0};
-  uint16_t Tp_i;
+		char Tp_version[9]={0};
+	     if(checksum_flag == 1)
+			 {
+
+	        SetZuobiao(10, 400 + 60);
+		      lcd_printf_new("NAND Chechsum = 0x%08X         ",CHECK_SUM_NAND);
+					SetZuobiao(10, 400 + 20);
+					memcpy(Tp_version,(char *)(BaseData_ARR+BMP_Ver_index*9),8);
+					lcd_printf_new("BMP VERSION   = %8s         ",Tp_version);
+					SetZuobiao(10, 400 + 40);
+					memcpy(Tp_version,(char *)(BaseData_ARR+Master_Ver_index*9),8);
+					lcd_printf_new("MAIN VERSION   = %8s         ",Tp_version);
+					SetZuobiao(10, 400);
+					memcpy(Tp_version,(char *)(BaseData_ARR+LCD_Ver_index*9),8);
+					lcd_printf_new("LCD VERSION   = %8s         ",Tp_version);
+			 }
+}
+
+
+void NAND_BMP_Read_checksum(void)
+{
+	uint16_t Tp_i=0;
+		uint32_t Tp_addr;
+	  uint32_t Tp_bmp_TAB[3]={0};
+		
+		
+	CHECK_SUM_NAND = 0;
 	
-	
-	while(Tp_index<badmanage_str->BAD_MANAGE_str.NANDFLASH_CUSTOMER_INX)
+	if(bmpBuf_kkk==0)
 	{
-		memset(buf,0,2048);
-		PageNum = Tp_index/2048;
-		NAND_ReadPage(PageNum,0,buf,2048);
-		for(Tp_i=0;Tp_i<2048;Tp_i++)
-		{
-			Tp_checksum+= buf[Tp_i];
-		}
-		Tp_index+=2048;
-		
-		
+	bmpBuf_kkk = (uint8_t *)(((uint32_t )malloc(IMAGE_BUFFER_SIZE+64)));
+	bmpBuf_kkk_bak = bmpBuf_kkk;
+	bmpBuf_kkk = 	(uint8_t *)(shift_pointer((uint32_t)bmpBuf_kkk,32)+32);
+	bmpBuf_kkk = (uint8_t *)((uint32_t)bmpBuf_kkk|0x80000000	);
 	}
-	return Tp_checksum;
+	if(bmpBuf_kkk==0)
+	{
+		return;
+	}	
+		
+	while(Tp_i<0XFF00)
+	{
+	   Tp_addr = READ_TAB_FROMSDRAM(Tp_i,1,Tp_bmp_TAB);
+	   Tp_i++;
+		 if(Tp_addr!=0Xffffffff)
+		 check_sum_nand(Tp_addr*2048,Tp_bmp_TAB[0],Tp_bmp_TAB[1]);
+	}
+	
+	//sprintf(display_checksum,"NAND Chechsum = 0x%08X",CHECK_SUM_NAND);
+  //LCD_DisplayStringLine(30,display_checksum);
+	
+	if(bmpBuf_kkk) {free(bmpBuf_kkk_bak);bmpBuf_kkk=0;}
+	
+	
+   checksum_flag = 1;
+	
+	
 }
 
 
@@ -279,6 +320,7 @@ void Time100msProcess(void)
 	if(LOGO_DATA_OUT_FLAG==3)
 	{
 	check_sw234( );
+	Display_checksum();	
 	}
 	//check_sw5( );
 	//renesas_power_control( );
@@ -344,16 +386,19 @@ void OneSecondProcess(void)
 					
 				// ClearLayerData(3);//Çå³ýÏÔÊ¾ÇøÓò
 				// Backlinght_Control_Init_HARDV4(128);
-				if((READ_PIN_SW1_1==SW_ON)&&(READ_PIN_SW1_2==SW_ON)&&(READ_PIN_SW1_3==SW_ON)&&(READ_PIN_SW1_4==SW_ON)&&(READ_PIN_SW1_6==SW_ON))
+				if((READ_PIN_SW1_3==SW_ON)&&(READ_PIN_SW1_6==SW_ON))
 				{
-					
-					NAND_CHECK = NAND_BMP_Read_checksum();
-	        SetZuobiao(10, 400 + 60);
-		      lcd_printf_new("NAND Chechsum = 0x%x         ",NAND_CHECK);
-					SetZuobiao(10, 400 + 20);
-					memcpy(Tp_version,BaseData_ARR+BMP_Ver_index*9,8);
-					lcd_printf_new("BMP VERSION   = %8s         ",Tp_version);
-					
+					if((READ_PIN_SW1_1==SW_ON)&&(READ_PIN_SW1_2==SW_ON)&&(READ_PIN_SW1_3==SW_ON)&&(READ_PIN_SW1_4==SW_ON)&&(READ_PIN_SW1_6==SW_ON))
+					{
+						
+					}
+					else
+					{
+						SetZuobiao(10, 380);
+						lcd_printf_new("ERROR: Incorrect DIP-SW settings");
+					}
+					NAND_BMP_Read_checksum();
+	        Display_checksum();
 	        while(1);
 				}
 					

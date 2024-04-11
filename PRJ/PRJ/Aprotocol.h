@@ -168,4 +168,5 @@ int8_t convert_1_hex_to_hex_ascii(int8_t a);
 void send_code_protocol_error(void);
 uint16_t GET_READ_RXNUM(uint16_t x_rx_in,uint16_t x_rx_out,uint16_t x_buff_max);
 void code_protocol_error(int8_t type,uint8_t Value_1,uint16_t Value_2,uint8_t cnt) ;
+void  NAND_BMP_Read_checksum(void);
 #endif

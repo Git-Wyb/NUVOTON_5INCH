@@ -85,18 +85,18 @@ FIQ_Handler
 
 Reset_Go
     ; Disable Interrupt in case code is load by ICE while other firmware is executing
-    LDR    r0, =REG_AIC_MDCR
-    LDR    r1, =0xFFFFFFFF
-    STR    r1, [r0]
-    LDR    r0, =REG_AIC_MDCRH
+    LDR    r0, =REG_AIC_MDCR;R0中装寄存器REG_AIC_MDCR的地址
+    LDR    r1, =0xFFFFFFFF;r1写入0xffffffff
+    STR    r1, [r0];将r1保存在r0地址上
+    LDR    r0, =REG_AIC_MDCRH;
     STR    r1, [r0]
     ;--------------------------------
     ; Initial Stack Pointer register
     ;--------------------------------
     ;INIT_STACK
-    LDR    R2, =0xB0001800
-    LDR    R3,[R2,#0x0010]
-    AND    R3, R3, #0x00000007
+    LDR    R2, =0xB0001800;R2=SDIC_BA
+    LDR    R3,[R2,#0x0010];R3=SDIC_SIZE0
+    AND    R3, R3, #0x00000007;CPU=DF972DF71Y,SDRAM SIZE =128M
     MOV    R1,#2
     MOV    R0,#1
 LOOP_DRAMSIZE

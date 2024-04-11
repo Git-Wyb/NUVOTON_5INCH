@@ -15,7 +15,7 @@
 extern int gs_usb_mount_flag;
 uint8_t LOGO_DATA_OUT_FLAG=0;
 uint8_t FLAG_SW_FINISH=0;//这个是由SW触发的升级要一直显示
-extern  uint16_t CHECK_SUM_USB,CHECK_SUM_NAND;
+extern  uint32_t CHECK_SUM_USB,CHECK_SUM_NAND;
 extern char  USB_IMAGE_TYPE;
 extern uint16_t FLAG_SW3_BEGIN;
 //extern uint32_t NANDFLASH_CUSTOMER_INX;
@@ -357,12 +357,12 @@ void Fresh_lcd_dis(void)
      SetZuobiao(10, 360);
 		if((CHECK_SUM_USB == CHECK_SUM_NAND)&&(gs_CpyInfo.total==gs_CpyInfo.okCnt)&&(gs_CpyInfo.total!=0))
 		{
-		 lcd_printf_new("PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,USB=0x%X,NAND=0x%X",CHECK_SUM_USB,CHECK_SUM_NAND);
+		 lcd_printf_new("PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,USB=0x%08X,NAND=0x%08X",CHECK_SUM_USB,CHECK_SUM_NAND);
 		
 		}
 		else
 		{
-		 lcd_printf_new("NG,NG,NG,NG,NG,NG,NG,NG,NG,NG,NG,NG,NG,USB=0x%X,NAND=0x%X",CHECK_SUM_USB,CHECK_SUM_NAND);	
+		 lcd_printf_new("NG,NG,NG,NG,NG,NG,NG,NG,NG,NG,NG,NG,NG,USB=0x%08X,NAND=0x%08X",CHECK_SUM_USB,CHECK_SUM_NAND);	
 			
 		}
 		

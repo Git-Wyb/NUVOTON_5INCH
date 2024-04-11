@@ -161,4 +161,5 @@ void nandflash_format(void);
 uint8_t Clear_sdram(uint32_t x_Flag);
 uint8_t get_command_xor(void);
 uint16_t BAD_BLOCK_CHANGE(uint16_t x_block);
+void check_sum_nand(uint32_t x_addr,uint16_t x_width,uint16_t x_height);
 #endif 

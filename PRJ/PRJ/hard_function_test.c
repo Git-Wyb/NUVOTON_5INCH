@@ -35,7 +35,7 @@ extern uint8_t touch_send_imm ;
 extern uint32_t Tp_bad;
 extern BMP_RPOTOCOL_TYPE  bmp_protocol[3];
 extern BADMANAGE_TAB_TYPE_U badmanage_str[1];
-extern uint16_t CHECK_SUM_USB,CHECK_SUM_NAND;
+extern uint32_t CHECK_SUM_USB,CHECK_SUM_NAND;
 extern char  USB_IMAGE_TYPE ;
 extern volatile uint8_t  *UART2_RX_BUFF;//[RX_BUFF_MAX];
 extern volatile uint16_t  RX_COUNT_IN ;
