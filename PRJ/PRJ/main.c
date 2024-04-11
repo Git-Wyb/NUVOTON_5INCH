@@ -73,6 +73,7 @@ extern uint8_t pwr_on_cnt;
 extern test_E test_e;
 extern FATFS usb_fatfs;
 extern LAYER_SDRAM_STR display_layer_sdram;
+extern uint32_t Flag_Tim_1ms;
 //��ʱ����
 void delay_ms(uint32_t i)
 {
@@ -336,7 +337,7 @@ int main(void)
 //	*(uint8_t *)(display_layer_sdram.LCD_FRAME1_BUFFER+2), *(uint8_t *)(display_layer_sdram.LCD_FRAME1_BUFFER+3),
 //	*(uint8_t *)(display_layer_sdram.LCD_FRAME1_BUFFER+4));
 	 
-//	if(0)
+	//	if(0)
 		if(READ_WORKMODE==WORK_FUNCTION)
 		{
 		while(1)
@@ -380,7 +381,12 @@ int main(void)
      /////////////if(pwr_on_cnt==0)
 		/////////////{
 			////////////////////////LOGO_handle();
-			
+			if(get_timego(Flag_Tim_1ms)>=1)
+	     {
+		      Flag_Tim_1ms = time1ms_count;
+		      tts_time();
+		
+	      }
 			
 			
 	    comm_handle();

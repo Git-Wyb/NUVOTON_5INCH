@@ -48,7 +48,7 @@ uint8_t TEMP_COUNT=0;
 static uint8_t Q_Num=0;
 static uint32_t Q_ADDR[4]={0};
 extern uint8_t *BaseData_ARR;
-
+extern uint8_t wt588h_send_step;
 
 void AD_init_8V(void)
 {
@@ -182,6 +182,7 @@ void hard_function_test(void)
 				AD_init_8V();
 				 Backlinght_Control_Init_HARDV4(0);
 			   screen_reverse_bit=1;
+				 RTC_CLKOUT();
 			   test_e = SW_DIP1_ON_dis;
 			   break;
 		case SW_DIP1_ON_dis:
@@ -1824,15 +1825,17 @@ void hard_function_test(void)
 				 //{
 			   //  Flag_int = 0;
 			    //  while(1)
-								{
+			      if(wt588h_send_step == 0)
+						{
 									if(Flag_int==1)
 									{
 										Flag_int = 0;
 										FT5x06_RD_Reg(0, buf, 42);
 										test_e = Voice_stop;
-										break;
+										//sysprintf("\r\nVOICE OUT\r\n");
+										//break;
 									}
-								}
+						}
 					//}
 				 
 				  break;
