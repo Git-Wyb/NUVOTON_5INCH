@@ -899,7 +899,7 @@ void rtc_init(void)
 {
 	//Ê¹ÄÜRECÊ±ÖÓ
 	  get_vbat_ad_value();
-	  if((systerm_error_status.bits.lse_error==0)&&((READ_WORKMODE==WORK_FUNCTION)))
+	  if(systerm_error_status.bits.lse_error==0)
 		{
 	
     RTC_EnableClock(TRUE);
@@ -919,7 +919,8 @@ void rtc_init(void)
 		{
 			rtc_time_deinit();
 		}
-//		else if((pwr_on_time_ground.u32cMonth>12)||(pwr_on_time_ground.u32cDay>31)||(pwr_on_time_ground.u32cHour>23)||(pwr_on_time_ground.u32cMinute>59)||(pwr_on_time_ground.u32cSecond>59))
+		
+//		if((pwr_on_time_ground.u32cMonth>12)||(pwr_on_time_ground.u32cDay>31)||(pwr_on_time_ground.u32cHour>23)||(pwr_on_time_ground.u32cMinute>59)||(pwr_on_time_ground.u32cSecond>59))
 //		{
 //			rtc_time_deinit();
 //		}	

@@ -183,6 +183,7 @@ void hard_function_test(void)
 				 Backlinght_Control_Init_HARDV4(0);
 			   screen_reverse_bit=1;
 				 RTC_CLKOUT();
+				// rtc_time_deinit();
 			   test_e = SW_DIP1_ON_dis;
 			   break;
 		case SW_DIP1_ON_dis:
@@ -1053,6 +1054,10 @@ void hard_function_test(void)
 					 }
 				    break;
 			case Touch_middle:
+				     if(Flag_int==1)
+					 {
+						 Flag_int = 0;
+						 FT5x06_RD_Reg(0, buf, 42);
 				    memset((void *)(display_layer_sdram.LCD_CACHE_BUFFER&(~0x80000000)),0xff,800*480*2);
 				     x=378;
 			       y=215;
@@ -1064,12 +1069,14 @@ void hard_function_test(void)
 	          ge2dSpriteBlt_Screen(x,y,width, height,(uint8_t *)(bmp_layer1_BUFFER ), (uint8_t *)(bmp_LCD_BUFFER));
             _ClipEnable = FALSE;
 			      test_e = Touch_middle_re;
-			      
+					 }
 							//touch_dev_poll();
 						
 						
 				    break;
 			case Touch_middle_re:
+				   if(touch_send_imm==0)
+					 {
 				   	for(Tp_i=0;Tp_i<10;Tp_i++)
 							{
 //								sysprintf("gs_tpInfo[Tp_i].x=%d,gs_tpInfo[Tp_i].y=%d",gs_tpInfo[Tp_i].x,gs_tpInfo[Tp_i].y);
@@ -1080,6 +1087,7 @@ void hard_function_test(void)
 									break;
 								}
 							}
+						}
 			     break;
 			case Touch_Left_Up:
 				  // Clear_sdram(0x40);
