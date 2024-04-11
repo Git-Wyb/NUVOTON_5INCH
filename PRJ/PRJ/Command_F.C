@@ -75,7 +75,7 @@ void NAND_BMP_Read_checksum(void)
 	 #endif	
 	}
 	
-	if(bmpBuf_kkk==0)
+	if(bmpBuf_kkk_bak==0)
 	{
 		#ifdef SYSUARTPRINTF_p
 	 sysprintf("bmpBuf_kkk=%08X,bmpBuf_kkk_bak=%08X, malloc NG\r\n",bmpBuf_kkk,bmpBuf_kkk_bak);
@@ -102,7 +102,7 @@ void NAND_BMP_Read_checksum(void)
 	//sprintf(display_checksum,"NAND Chechsum = 0x%08X",CHECK_SUM_NAND);
   //LCD_DisplayStringLine(30,display_checksum);
 	
-	if(bmpBuf_kkk) 
+	if(bmpBuf_kkk_bak) 
   {
 		#ifdef SYSUARTPRINTF_p
 	 sysprintf("bmpBuf_kkk=%08X,bmpBuf_kkk_bak=%08X, free\r\n",bmpBuf_kkk,bmpBuf_kkk_bak);
