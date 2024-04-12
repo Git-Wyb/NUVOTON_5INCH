@@ -466,7 +466,7 @@ void TEST_NANDFLASH(void)
 		//SetZuobiao(10, 400 + 20);
 	  sysprintf( "nandflash errblock");
 		
-		//while(1);
+		while(1);
 	}
 	else
 	{

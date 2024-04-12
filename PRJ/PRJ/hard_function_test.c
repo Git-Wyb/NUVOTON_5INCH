@@ -186,6 +186,7 @@ void hard_function_test(void)
 			   screen_reverse_bit=1;
 				 RTC_CLKOUT();
 				// rtc_time_deinit();
+				
 			   test_e = SW_DIP1_ON_dis;
 			   break;
 		case SW_DIP1_ON_dis:
@@ -922,17 +923,24 @@ void hard_function_test(void)
 				   break;		
 			case BACK_light_dis:
 				   SetZuobiao(10, 400 + 40);
-				   lcd_printf_new("LCD_BACKLIGHT=100%");
+				   lcd_printf_new("LCD_BACKLIGHT=100%(touch)");
 			     Backlinght_Control_Init_HARDV4(0);
-			     test_e = BACK_light_100_1;
+			     test_e = BACK_light_50_re;
 			     Flag_int = 0;
 			     break;
 			case BACK_light_100_1:
 				   if(Flag_int==1)
 					 {
+						 delay_ms(50);
+						 Flag_int=0;
+						 delay_ms(50);
+						 if(Flag_int==1)
+						 {
+							// touch_send_imm =1;
 						 sysprintf("BACK_light_50_re\r\n");
 						 Flag_int = 0;
 						  test_e = BACK_light_50_re;
+						 }
 					 }
 				   break;
 			case BACK_light_50_re:
@@ -946,13 +954,19 @@ void hard_function_test(void)
 			case BACK_light_50:
 				   if(Flag_int==1)
 					 {
+						  delay_ms(50);
+						 Flag_int=0;
+						 delay_ms(50);
+						 if(Flag_int==1)
+						 {
 						 sysprintf("BACK_light_0_re\r\n");
 						 Flag_int = 0;
 						 FT5x06_RD_Reg(0, buf, 42);
 						 SetZuobiao(10, 400 + 40);
-						 lcd_printf_new(" LCD_BACKLIGHT=50%");
+						 lcd_printf_new(" LCD_BACKLIGHT=50%(touch)");
 						 Backlinght_Control_Init_HARDV4(128);
 						 test_e = BACK_light_0_re;
+						 }
 					 }
 				   break;
 			case BACK_light_0_re:
@@ -965,12 +979,18 @@ void hard_function_test(void)
 			case BACK_light_0:
 				 if(Flag_int==1)
 					 {
+						  delay_ms(50);
+						 Flag_int=0;
+						 delay_ms(50);
+						 if(Flag_int==1)
+						 {
 						 Flag_int = 0;
 						 FT5x06_RD_Reg(0, buf, 42);
 						 SetZuobiao(10, 400 + 40);
-						 lcd_printf_new("  LCD_BACKLIGHT=0%");
+						 lcd_printf_new("LCD_BACKLIGHT=0%(touch)");
 						 Backlinght_Control_Init_HARDV4(255);
 						 test_e = BACK_light_50_2_re;
+						 }
 					 }
 				   break;
 			case BACK_light_50_2_re:
@@ -983,12 +1003,18 @@ void hard_function_test(void)
 			case BACK_light_50_2:
 				    if(Flag_int==1)
 					 {
+						  delay_ms(50);
+						 Flag_int=0;
+						 delay_ms(50);
+						 if(Flag_int==1)
+						 {
 						 Flag_int = 0;
 						 FT5x06_RD_Reg(0, buf, 42);
 						 SetZuobiao(10, 400 + 40);
-						 lcd_printf_new(" LCD_BACKLIGHT=50%");
+						 lcd_printf_new("LCD_BACKLIGHT=50%(touch)");
 						 Backlinght_Control_Init_HARDV4(128);
 						 test_e = BACK_light_100_2_re;
+						 }
 					 }
 				   break;
 			case BACK_light_100_2_re:
@@ -1001,12 +1027,18 @@ void hard_function_test(void)
 			case BACK_light_100_2:
 				if(Flag_int==1)
 					 {
+						  delay_ms(50);
+						 Flag_int=0;
+						 delay_ms(50);
+						 if(Flag_int==1)
+						 {
 						 Flag_int = 0;
 						 FT5x06_RD_Reg(0, buf, 42);
 						 SetZuobiao(10, 400 + 40);
-						 lcd_printf_new("LCD_BACKLIGHT=100%");
+						 lcd_printf_new("LCD_BACKLIGHT=100%(touch)");
 						 Backlinght_Control_Init_HARDV4(0);
 						 test_e = BACK_light_100_2_ree;
+						 }
 					 }
 				    break;
 			case BACK_light_100_2_ree:
@@ -1019,17 +1051,23 @@ void hard_function_test(void)
 			case BACK_light_100_2_reee:
 				    if(Flag_int==1)
 					 {
+						  delay_ms(50);
+						 Flag_int=0;
+						 delay_ms(50);
+						 if(Flag_int==1)
+						 {
 						 Flag_int = 0;
 						 FT5x06_RD_Reg(0, buf, 42);
 						 SetZuobiao(10, 400 + 40);
 						 test_e = LCD_forward_direction;
+						 }
 					 }
 				    break;		 
 			case LCD_forward_direction:
 				   if(touch_send_imm==0)
 					 {
 					SetZuobiao(10, 400 + 40);
-				   lcd_printf_new("LCD_forward_direction");
+				   lcd_printf_new("LCD_forward_direction(touch)");
 			     SCREEN_CONTROL133_0;
 			     SCREEN_CONTROL134_1;
 			     screen_reverse_bit=0;
@@ -1040,14 +1078,20 @@ void hard_function_test(void)
 		  case LCD_forward_wait:
 				   if(Flag_int==1)
 					 {
+						  delay_ms(50);
+						 Flag_int=0;
+						 delay_ms(50);
+						 if(Flag_int==1)
+						 {
 						 Flag_int = 0;
 						 FT5x06_RD_Reg(0, buf, 42);
 						 SetZuobiao(10, 400 + 40);
-						 lcd_printf_new("LCD_positive_direction");
+						 lcd_printf_new("LCD_positive_direction(touch)");
 						 SCREEN_CONTROL133_1;
 				     SCREEN_CONTROL134_0;
 				      screen_reverse_bit=1;
-						  test_e =  LCD_positive_wait;
+						  test_e =  pre_Touch_middle;
+						 }
 					 }
 				   break;
 			case LCD_positive_wait:
@@ -1060,9 +1104,15 @@ void hard_function_test(void)
 			case LCD_positive_direction:
 				    if(Flag_int==1)
 					 {
+						  delay_ms(50);
+						 Flag_int=0;
+						 delay_ms(50);
+						 if(Flag_int==1)
+						 {
 						 Flag_int = 0;
 						 FT5x06_RD_Reg(0, buf, 42);
 						 test_e =  pre_Touch_middle;
+						 }
 					 }
 				   break;
 			case  pre_Touch_middle:
@@ -1074,6 +1124,11 @@ void hard_function_test(void)
 			case Touch_middle:
 				     if(Flag_int==1)
 					 {
+						 delay_ms(50);
+						 Flag_int=0;
+						 delay_ms(50);
+						 if(Flag_int==1)
+						 {
 						 Flag_int = 0;
 						 FT5x06_RD_Reg(0, buf, 42);
 				    memset((void *)(display_layer_sdram.LCD_CACHE_BUFFER&(~0x80000000)),0xff,800*480*2);
@@ -1086,8 +1141,12 @@ void hard_function_test(void)
 	          _ClipBR=x+width+((y+height)<<16);
 	          ge2dSpriteBlt_Screen(x,y,width, height,(uint8_t *)(bmp_layer1_BUFFER ), (uint8_t *)(bmp_LCD_BUFFER));
             _ClipEnable = FALSE;
+							 SetZuobiao(10, 400 + 40);     
+						lcd_printf_new("(touch)");
+							
 						// memset((void *)gs_tpInfo,0,sizeof(gs_tpInfo));
 			      test_e = Touch_middle_re;
+						 }
 					 }
 							//touch_dev_poll();
 						
@@ -1120,6 +1179,8 @@ void hard_function_test(void)
 	          _ClipBR=x+width+((y+height)<<16);
 	          ge2dSpriteBlt_Screen(x,y,width, height,(uint8_t *)(bmp_layer1_BUFFER ), (uint8_t *)(bmp_LCD_BUFFER));
             _ClipEnable = FALSE;
+			     SetZuobiao(10, 400 + 40);     
+						lcd_printf_new("(touch)");
 			      test_e = Touch_Left_Up_re;
 			     // while(1)
 						//{
@@ -1149,6 +1210,8 @@ void hard_function_test(void)
 	          _ClipBR=x+width+((y+height)<<16);
 	          ge2dSpriteBlt_Screen(x,y,width, height,(uint8_t *)(bmp_layer1_BUFFER ), (uint8_t *)(bmp_LCD_BUFFER));
             _ClipEnable = FALSE;
+			       SetZuobiao(10, 400 + 40);     
+						lcd_printf_new("(touch)");
 			      test_e = Touch_Right_Up_re;
 			      //while(1)
 						//{
@@ -1178,6 +1241,8 @@ void hard_function_test(void)
 	          _ClipBR=x+width+((y+height)<<16);
 	          ge2dSpriteBlt_Screen(x,y,width, height,(uint8_t *)(bmp_layer1_BUFFER ), (uint8_t *)(bmp_LCD_BUFFER));
             _ClipEnable = FALSE;
+				    SetZuobiao(10, 400 + 40);     
+						lcd_printf_new("(touch)");
 				   test_e =Touch_Left_Down_re ;
 			     // while(1)
 						//{
@@ -1207,6 +1272,8 @@ void hard_function_test(void)
 	          _ClipBR=x+width+((y+height)<<16);
 	          ge2dSpriteBlt_Screen(x,y,width, height,(uint8_t *)(bmp_layer1_BUFFER ), (uint8_t *)(bmp_LCD_BUFFER));
             _ClipEnable = FALSE;
+					 SetZuobiao(10, 400 + 40);     
+						lcd_printf_new("(touch)");
 					  test_e = Touch_Right_Down_re;
 					case Touch_Right_Down_re:
 							for(Tp_i=0;Tp_i<10;Tp_i++)
@@ -1230,9 +1297,15 @@ void hard_function_test(void)
 			case AD_BAT_wait:
 				   if(Flag_int==1)
 					 {
+						 delay_ms(50);
+						 Flag_int=0;
+						 delay_ms(50);
+						 if(Flag_int==1)
+						 {
 						 Flag_int = 0;
 						 FT5x06_RD_Reg(0, buf, 42);
 						 test_e = AD_BAT_wait1;
+						 }
 					 }
            break;		
 			case 	AD_BAT_wait1:
@@ -1248,9 +1321,10 @@ void hard_function_test(void)
     					Tp_advalue = Tp_advalue/4095;		 
     					Tp_advalue = 	(Tp_advalue*10)/2.5;	
 			        SetZuobiao(10, 400 + 40);
-  						 lcd_printf_new("                  ");
-               lcd_printf_new("VBAT=%fV",Tp_advalue);
-			        delay_ms(2000);
+  						 lcd_printf_new("                                               ");
+               SetZuobiao(10, 400 + 40);
+			         lcd_printf_new("VBAT=%fV(touch)",Tp_advalue);
+			        delay_ms(20);
 			
 ////						REG_OPERATE(REG_ADC_CTL,ADC_CTL_MST,set);
 ////				    while((inpw(REG_ADC_ISR)&ADC_ISR_MF)==0);
@@ -1277,9 +1351,15 @@ void hard_function_test(void)
 ////						 lcd_printf_new("VBAT=%fV",Tp_advalue);
 						if(Flag_int==1)
 					 {
+						 delay_ms(50);
+						 Flag_int=0;
+						 delay_ms(50);
+						 if(Flag_int==1)
+						 {
 						 Flag_int = 0;
 						 FT5x06_RD_Reg(0, buf, 42);
 						 test_e = AD_8V_INIT;
+						 }
 					 }						 
 				   break;
 				 
@@ -1294,9 +1374,15 @@ void hard_function_test(void)
 			case AD_8V_wait:
 				   if(Flag_int==1)
 					 {
+						 delay_ms(50);
+						 Flag_int=0;
+						 delay_ms(50);
+						 if(Flag_int==1)
+						 {
 						 Flag_int = 0;
 						 FT5x06_RD_Reg(0, buf, 42);
 						 test_e = AD_8V_wait1;
+						 }
 					 }
 				    break;
 			case AD_8V_wait1:
@@ -1333,8 +1419,9 @@ void hard_function_test(void)
   					//Tp_advalue = Tp_advalue/4095;		 
   					//Tp_advalue = 	(Tp_advalue*100)/33;	
 					 SetZuobiao(10, 400 + 40);
-						 lcd_printf_new("                  ");
-						 lcd_printf_new("VEXT=%fV",Tp_advalue);
+						 lcd_printf_new("                                               ");
+						 SetZuobiao(10, 400 + 40);
+						 lcd_printf_new("VEXT=%fV(touch)",Tp_advalue);
 						 delay_ms(2000);
 						if(Flag_int==1)
 					 {
@@ -1342,7 +1429,8 @@ void hard_function_test(void)
 						 FT5x06_RD_Reg(0, buf, 42 );
 						  power_int_disable();
 			      SetZuobiao(10, 400 + 40);
-						lcd_printf_new("                  ");
+						lcd_printf_new("                                               ");
+						  SetZuobiao(10, 400 + 40);
 						lcd_printf_new("U9 OUTPUT LOW,6V INPUT");
 						 test_e = POWER_8V_LEVEL_LOW_wait;
 					 }	
@@ -1362,7 +1450,8 @@ void hard_function_test(void)
 				 if(touch_send_imm==0)
 			      {
 							 SetZuobiao(10, 400 + 40);
-						lcd_printf_new("                  ");
+						lcd_printf_new("                                               ");
+							SetZuobiao(10, 400 + 40);
 						lcd_printf_new("U9 OUTPUT HIGH,9V INPUT");
 							test_e = POWER_8V_LEVEL_HIGH;
 						}
@@ -1377,7 +1466,8 @@ void hard_function_test(void)
 			       if(GPIO_ReadBit(GPIOH,BIT5)==0)
 					   {
 						 SetZuobiao(10, 400 + 40);
-						  lcd_printf_new("                  ");
+						  lcd_printf_new("                                               ");
+							 SetZuobiao(10, 400 + 40);
 						  lcd_printf_new("U9 ERR");
 						 while(1);
 					  }
@@ -1399,7 +1489,8 @@ void hard_function_test(void)
 			       if(GPIO_ReadBit(GPIOH,BIT5)==0)
 					   {
 						 SetZuobiao(10, 400 + 40);
-						  lcd_printf_new("                  ");
+						  lcd_printf_new("                                               ");
+							 SetZuobiao(10, 400 + 40);
 						  lcd_printf_new("U9 ERR");
 						 while(1);
 					  }
@@ -1426,7 +1517,8 @@ void hard_function_test(void)
 						 if(*(uint8_t *)(display_layer_sdram.LCD_FRAME_BUFFER+Tp_i)!=0x00)
 						 {
 						   SetZuobiao(10, 400 + 40); 
-							 lcd_printf_new("                       ");
+							 lcd_printf_new("                                               ");
+							 SetZuobiao(10, 400 + 40); 
 				        lcd_printf_new("sdram err,err addr=0x%x,LCD_FRAME_BUFFER\r\n",display_layer_sdram.LCD_FRAME_BUFFER);
 							 while(1);
 							 
@@ -1434,7 +1526,8 @@ void hard_function_test(void)
 						  if(*(uint8_t *)(display_layer_sdram.LCD_FRAME1_BUFFER+Tp_i)!=0x55)
 						 {
 						   SetZuobiao(10, 400 + 40); 
-							 lcd_printf_new("                       ");
+							 lcd_printf_new("                                               ");
+							 SetZuobiao(10, 400 + 40); 
 				        lcd_printf_new("sdram err,err addr=0x%x,LCD_FRAME1_BUFFER\r\n",display_layer_sdram.LCD_FRAME1_BUFFER);
 							 while(1);
 							 
@@ -1442,7 +1535,8 @@ void hard_function_test(void)
 						   if(*(uint8_t *)(display_layer_sdram.LCD_FRAME2_BUFFER+Tp_i)!=0xaa)
 						 {
 						   SetZuobiao(10, 400 + 40); 
-							 lcd_printf_new("                       ");
+							 lcd_printf_new("                                               ");
+							 SetZuobiao(10, 400 + 40); 
 				        lcd_printf_new("sdram err,err addr=0x%x,LCD_FRAME2_BUFFER\r\n",display_layer_sdram.LCD_FRAME2_BUFFER);
 							 while(1);
 							 
@@ -1450,7 +1544,8 @@ void hard_function_test(void)
 						   if(*(uint8_t *)(display_layer_sdram.LCD_FRAME3_BUFFER+Tp_i)!=0x77)
 						 {
                SetZuobiao(10, 400 + 40);						   
-							 lcd_printf_new("                       ");
+							 lcd_printf_new("                                               ");
+							 SetZuobiao(10, 400 + 40); 
 				        lcd_printf_new("sdram err,err addr=0x%x,LCD_FRAME3_BUFFER\r\n",display_layer_sdram.LCD_FRAME3_BUFFER);
 							 while(1);
 							 
@@ -1458,13 +1553,16 @@ void hard_function_test(void)
 						   if(*(uint8_t *)(display_layer_sdram.LCD_CACHE_BUFFER+Tp_i)!=0x11)
 						 {
 						   SetZuobiao(10, 400 + 40); 
-							 lcd_printf_new("                       ");
+							 lcd_printf_new("                                               ");
+							 SetZuobiao(10, 400 + 40); 
 				        lcd_printf_new("sdram err,err addr=0x%x,LCD_CACHE_BUFFER\r\n",display_layer_sdram.LCD_CACHE_BUFFER);
 							 while(1);
 							 
 						 }
 					 }
-					   lcd_printf_new("                       ");
+					  SetZuobiao(10, 400 + 40); 
+					 lcd_printf_new("                                               ");
+							 SetZuobiao(10, 400 + 40); 
 				   lcd_printf_new("sdram test");
 			     while(1)
 					 {
@@ -1479,7 +1577,8 @@ void hard_function_test(void)
 						 if(sdram_new_addr==NULL)
 						 {
 							 SetZuobiao(10, 400 + 40); 
-							 lcd_printf_new("                       ");
+							 lcd_printf_new("                                               ");
+							 SetZuobiao(10, 400 + 40); 
 				        lcd_printf_new("sdram pass, size = 0x%x",sdram_total);
 							 for(Q_Num=0;Q_Num<4;Q_Num++)
 							 {
@@ -1510,8 +1609,9 @@ void hard_function_test(void)
 							   if(*(uint8_t *)(sdram_new_addr+Tp_i)!=0x55)
 							   {
 								    SetZuobiao(10, 400 + 40);  
-									 lcd_printf_new("                       ");
-				             lcd_printf_new("sdram err,err_addr=0x%x,sdram_total=0x%x",sdram_new_addr,sdram_total);
+									 lcd_printf_new("                                               ");
+				             SetZuobiao(10, 400 + 40); 
+									 lcd_printf_new("sdram err,err_addr=0x%x,sdram_total=0x%x",sdram_new_addr,sdram_total);
 							       while(1);
 							 
 							   }
@@ -1527,17 +1627,19 @@ void hard_function_test(void)
 					 {
 			SetZuobiao(10, 400 + 40);	    
 			lcd_printf_new("                                               ");
-				    lcd_printf_new("test nandflash");
+				    SetZuobiao(10, 400 + 40);	
+						 lcd_printf_new("test nandflash");
 				   TEST_NANDFLASH();
 						 
 						 SetZuobiao(10, 400 + 40);	    
 			      lcd_printf_new("                                               ");
-				    lcd_printf_new("nandflash pass,bad = %d",Tp_bad);
-           if(Tp_bad>10) 
-					 {
-						 lcd_printf_new("nandflash err,bad = %d",Tp_bad);
-						 while(1);
-					 }
+				    SetZuobiao(10, 400 + 40);	
+						 lcd_printf_new("nandflash pass,bad = %d",Tp_bad);
+//           if(Tp_bad>10) 
+//					 {
+//						 lcd_printf_new("nandflash err,bad = %d",Tp_bad);
+//						 while(1);
+//					 }
 						 delay_ms(3000);
 						 test_e = W25Q128_check;//Nand_check;//Updata_image;
 //			     Flag_int = 0;
@@ -1570,6 +1672,9 @@ void hard_function_test(void)
 								SetZuobiao(10, 400 + 40);  
 				         lcd_printf_new("W25Q128 err");
 								#ifdef  SYSUARTPRINTF 
+								SetZuobiao(10, 400 + 40);	
+								lcd_printf_new("                                               ");
+								SetZuobiao(10, 400 + 40);	
 								sysprintf("W25Q128 err=%X\r\n",Tp_i);
 								#endif
 								 while(1);
@@ -1577,7 +1682,9 @@ void hard_function_test(void)
 							else
 							{
 								SetZuobiao(10, 400 + 40);  
-				         lcd_printf_new("W25Q128 ok");
+				         lcd_printf_new("                                               ");
+								SetZuobiao(10, 400 + 40); 
+								lcd_printf_new("W25Q128 ok");
 								#ifdef  SYSUARTPRINTF 
 								sysprintf("W25Q128 ok=%X\r\n",Tp_i);
 								#endif
@@ -1602,7 +1709,7 @@ void hard_function_test(void)
 	        {
 		        
 						SetZuobiao(10, 400 + 40);     
-						lcd_printf_new("                       ");
+						lcd_printf_new("                                                                         ");
 						SetZuobiao(10, 400 + 40);  
 				         lcd_printf_new("USB NO LOAD");
 						delay_ms(3000);
@@ -1626,8 +1733,9 @@ void hard_function_test(void)
 					else
 					{
 						SetZuobiao(10, 400 + 40);  
-						lcd_printf_new("                       ");
-				         lcd_printf_new("USB NO BMP ");
+						lcd_printf_new("                                                                         ");
+				    SetZuobiao(10, 400 + 40);     
+						lcd_printf_new("USB NO BMP ");
 						delay_ms(3000);
 						
 					}
@@ -1687,6 +1795,10 @@ void hard_function_test(void)
 				sysprintf("\r\nRX_COUNT_OUT=%d\r\n",RX_COUNT_OUT);
 				if(RX_COUNT_OUT==17)
 				{
+					SetZuobiao(10, 400 + 40);  
+						lcd_printf_new("                                                                         ");
+				    SetZuobiao(10, 400 + 40);     
+						lcd_printf_new("FF00(touch)");
 					Flag_int = 0;
 					while(1)		
 					{						
@@ -1740,6 +1852,10 @@ void hard_function_test(void)
 			case Display_FF01_WAIT:
 				if(RX_COUNT_OUT==17)
 				{
+					SetZuobiao(10, 400 + 40);  
+						lcd_printf_new("                                                                         ");
+				    SetZuobiao(10, 400 + 40);     
+						lcd_printf_new("FF01(touch)");
 					Flag_int = 0;
 					while(1)		
 					{						
@@ -1794,6 +1910,10 @@ void hard_function_test(void)
 			 case Display_FF02_WAIT:
 				if(RX_COUNT_OUT==17)
 				{
+					SetZuobiao(10, 400 + 40);  
+						lcd_printf_new("                                                                         ");
+				    SetZuobiao(10, 400 + 40);     
+						lcd_printf_new("FF02(touch)");
 					Flag_int = 0;
 					while(1)		
 					{						
@@ -1814,9 +1934,9 @@ void hard_function_test(void)
 				 {
 				 sysprintf("\r\nVOICE OUT\r\n");
 					 SetZuobiao(10, 400 + 40);  
-						lcd_printf_new("                       ");
+						lcd_printf_new("                                                                         ");
 					 SetZuobiao(10, 400 + 40); 
-				         lcd_printf_new("VOICE OUT");
+				         lcd_printf_new("VOICE OUT(touch)");
 					 
 					 tts.file = 9;
 					 tts.voice = 0XF;
@@ -1856,9 +1976,16 @@ void hard_function_test(void)
 						{
 									if(Flag_int==1)
 									{
+										
+										 delay_ms(50);
+						         Flag_int=0;
+						         delay_ms(50);
+						        if(Flag_int==1)
+										{
 										Flag_int = 0;
 										FT5x06_RD_Reg(0, buf, 42);
 										test_e = Voice_stop;
+										}
 										//sysprintf("\r\nVOICE OUT\r\n");
 										//break;
 									}
@@ -1871,9 +1998,9 @@ void hard_function_test(void)
 				 {
 				 sysprintf("\r\nVOICE STOP\r\n");
 					  SetZuobiao(10, 400 + 40);  
-						lcd_printf_new("                       ");
+						lcd_printf_new("                                                                         ");
 					 SetZuobiao(10, 400 + 40); 
-				         lcd_printf_new("VOICE STOP");
+				         lcd_printf_new("VOICE STOP(touch)");
 					 // sprintf((char *)UART2_RX_BUFF,"%S","@07BF09FF*");
 					 	tts.play_num=0;
 					//
@@ -1897,9 +2024,15 @@ void hard_function_test(void)
 								{
 									if(Flag_int==1)
 									{
+										 delay_ms(50);
+						         Flag_int=0;
+						         delay_ms(50);
+						        if(Flag_int==1)
+										{
 										Flag_int = 0;
 										FT5x06_RD_Reg(0, buf, 42);
-										test_e = RTC_check;
+										test_e = powersave;
+										}
 										break;
 									}
 								}
@@ -1911,9 +2044,9 @@ void hard_function_test(void)
 				 {
 				 sysprintf("\r\nRTC CLOCK OUT\r\n");
 			  SetZuobiao(10, 400 + 40);  
-						lcd_printf_new("                       ");
+						lcd_printf_new("                                                                         ");
 					 SetZuobiao(10, 400 + 40); 
-				         lcd_printf_new("RTC CLOCK OUT");
+				         lcd_printf_new("RTC CLOCK OUT(touch)");
 			       RTC_CLKOUT();
 					 test_e = RTC_check_wait;
 				 }
@@ -1923,10 +2056,16 @@ void hard_function_test(void)
 			 case RTC_check_wait:
 				  	if(Flag_int==1)
 							{
-										Flag_int = 0;
+										 delay_ms(50);
+						         Flag_int=0;
+						         delay_ms(50);
+						        if(Flag_int==1)
+										{
+								    Flag_int = 0;
 										FT5x06_RD_Reg(0, buf, 42);
 								    RTC_CLKSTOP();
 										test_e = powersave;
+										}
 										
 							}
 				 break;
@@ -1935,21 +2074,27 @@ void hard_function_test(void)
 				 {
 				  sysprintf("\r\npower save\r\n");
 			  SetZuobiao(10, 400 + 40);  
-						lcd_printf_new("                       ");
+						lcd_printf_new("                                                                         ");
 					 SetZuobiao(10, 400 + 40); 
-				         lcd_printf_new("POWERSAVE");
+				         lcd_printf_new("POWERSAVE(touch)");
 					 test_e =  powersave_wait;
 			   }
 				 break;
 			 case powersave_wait:
 				 if(Flag_int==1)
 							{
-										Flag_int = 0;
+										 delay_ms(50);
+						         Flag_int=0;
+						         delay_ms(50);
+						        if(Flag_int==1)
+										{
+								    Flag_int = 0;
+								    
 										FT5x06_RD_Reg(0, buf, 42);
 								    //RTC_CLKSTOP();
 										//test_e = powersave;
 								    test_e =   powersave_end;
-								    
+								    }
 										
 							}
 				 break;

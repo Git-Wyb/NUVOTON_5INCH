@@ -208,6 +208,7 @@ void power_save(void)
 	
 	LCD_PWR_OFF();
 	 POWER_5V_OFF();
+	download_gpio_set_output();
 	 //Backlinght_Control_Init_HARDV4(255);
 	
 	

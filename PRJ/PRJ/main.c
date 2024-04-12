@@ -313,6 +313,7 @@ int main(void)
 			MODE_WORKTEST=check_io_state(MODE_SELECT);
 		}
 		while(MODE_WORKTEST==STATUS_Err);
+		//MODE_WORKTEST = WORK_TEST;
 		
 	 while((get_main_pwr_ad_value()<VOLT_WORK));
 	 LED_POWER_ON();

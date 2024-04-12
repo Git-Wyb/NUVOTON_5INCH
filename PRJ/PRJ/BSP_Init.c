@@ -89,6 +89,7 @@ uint8_t *RxBuffer_noshift;
  uint8_t flag_usb_init=0;
  extern int gs_usb_mount_flag;
  extern uint8_t TYPE_PRODUCT;
+extern uint8_t MODE_WORKTEST;
  
 void  REG_OPERATE(uint32_t x_reg,uint32_t x_data,ENUM_REG x_type)
 {
@@ -666,7 +667,7 @@ void SDRAM_DATA_INIT(void)
 	#endif
 	if((READ_PIN_SW1_6!=SW_ON)&&
 		 ((badmanage_str->BAD_MANAGE_str.flag!=BAD_BLOCK_LOCK))&&
-	   (READ_WORKMODE==WORK_FUNCTION)) 
+	   (MODE_WORKTEST==WORK_FUNCTION)) 
 	{		
 	power_checkreset();
 	//HAL_NVIC_SystemReset( );
