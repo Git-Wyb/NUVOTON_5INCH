@@ -406,7 +406,16 @@ int board_nand_init(struct nand_chip *nand)
     // NAND Reset
     outpw(REG_NANDCTL, inpw(REG_NANDCTL) | 0x1);    // software reset
     while (inpw(REG_NANDCTL) & 0x1);
-
+    
+		
+		//ECC ENABLE
+		
+		// Redundant area size
+    outpw(REG_NANDRACTL, 0X40);
+		REG_OPERATE(REG_NANDCTL,(1<<17)|(1<<18)|(1<<19)|(1<<21)|(1<<22),clear);
+		REG_OPERATE(REG_NANDCTL,(1<<4)|(1<<7)|(1<<8)|(1<<16)|(1<<20)|(1<<23),set);
+		
+		
     /* Detect NAND chips */
     /* first scan to find the device and get the page size */
 //////////////    if (nand_scan_ident(&(nuc970_nand->mtd), 1, NULL)) {

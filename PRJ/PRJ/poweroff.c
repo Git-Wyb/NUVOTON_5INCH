@@ -49,7 +49,7 @@ void LVD_IRQHandler(void)
 	//inpw(REG_SYS_MISCISR);
 	//REG_OPERATE(REG_SYS_MISCISR,1,clear);
 	
-	 outpw(REG_NANDECTL, 0x0); /* lock write protect */
+outpw(REG_NANDECTL, 0x0); /* lock write protect */
 while(1);
 	//	sysprintf("\r\n--------------LVD INIT------------------\r\n");
 //	REG_OPERATE(REG_SYS_MISCISR,1,clear);
@@ -369,7 +369,7 @@ void LOW_POWER_cyw(void)
 				
 				#ifdef  SYSUARTPRINTF_ActionTimers 
 					sysprintf("POWER OFF\r\n");
-					sysprintf("logodata_sdrambuffer_addr_arry[Tp_field]_5=0x%x,0x%x,0x%x,0x%x\r\n",
+					sysprintf("logodata_sdrambuffer_addr_arry[Tp_field]_3=0x%x,0x%x,0x%x,0x%x\r\n",
 					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4),
 				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+5),
 					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+6),
@@ -391,7 +391,7 @@ void LOW_POWER_cyw(void)
 				 NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr,1);
 				
 					//sysprintf("POWER OFF\r\n");
-					sysprintf("logodata_sdrambuffer_addr_arry[Tp_field]_6=0x%x,0x%x,0x%x,0x%x\r\n",
+					sysprintf("logodata_sdrambuffer_addr_arry[Tp_field]_4=0x%x,0x%x,0x%x,0x%x\r\n",
 					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4),
 				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+5),
 					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+6),
