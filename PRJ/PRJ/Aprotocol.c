@@ -1823,7 +1823,7 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 	    if(LOGO_DATA_OUT_FLAG!=3 )    return 0;   
 			if((buff[23]!=',')&&(buff[23]!='*')) return 0;//��ֹ�ļ�����1λҲ����
       
-		 	if((buff[4]=='0')||(buff[4]=='1'))//????????
+		 	if((buff[4]=='0')||(buff[4]=='1')||(buff[4]=='2'))//????????
 				{
 					
 					if(buff[4]=='0')//?�??????????j??????
@@ -1875,7 +1875,8 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 						
 					//if((Tp_field_addr + Tp_field_size)>0x8000000) return 0;	
 					//if((tp_field.addr + tp_field.space)>=0x9DC0000) return 0;//��С����NANDFLASH���ܴ�С�� ���������� ��Ϊ��2Gbit���豸���Ա����
-					if((tp_field.addr + tp_field.space)>=0x9B40000) return 0;
+					//if((tp_field.addr + tp_field.space)>=0x9B40000) return 0;
+					if((tp_field.addr + tp_field.space)>=0x98A0000) return 0;
 					if(tp_field.addr < 0x6000000 )  return 0; //��ʼ��ַ����LOGO����Ӧ���ڵķ�Χ�� 20171016
 					
 					if((tp_field.addr %0x20000)!=0)  return 0;	
@@ -2077,7 +2078,14 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
      						break;
 						case UnitPara_DATACLASS:
 							  //?????????
-						     Clear_sdram(1<<(Tp_field+8));//AREANO
+						     if(buff[4]=='2')
+								{
+									UnitData_NandToSDRAM(Tp_field,Tp_gs_AreaInfo[Tp_field].addr+logodata_2gbit_change_addr);
+								}
+								else
+								{
+						
+						    Clear_sdram(1<<(Tp_field+8));//AREANO
                 for(Q0_addr=0;Q0_addr<(Tp_gs_AreaInfo[Tp_field].space/0x20000);Q0_addr++)
 								 {
 									 NAND_EraseBlock((Tp_gs_AreaInfo[Tp_field].addr+logodata_2gbit_change_addr)/0x20000+Q0_addr);
@@ -2086,6 +2094,8 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 								 *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS2_OFFSET) = 0X18;
 								 *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS3_OFFSET) = 0X18;
 								  SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],(Tp_gs_AreaInfo[Tp_field].addr+logodata_2gbit_change_addr)/2048,1);
+								  SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],unit_data__B_nandflash_start,1);
+								}
 						    break;
 						case 	TestFinalData_DATACLASS:
 							   Clear_sdram(1<<(Tp_field+8));//AREANO
@@ -2355,7 +2365,7 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 						 *(__IO uint8_t*)(logodata_sdrambuffer_addr_arry[filed_num] + Tp_data3 +  UINT_START3_OFFSET) = Tp_field_addr ;
 					 
 					 SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[filed_num],(gs_AreaInfo[filed_num].addr+logodata_2gbit_change_addr)/2048,1);
-				
+				   SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[filed_num],unit_data__B_nandflash_start,1);
 //					//Tp_field = filed_num;
 //					Tp_data3 =convet_3_dec_asccii_to_hex(buff + 5);//����ǵ�Ԫ����
 //					if(Tp_data3 == 0xffff) return 0;//���ݲ��Ϲ淶

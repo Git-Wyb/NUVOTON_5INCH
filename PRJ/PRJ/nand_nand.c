@@ -461,7 +461,7 @@ void TEST_NANDFLASH(void)
 //		
 //	}
 	sysprintf("Tp_bad = %x\n\r",Tp_bad);
-	if(Tp_bad > 20)
+	if(Tp_bad > 39)
 	{
 		//SetZuobiao(10, 400 + 20);
 	  sysprintf( "nandflash errblock");

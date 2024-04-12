@@ -49,7 +49,7 @@
 #define NAND_PAGE_SIZE             ((uint16_t)0x0800)
 #define IMAGE_BUFFER_SIZE    800*3
 #define BAD_BLOCK_LOCK 0x36373839
-#define BAD_BLOCK_TOTAL 40
+#define BAD_BLOCK_TOTAL 60
 
 #define backup_tab_nandflash_start      0//0         //  0x0000_0000��0x0001_FFFF
 #define image_file_nandflash_start      (1*64)//(1*64)//64        
@@ -57,8 +57,9 @@
 #define image_tab__nandflash_start      (1529*64)//(765*64)//(1529*64)//48960
 #define baseB_data__nandflash_start      (1533*64)//(769*64)//(1533*64)//49152   //SAVE
 #define logo_data__nandflash_start      (1534*64)//(770*64)//(1534*64)//49216
-#define baseA_data__nandflash_start      (2007*64)//POWERDOWN DON'T SAVE
-#define backupdata_nandflash_start      (2008*64)//(1004*64)//(2008*64)//64256
+#define unit_data__B_nandflash_start      (1986*64)
+#define baseA_data__nandflash_start      (1987*64)//POWERDOWN DON'T SAVE
+#define backupdata_nandflash_start      (1988*64)//(1004*64)//(2008*64)//64256
 #define nandflash______________end      (2048*64)//(1024*64)//(2048*64)//65536     // 
 
 
@@ -147,7 +148,7 @@ typedef struct BADMANAGE_TAB
 typedef union BADMANGE_TAB_U
 {
 	BADMANAGE_TAB_TYPE BAD_MANAGE_str;
-	uint8_t  BAD_MANAGE_arr[176];
+	uint8_t  BAD_MANAGE_arr[BAD_BLOCK_TOTAL*4+16];
 }BADMANAGE_TAB_TYPE_U;
 	
 
