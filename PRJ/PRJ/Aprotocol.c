@@ -2164,6 +2164,7 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 						
                 for(Q0_addr=0;Q0_addr<(Tp_gs_AreaInfo[Tp_field].space/0x20000);Q0_addr++)
 								 {
+									 
 									 NAND_EraseBlock((Tp_gs_AreaInfo[Tp_field].addr+logodata_2gbit_change_addr)/0x20000+Q0_addr);
 								 }
 								 

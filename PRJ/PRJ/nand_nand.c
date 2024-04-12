@@ -156,7 +156,9 @@ uint32_t NAND_ReadID(void)
 
 u8 NAND_EraseBlock(u32 BlockNum)
 {
-	
+	#ifdef  SYSUARTPRINTF
+			sysprintf("NAND_EraseBlock=%X\r\n",BlockNum);
+	#endif
 	//REG_OPERATE(REG_NANDINTSTS,1<<10,set);
 //////	uint32_t Tp_busy=0;
 //////	
@@ -312,9 +314,13 @@ u8 NAND_ReadPage(u32 PageNum,u16 ColNum,u8 *pBuffer,u16 NumByteToRead)
 	uint16_t Tp_i;
 	u8 errsta=0;
 	u8 res=0;
-	
+	#ifdef  SYSUARTPRINTF 
+		//	sysprintf("NAND_ReadPage1,PageNum=0x%x\r\n",PageNum);
+			#endif
 	PageNum = BAD_BLOCK_CHANGE(PageNum/64)*64  +  PageNum%64;
-	
+	#ifdef  SYSUARTPRINTF 
+			//sysprintf("NAND_ReadPage2,PageNum=0x%x\r\n",PageNum);
+			#endif
 	//memset(NAND_WRITE_BUF,0x0,2048);
 	outpw(REG_NANDCMD,inpw(REG_NANDCMD)&0xffffff00|(uint8_t)NAND_CMD_READ0);
 	outpw(REG_NANDADDR, ((inpw(REG_NANDADDR)&0x7fffff00))|((u8)ColNum));

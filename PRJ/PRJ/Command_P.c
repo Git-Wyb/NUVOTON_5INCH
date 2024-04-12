@@ -411,8 +411,13 @@ uint8_t SDRAM_TO_NANDFLASH(uint32_t x_sdram_start,uint32_t x_nandflash_start,uin
 	NAND_ADDRESS_STR WriteReadAddr;
 	 uint32_t Tp_i=0;//,Tp_j=0;
 	uint16_t  x_delay;
-	static uint16_t Tp_backup;
+	//static uint16_t Tp_backup;
 	
+	rewrite:
+	
+	#ifdef  SYSUARTPRINTF 
+	sysprintf("SDRAM_TO_NANDFLASH=x_sdram_start=0x%x,x_nandflash_start=0x%x,x_block_num=0x%x\r\n",x_sdram_start,x_nandflash_start,x_block_num);
+	#endif
 	//x_nandflash_start = x_nandflash_start*64;
 	
 	if((x_nandflash_start%64)!=0)
@@ -425,7 +430,7 @@ uint8_t SDRAM_TO_NANDFLASH(uint32_t x_sdram_start,uint32_t x_nandflash_start,uin
 	
 	for(Tp_i=0;Tp_i<64*x_block_num;Tp_i++)
 	{
-		rewrite:
+		//rewrite:
 		WriteReadAddr.Zone = 0x00;
     WriteReadAddr.Block = 0x00;
     WriteReadAddr.Page = x_nandflash_start+Tp_i;
@@ -449,10 +454,11 @@ uint8_t SDRAM_TO_NANDFLASH(uint32_t x_sdram_start,uint32_t x_nandflash_start,uin
 		if(NAND_WritePage(WriteReadAddr.Page,0,TX_NEW, NAND_PAGE_SIZE))
 		{
 			#ifdef  SYSUARTPRINTF 
-			sysprintf("BAD BLOCK MARK");
+			sysprintf("BAD BLOCK MARK1,Tp_i=0x%d\r\n",Tp_i);
 			#endif
 			BAD_BLOCK_MARK(BAD_BLOCK_CHANGE(WriteReadAddr.Page/64));
-			SDRAM_TO_NANDFLASH(x_sdram_start,x_nandflash_start,x_block_num);
+			goto rewrite;
+			//SDRAM_TO_NANDFLASH(x_sdram_start,x_nandflash_start,x_block_num);
 			//BAD_BLOCK_MARK(BAD_BLOCK_CHANGE(WriteReadAddr.Page/64));
 			//SDRAM_TO_NANDFLASH(x_sdram_start,x_nandflash_start,x_block_num);
 //			  systerm_error_status.bits.nandflash_Write_error = 1;
@@ -473,15 +479,19 @@ uint8_t SDRAM_TO_NANDFLASH(uint32_t x_sdram_start,uint32_t x_nandflash_start,uin
 //				goto rewrite ;
 //			}
 		}
+			#ifdef  SYSUARTPRINTF 
+			sysprintf("Tp_iTp_i=0x%d\r\n",Tp_i);
+			#endif
 		
 		NAND_ReadPage(WriteReadAddr.Page,0,RxBuffer, NAND_PAGE_SIZE);
 		if(memcmp(TX_NEW,RxBuffer,NAND_PAGE_SIZE)!=0)
 		{
 			#ifdef  SYSUARTPRINTF 
-			sysprintf("BAD BLOCK MARK");
+			sysprintf("BAD BLOCK MARK2,Tp_i=0x%d\r\n",Tp_i);
 			#endif
 			BAD_BLOCK_MARK(BAD_BLOCK_CHANGE(WriteReadAddr.Page/64));
-			SDRAM_TO_NANDFLASH(x_sdram_start,x_nandflash_start,x_block_num);
+			goto rewrite;
+			//SDRAM_TO_NANDFLASH(x_sdram_start,x_nandflash_start,x_block_num);
 		}
 //		if(NAND_GetECCresult(WriteReadAddr.Page,0))
 //		{

@@ -549,7 +549,7 @@ void nandflash_init(void)
 void SDRAM_DATA_INIT(void)
 {
 	
-	uint16_t width,height;
+	uint16_t width,height,Tp_i;
 //		union 
 //	{
 //		uint32_t DATA_U32;
@@ -662,8 +662,20 @@ void SDRAM_DATA_INIT(void)
 	
 	//sprintf("badmanage_str->BAD_MANAGE_str.NANDFLASH_USER_INX=%x,read\n\r",badmanage_str->BAD_MANAGE_str.NANDFLASH_USER_INX);
 	//NANDFLASH_BADMANAGE_INIT();
-	#ifdef  SYSUARTPRINTF 
-	sysprintf("READ_PIN_SW1_6=0x%x,badmanage_str->BAD_MANAGE_str.flag=0x%08x\r\n",READ_PIN_SW1_6,badmanage_str->BAD_MANAGE_str.flag);
+	#ifdef  SYSUARTPRINTF
+////  	badmanage_str->BAD_MANAGE_str.ERR_NUMBER = 70;
+////		for(Tp_i=0;Tp_i<70;Tp_i++)
+////		{
+////			badmanage_str->BAD_MANAGE_str.ERR_BLOCK[Tp_i] = 1+Tp_i;
+////			badmanage_str->BAD_MANAGE_str.BACKUP_BLOCK[Tp_i] = 1968+Tp_i;
+////		}
+////		NANDFLASH_P3PD_INX_SAVE();
+		
+	sysprintf("ERR_NUMBER=0x%08x\r\n",badmanage_str->BAD_MANAGE_str.ERR_NUMBER);
+	for(Tp_i=0;Tp_i<badmanage_str->BAD_MANAGE_str.ERR_NUMBER;Tp_i++)
+	{
+		sysprintf("errblock=0x%08x,backupblock=0x%08x\r\n",badmanage_str->BAD_MANAGE_str.ERR_BLOCK[Tp_i],badmanage_str->BAD_MANAGE_str.BACKUP_BLOCK[Tp_i]);
+	}
 	#endif
 	if((READ_PIN_SW1_6!=SW_ON)&&
 		 ((badmanage_str->BAD_MANAGE_str.flag!=BAD_BLOCK_LOCK))&&
