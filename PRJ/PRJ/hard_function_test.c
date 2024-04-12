@@ -1942,7 +1942,7 @@ void hard_function_test(void)
 					 SetZuobiao(10, 400 + 40);  
 						lcd_printf_new("                                                                         ");
 					 SetZuobiao(10, 400 + 40); 
-				         lcd_printf_new("VOICE OUT(touch)");
+				         lcd_printf_new("VOICE Start");
 					 
 					 tts.file = 9;
 					 tts.voice = 0XF;
@@ -1978,15 +1978,20 @@ void hard_function_test(void)
 				 //{
 			   //  Flag_int = 0;
 			    //  while(1)
+			     
 			      if(wt588h_send_step == 0)
 						{
-									if(Flag_int==1)
+									
+							    if(touch_send_imm==0)
 									{
-										
-										 delay_ms(50);
-						         Flag_int=0;
-						         delay_ms(50);
-						        if(Flag_int==1)
+										  SetZuobiao(10, 400 + 40);  
+						       lcd_printf_new("                                                                         ");
+					         SetZuobiao(10, 400 + 40); 
+				           lcd_printf_new("VOICE STOP(touch)");
+										// delay_ms(50);
+						        // Flag_int=0;
+						       //  delay_ms(50);
+						       // if(Flag_int==1)
 										{
 										Flag_int = 0;
 										FT5x06_RD_Reg(0, buf, 42);
@@ -2000,8 +2005,13 @@ void hard_function_test(void)
 				 
 				  break;
 				case Voice_stop:
-				 if(touch_send_imm==0)
+				 if(Flag_int==1)
 				 {
+					 	 delay_ms(50);
+						  Flag_int=0;
+					  delay_ms(50);
+					 if(Flag_int==1)
+					 {
 				 sysprintf("\r\nVOICE STOP\r\n");
 					  SetZuobiao(10, 400 + 40);  
 						lcd_printf_new("                                                                         ");
@@ -2016,6 +2026,7 @@ void hard_function_test(void)
 			    // RX_COUNT_IN =  10;
 					 test_e = Voice_stop_wait;
 				 }
+			 }
 					// FLAG_DISPLAY = 1;
 //				  send_wt588h_init(0xFFE0|9);
 //		      delay_ms(50);
