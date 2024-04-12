@@ -49,7 +49,7 @@ void LVD_IRQHandler(void)
 	//inpw(REG_SYS_MISCISR);
 	//REG_OPERATE(REG_SYS_MISCISR,1,clear);
 	
-	
+	 outpw(REG_NANDECTL, 0x0); /* lock write protect */
 while(1);
 	//	sysprintf("\r\n--------------LVD INIT------------------\r\n");
 //	REG_OPERATE(REG_SYS_MISCISR,1,clear);
@@ -574,6 +574,7 @@ void LOW_POWER_cyw(void)
 		GPIO_Set(GPIOG,BIT3);
 		#endif
 		#ifdef POWER_INT_MODE
+		outpw(REG_NANDECTL, 0x0); /* lock write protect */
 		power_checkreset();
         #endif
 		 while(1)
