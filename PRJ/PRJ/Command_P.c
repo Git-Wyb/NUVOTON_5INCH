@@ -399,6 +399,7 @@ void BAD_BLOCK_MARK(uint16_t x_block)
 	sprintf((char *)(BaseData_ARR+BASE_data_ErrBlock*9),"%08X",badmanage_str->BAD_MANAGE_str.ERR_NUMBER );
 	
 	
+	NANDFLASH_P3PD_INX_SAVE();
 	//SDRAM_TO_NANDFLASH(badmanage_tab_BUFFER,backup_tab_nandflash_start,1);
 	
 }
