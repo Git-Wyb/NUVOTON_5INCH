@@ -419,6 +419,8 @@ uint8_t SDRAM_TO_NANDFLASH(uint32_t x_sdram_start,uint32_t x_nandflash_start,uin
 	}
 	//HAL_NVIC_DisableIRQ(PVD_IRQn);
 	//__set_PRIMASK(1);
+	sysSetLocalInterrupt(DISABLE_IRQ);
+	
 	for(Tp_i=0;Tp_i<64*x_block_num;Tp_i++)
 	{
 		rewrite:
@@ -485,6 +487,9 @@ uint8_t SDRAM_TO_NANDFLASH(uint32_t x_sdram_start,uint32_t x_nandflash_start,uin
 //			SDRAM_TO_NANDFLASH(x_sdram_start,x_nandflash_start,x_block_num);
 //		}
 	}
+	
+	sysSetLocalInterrupt(ENABLE_IRQ);
+	
 	//__set_PRIMASK(0);
 	//HAL_NVIC_EnableIRQ(PVD_IRQn);
 	

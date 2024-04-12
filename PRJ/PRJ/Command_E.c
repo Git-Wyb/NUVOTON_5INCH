@@ -108,7 +108,7 @@ void INIT_LOGO_DATA(DATACLASS_TYPE x_datatype,uint8_t x_field)
 								 *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS2_OFFSET) = 0X18;
 								 *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS3_OFFSET) = 0X18;
 								  SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],(gs_AreaInfo[Tp_field].addr+logodata_2gbit_change_addr)/2048,1);
-						      SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],unit_data__B_nandflash_start,1);
+						     // SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],unit_data__B_nandflash_start,1);
 						           break;
 						      case 	TestFinalData_DATACLASS:
 							           Clear_sdram(1<<(Tp_field+8));//AREANO

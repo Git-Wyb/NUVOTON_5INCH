@@ -57,9 +57,9 @@
 #define image_tab__nandflash_start      (1529*64)//(765*64)//(1529*64)//48960
 #define baseB_data__nandflash_start      (1533*64)//(769*64)//(1533*64)//49152   //SAVE
 #define logo_data__nandflash_start      (1534*64)//(770*64)//(1534*64)//49216
-#define unit_data__B_nandflash_start      (1986*64)
-#define baseA_data__nandflash_start      (1987*64)//POWERDOWN DON'T SAVE
-#define backupdata_nandflash_start      (1988*64)//(1004*64)//(2008*64)//64256
+//#define unit_data__B_nandflash_start      (1966*64)
+#define baseA_data__nandflash_start      (1967*64)//POWERDOWN DON'T SAVE
+#define backupdata_nandflash_start      (1968*64)//(1004*64)//(2008*64)//64256
 #define nandflash______________end      (2048*64)//(1024*64)//(2048*64)//65536     // 
 
 

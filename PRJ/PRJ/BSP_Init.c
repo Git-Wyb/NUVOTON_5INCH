@@ -411,9 +411,9 @@ int board_nand_init(struct nand_chip *nand)
 		//ECC ENABLE
 		
 		// Redundant area size
-    outpw(REG_NANDRACTL, 0X40);
-		REG_OPERATE(REG_NANDCTL,(1<<17)|(1<<18)|(1<<20)|(1<<21)|(1<<22),clear);
-		REG_OPERATE(REG_NANDCTL,(1<<4)|(1<<7)|(1<<8)|(1<<16)|(1<<19)|(1<<23),set);
+ ////   outpw(REG_NANDRACTL, 0X40);
+	////	REG_OPERATE(REG_NANDCTL,(1<<17)|(1<<18)|(1<<20)|(1<<21)|(1<<22),clear);
+	////	REG_OPERATE(REG_NANDCTL,(1<<4)|(1<<7)|(1<<8)|(1<<16)|(1<<19)|(1<<23),set);
 		
 		
     /* Detect NAND chips */

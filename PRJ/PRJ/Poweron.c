@@ -398,7 +398,7 @@ void UnitData_NandToSDRAM(uint8_t Tp_field,uint32_t Tp_addr)
 				}
 				if(Tp_flag == 1)
 				{
-				NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[Tp_field],unit_data__B_nandflash_start,1);
+				NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr/2048,1);
 				}
 				
 			 Tp_cs = 0;
@@ -445,8 +445,8 @@ void UnitData_NandToSDRAM(uint8_t Tp_field,uint32_t Tp_addr)
 						 memcpy((uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]),(uint8_t *)logodata_sdrambuffer_addr_arry[Tp_field]+UINT_START2_OFFSET,MAX_LOGO_UINT_NUM+2);
 					}
 			 }
-			 if(Tp_flag ==0)  SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],unit_data__B_nandflash_start,1);
-			 if(Tp_flag ==1)  SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr/2048,1);
+			 //if(Tp_flag ==0)  SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr/2048,1);
+			 //if(Tp_flag ==1)  SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr/2048,1);
 }
 
 
