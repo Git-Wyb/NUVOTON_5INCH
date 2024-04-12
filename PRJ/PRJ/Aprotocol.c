@@ -2080,7 +2080,9 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
      						break;
 						case UnitPara_DATACLASS:
 							  //?????????
-						     if(buff[4]=='2')
+						     //if(buff[4]=='2')
+						     //if(0)
+						    if(buff[4]=='2')
 								{
 									UnitData_NandToSDRAM(Tp_field,Tp_gs_AreaInfo[Tp_field].addr+logodata_2gbit_change_addr);
 								}
@@ -2096,7 +2098,7 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 								 *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS2_OFFSET) = 0X18;
 								 *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS3_OFFSET) = 0X18;
 								  SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],(Tp_gs_AreaInfo[Tp_field].addr+logodata_2gbit_change_addr)/2048,1);
-								  //SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],unit_data__B_nandflash_start,1);
+								  SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],unit_data__B_nandflash_start,1);
 								}
 						    break;
 						case 	TestFinalData_DATACLASS:
@@ -2367,7 +2369,7 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 						 *(__IO uint8_t*)(logodata_sdrambuffer_addr_arry[filed_num] + Tp_data3 +  UINT_START3_OFFSET) = Tp_field_addr ;
 					 
 					 SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[filed_num],(gs_AreaInfo[filed_num].addr+logodata_2gbit_change_addr)/2048,1);
-				   //SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[filed_num],unit_data__B_nandflash_start,1);
+				   SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[filed_num],unit_data__B_nandflash_start,1);
 //					//Tp_field = filed_num;
 //					Tp_data3 =convet_3_dec_asccii_to_hex(buff + 5);//����ǵ�Ԫ����
 //					if(Tp_data3 == 0xffff) return 0;//���ݲ��Ϲ淶

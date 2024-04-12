@@ -52,7 +52,7 @@ extern uint8_t *Image_Buf,*Image_Buf_bak;
 extern uint32_t logodata_sdrambuffer_addr_arry_bak[16];
 //extern uint8_t *Tp_Image_Buf;
 
-char SOFT_VERSION[] = "TBNUVA04";
+char SOFT_VERSION[] = "TBNUVA05";
  uint8_t flag_AB=0;
 
 uint8_t LOGO_ERR = 0;
@@ -445,8 +445,8 @@ void UnitData_NandToSDRAM(uint8_t Tp_field,uint32_t Tp_addr)
 						 memcpy((uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]),(uint8_t *)logodata_sdrambuffer_addr_arry[Tp_field]+UINT_START2_OFFSET,MAX_LOGO_UINT_NUM+2);
 					}
 			 }
-			 //if(Tp_flag ==0)  SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr/2048,1);
-			 //if(Tp_flag ==1)  SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr/2048,1);
+			 if(Tp_flag ==0)  SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],unit_data__B_nandflash_start,1);
+			 if(Tp_flag ==1)  SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr/2048,1);
 }
 
 

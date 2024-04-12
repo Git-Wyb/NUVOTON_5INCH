@@ -548,7 +548,14 @@ void nandflash_init(void)
 void SDRAM_DATA_INIT(void)
 {
 	
-	uint16_t width,height;
+	uint16_t width,height,Tp_i;
+		union 
+	{
+		uint32_t DATA_U32;
+		uint8_t  DATA_U8[4];
+	}Tp_CHECK;
+	
+	
 	display_layer_sdram.IMAGE_TAB_BUFFER = (uint32_t )malloc((4*64*2048)+64);
 	display_layer_sdram.IMAGE_TAB_BUFFER = 32+shift_pointer((uint32_t)display_layer_sdram.IMAGE_TAB_BUFFER, 32);
 	display_layer_sdram.IMAGE_TAB_BUFFER = display_layer_sdram.IMAGE_TAB_BUFFER|0X80000000;
@@ -646,17 +653,31 @@ void SDRAM_DATA_INIT(void)
 	
 	
 	NAND_ReadPage(backup_tab_nandflash_start,0,(uint8_t *)badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
+	Tp_CHECK.DATA_U32 = 0;
+	for(Tp_i=0;Tp_i<(sizeof(badmanage_str->BAD_MANAGE_arr)-4);Tp_i++)
+	{
+		Tp_CHECK.DATA_U32 =Tp_CHECK.DATA_U32 + badmanage_str->BAD_MANAGE_arr[Tp_i];
+	}
+	
 	//sprintf("badmanage_str->BAD_MANAGE_str.NANDFLASH_USER_INX=%x,read\n\r",badmanage_str->BAD_MANAGE_str.NANDFLASH_USER_INX);
 	//NANDFLASH_BADMANAGE_INIT();
 	#ifdef  SYSUARTPRINTF 
 	sysprintf("READ_PIN_SW1_6=0x%x,badmanage_str->BAD_MANAGE_str.flag=0x%08x\r\n",READ_PIN_SW1_6,badmanage_str->BAD_MANAGE_str.flag);
 	#endif
-	if((READ_PIN_SW1_6!=SW_ON)&&(badmanage_str->BAD_MANAGE_str.flag!=BAD_BLOCK_LOCK)&&(READ_WORKMODE==WORK_FUNCTION)) 
+	if((READ_PIN_SW1_6!=SW_ON)&&
+		 ((badmanage_str->BAD_MANAGE_str.flag!=BAD_BLOCK_LOCK)||(Tp_CHECK.DATA_U32!=badmanage_str->BAD_MANAGE_str.backup_checksum))&&
+	   (READ_WORKMODE==WORK_FUNCTION)) 
 	{		
 	power_checkreset();
 	//HAL_NVIC_SystemReset( );
 	while(1);
 	
+	}
+	if((READ_PIN_SW1_6==SW_ON)&&
+		 ((Tp_CHECK.DATA_U32!=badmanage_str->BAD_MANAGE_str.backup_checksum))&&
+	   (READ_WORKMODE==WORK_FUNCTION))
+	{
+		badmanage_str->BAD_MANAGE_str.ERR_NUMBER=0;
 	}
 	
 	

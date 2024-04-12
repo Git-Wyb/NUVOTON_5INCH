@@ -49,7 +49,7 @@
 #define NAND_PAGE_SIZE             ((uint16_t)0x0800)
 #define IMAGE_BUFFER_SIZE    800*3
 #define BAD_BLOCK_LOCK 0x36373839
-#define BAD_BLOCK_TOTAL 60
+#define BAD_BLOCK_TOTAL 80
 
 #define backup_tab_nandflash_start      0//0         //  0x0000_0000锟斤拷0x0001_FFFF
 #define image_file_nandflash_start      (1*64)//(1*64)//64        
@@ -57,7 +57,7 @@
 #define image_tab__nandflash_start      (1529*64)//(765*64)//(1529*64)//48960
 #define baseB_data__nandflash_start      (1533*64)//(769*64)//(1533*64)//49152   //SAVE
 #define logo_data__nandflash_start      (1534*64)//(770*64)//(1534*64)//49216
-//#define unit_data__B_nandflash_start      (1966*64)
+#define unit_data__B_nandflash_start      (1966*64)
 #define baseA_data__nandflash_start      (1967*64)//POWERDOWN DON'T SAVE
 #define backupdata_nandflash_start      (1968*64)//(1004*64)//(2008*64)//64256
 #define nandflash______________end      (2048*64)//(1024*64)//(2048*64)//65536     // 
@@ -140,15 +140,16 @@ typedef struct BADMANAGE_TAB
 	uint32_t NANDFLASH_CUSTOMER_INX;
 	uint32_t NANDFLASH_USER_INX;
 	uint32_t flag;//被检测后置位为一个定值0x36373839
-	uint8_t  ERR_NUMBER;//坏块个数只在flag被置位为定值时才有效
+	uint32_t  ERR_NUMBER;//坏块个数只在flag被置位为定值时才有效
 	uint16_t ERR_BLOCK[BAD_BLOCK_TOTAL];//检查出有问题的块
 	uint16_t BACKUP_BLOCK[BAD_BLOCK_TOTAL];//对应替换的块
+  uint32_t backup_checksum;
 }BADMANAGE_TAB_TYPE;
 
 typedef union BADMANGE_TAB_U
 {
 	BADMANAGE_TAB_TYPE BAD_MANAGE_str;
-	uint8_t  BAD_MANAGE_arr[BAD_BLOCK_TOTAL*4+16];
+	uint8_t  BAD_MANAGE_arr[BAD_BLOCK_TOTAL*4+20];
 }BADMANAGE_TAB_TYPE_U;
 	
 
@@ -163,4 +164,5 @@ uint8_t Clear_sdram(uint32_t x_Flag);
 uint8_t get_command_xor(void);
 uint16_t BAD_BLOCK_CHANGE(uint16_t x_block);
 void check_sum_nand(uint32_t x_addr,uint16_t x_width,uint16_t x_height);
+void NANDFLASH_backup_checksum(void);
 #endif 
