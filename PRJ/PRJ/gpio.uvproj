@@ -373,7 +373,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>NO_TIMER, IS_FPGA,POWER_INT_MODE,DEBUG</Define>
+              <Define>NO_TIMER, IS_FPGA,POWER_INT_MODE,DEBUG,SYSUARTPRINTF_ActionTimers</Define>
               <Undefine></Undefine>
               <IncludePath>..\..\Driver\Include;..\..\Library\UsbHostLib\inc;..\..\ThirdParty\FATFS\source;..\..\ThirdParty\yaffs2\include;..\PRJ</IncludePath>
             </VariousControls>
