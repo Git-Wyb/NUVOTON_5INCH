@@ -686,6 +686,12 @@ void SDRAM_DATA_INIT(void)
 	while(1);
 	
 	}
+	
+	
+	if(MODE_WORKTEST==WORK_TEST)
+	{
+		badmanage_str->BAD_MANAGE_str.ERR_NUMBER=0;
+	}
 //	if((READ_PIN_SW1_6==SW_ON)&&
 //		 ((Tp_CHECK.DATA_U32!=badmanage_str->BAD_MANAGE_str.backup_checksum))&&
 //	   (READ_WORKMODE==WORK_FUNCTION))
