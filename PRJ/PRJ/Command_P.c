@@ -654,8 +654,16 @@ flag111:
 		
 	   for(x_delay = 0;x_delay<1048;x_delay++);
 		
-	   NAND_WritePage( WriteReadAddr.Page,0,bmpBuf_kkk, 2048);
-		
+	   //NAND_WritePage( WriteReadAddr.Page,0,bmpBuf_kkk, 2048);
+		 while(NAND_WritePage( WriteReadAddr.Page,0,bmpBuf_kkk, 2048)==NSTA_ERROR)
+		 {
+			// x_delay = x_delay;
+			 BAD_BLOCK_MARK(BAD_BLOCK_CHANGE(WriteReadAddr.Page/64));
+			 if(systerm_error_status.bits.nandflash_Write_error == 1)
+			 {
+				 break;
+			 }
+		 }
 		    
 		   Tp_addr = Tp_addr +2048;
 			x_nandflah_start = x_nandflah_start+2048;

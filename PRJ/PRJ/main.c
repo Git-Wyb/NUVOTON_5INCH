@@ -96,6 +96,7 @@ uint32_t get_ticks(void)
 FRESULT TP_res;
 extern volatile uint32_t  time1ms_count;
 uint32_t Tp_data = 0;
+uint8_t TYPE_PRODUCT=0;
 #ifdef SYSUARTPRINTF_p
 
 extern  uint8_t *bmpBuf_kkk,*bmpBuf_kkk_bak;
@@ -260,6 +261,8 @@ int main(void)
 		#ifdef  SYSUARTPRINTF  
 		sysprintf("VOLT_WORK=%X\r\n",VOLT_WORK);
 		#endif
+		TYPE_PRODUCT = READ_PRODUCTTYPE;
+		
 	 while((get_main_pwr_ad_value()<VOLT_WORK));
 	 LED_POWER_ON();
 	 LED_POWERLOW_OFF();

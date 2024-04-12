@@ -2464,6 +2464,14 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 						   Tp_field_addr = (gs_AreaInfo[filed_num].addr+logodata_2gbit_change_addr)/2048 + Fieldx_Info[filed_num].cycle*64;		
 			         NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[filed_num],Tp_field_addr,1);
 					 }
+					 else
+					 {
+						 if(READ_PRODUCTTYPE==PORDUCT_7INCH)
+						 {
+							Tp_field_addr =(gs_AreaInfo[filed_num].addr+logodata_2gbit_change_addr)/2048 + Fieldx_Info[filed_num].cycle*64;
+							SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[filed_num],Tp_field_addr,1);
+						 }
+					 }
 //          buff[5+p_gs_AreaInfo->size]=0x00;//���溯�������ָ���������Ҫ��0x00��β
 //					if(AreaWriteCmd(0,filed_num,0,&buff[5], p_gs_AreaInfo->size)==0)  //����������û�õ�
 //					{
