@@ -49,6 +49,8 @@ static uint8_t Q_Num=0;
 static uint32_t Q_ADDR[4]={0};
 extern uint8_t *BaseData_ARR;
 extern uint8_t wt588h_send_step;
+static uint32_t time_display=0;
+extern UINT32 volatile time1ms_count;
 
 void AD_init_8V(void)
 {
@@ -1312,10 +1314,14 @@ void hard_function_test(void)
 				    if(touch_send_imm==0)
 			    {
 						test_e = AD_BAT;
+
 					}
            break;				
 			case AD_BAT:
-				      Tp_advalue = get_vbat_ad_value();
+				     if( get_timego(time_display)>1000)
+						 {
+				      time_display = time1ms_count;
+							Tp_advalue = get_vbat_ad_value();
 			        Tp_advalue = Tp_advalue*64/3;
 							Tp_advalue = Tp_advalue*2.5;
     					Tp_advalue = Tp_advalue/4095;		 
@@ -1323,9 +1329,9 @@ void hard_function_test(void)
 			        SetZuobiao(10, 400 + 40);
   						 lcd_printf_new("                                               ");
                SetZuobiao(10, 400 + 40);
-			         lcd_printf_new("VBAT=%fV(touch)",Tp_advalue);
+			         lcd_printf_new("VBAT=%3.2fV(touch)",Tp_advalue);
 			        delay_ms(20);
-			
+						 }
 ////						REG_OPERATE(REG_ADC_CTL,ADC_CTL_MST,set);
 ////				    while((inpw(REG_ADC_ISR)&ADC_ISR_MF)==0);
 ////		       
