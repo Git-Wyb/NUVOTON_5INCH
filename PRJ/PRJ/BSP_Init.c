@@ -662,9 +662,8 @@ void SDRAM_DATA_INIT(void)
 	
 	//sprintf("badmanage_str->BAD_MANAGE_str.NANDFLASH_USER_INX=%x,read\n\r",badmanage_str->BAD_MANAGE_str.NANDFLASH_USER_INX);
 	//NANDFLASH_BADMANAGE_INIT();
-	#ifdef  SYSUARTPRINTF_ActionTimers 
-	sysprintf("badmanage_str->BAD_MANAGE_str.ERR_NUMBER=0x%08x,badmanage_str->BAD_MANAGE_str.flag=0x%08x\r\n",badmanage_str->BAD_MANAGE_str.ERR_NUMBER,badmanage_str->BAD_MANAGE_str.flag);
-	sysprintf("1=%d,2=%d,3=%d\r\n",badmanage_str->BAD_MANAGE_str.ERR_BLOCK[0],badmanage_str->BAD_MANAGE_str.ERR_BLOCK[1],badmanage_str->BAD_MANAGE_str.ERR_BLOCK[2]);
+	#ifdef  SYSUARTPRINTF 
+	sysprintf("READ_PIN_SW1_6=0x%x,badmanage_str->BAD_MANAGE_str.flag=0x%08x\r\n",READ_PIN_SW1_6,badmanage_str->BAD_MANAGE_str.flag);
 	#endif
 	if((READ_PIN_SW1_6!=SW_ON)&&
 		 ((badmanage_str->BAD_MANAGE_str.flag!=BAD_BLOCK_LOCK))&&
