@@ -53,6 +53,7 @@ extern  uint8_t flag_AB;
 
 extern uint8_t LOGO_ERR;
 extern uint8_t COMMAND_N;
+extern uint8_t TYPE_PRODUCT;
 
 const uint32_t logodata_sdrambuffer_size_arry[]=
                                 {
@@ -2476,7 +2477,7 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 					 }
 					 else
 					 {
-						 if(READ_PRODUCTTYPE==PORDUCT_7INCH)
+						 if(TYPE_PRODUCT==PORDUCT_7INCH)
 						 {
 							Tp_field_addr =(gs_AreaInfo[filed_num].addr+logodata_2gbit_change_addr)/2048 + Fieldx_Info[filed_num].cycle*64;
 							SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[filed_num],Tp_field_addr,1);

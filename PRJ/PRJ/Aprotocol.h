@@ -133,6 +133,19 @@ typedef enum DATACLASS
 }DATACLASS_TYPE; 
 
 
+typedef enum IO_TYPE
+{
+	TYPE_SELECT=0,
+	MODE_SELECT=1,
+}IO_TYPE_E;
+
+
+typedef enum IO_TYPE_status
+{
+	LEVEL_0=0,
+	LEVEL_1,
+	STATUS_Err,
+}IO_TYPE_status_E;
 
 
 struct POWER_ON_RECORD_TYPE

@@ -88,6 +88,7 @@ extern uint8_t *TxBuffer ;//[NAND_PAGE_SIZE];
 uint8_t *RxBuffer_noshift;
  uint8_t flag_usb_init=0;
  extern int gs_usb_mount_flag;
+ extern uint8_t TYPE_PRODUCT;
  
 void  REG_OPERATE(uint32_t x_reg,uint32_t x_data,ENUM_REG x_type)
 {
@@ -660,7 +661,7 @@ void SDRAM_DATA_INIT(void)
 		#endif
 	
 		
-	if(READ_PRODUCTTYPE==PORDUCT_7INCH)
+	if(TYPE_PRODUCT==PORDUCT_7INCH)
 	{
 		
 	uint32_t bmp_TAB[3];

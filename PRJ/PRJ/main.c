@@ -93,10 +93,51 @@ uint32_t get_ticks(void)
 }
 
 
+IO_TYPE_status_E check_io_state(IO_TYPE_E x_type)
+{
+	uint8_t Tp_i,Tp_j=0;
+	IO_TYPE_status_E Tp_result=0;
+	
+	
+	for(Tp_i=0;Tp_i<5;Tp_i++)
+	{
+		switch(x_type)
+		{
+			case TYPE_SELECT:
+				   Tp_j+= READ_PRODUCTTYPE;
+				    break;
+			case MODE_SELECT:
+				   Tp_j+= READ_WORKMODE;
+			     break;
+				default:break;
+		}
+	}
+	
+	if(Tp_j==0)
+	{		
+		Tp_result=LEVEL_0;
+	}
+	else if(Tp_j==5)
+	{
+		Tp_result=LEVEL_1;
+	}
+	else
+	{
+		Tp_result=STATUS_Err;
+	}
+	
+	return Tp_result;
+}
+
+
+
 FRESULT TP_res;
 extern volatile uint32_t  time1ms_count;
 uint32_t Tp_data = 0;
 uint8_t TYPE_PRODUCT=0;
+uint8_t MODE_WORKTEST = 0;
+
+
 #ifdef SYSUARTPRINTF_p
 
 extern  uint8_t *bmpBuf_kkk,*bmpBuf_kkk_bak;
@@ -261,7 +302,17 @@ int main(void)
 		#ifdef  SYSUARTPRINTF  
 		sysprintf("VOLT_WORK=%X\r\n",VOLT_WORK);
 		#endif
-		TYPE_PRODUCT = READ_PRODUCTTYPE;
+		
+		do
+		{
+			TYPE_PRODUCT=check_io_state(TYPE_SELECT);
+		}
+		while(TYPE_PRODUCT==STATUS_Err);
+		do
+		{
+			MODE_WORKTEST=check_io_state(MODE_SELECT);
+		}
+		while(MODE_WORKTEST==STATUS_Err);
 		
 	 while((get_main_pwr_ad_value()<VOLT_WORK));
 	 LED_POWER_ON();
@@ -371,7 +422,7 @@ int main(void)
 //	*(uint8_t *)(display_layer_sdram.LCD_FRAME1_BUFFER+4));
 	 
 		//if(0)
-	 if(READ_WORKMODE==WORK_FUNCTION)
+	 if(MODE_WORKTEST==WORK_FUNCTION)
 		{
 		while(1)
 		{
@@ -402,7 +453,7 @@ int main(void)
 		}//WORK_FUNCTION
 		
 		//if(1)
-		if(READ_WORKMODE==WORK_TEST)
+		if(MODE_WORKTEST==WORK_TEST)
 		{	
 			
 		//REG_OPERATE(REG_CLK_PCLKEN0,1<<17,clear);	

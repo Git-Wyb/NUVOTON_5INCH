@@ -60,6 +60,8 @@ uint8_t touch_send_imm = 0;
 extern uint32_t Flag_Tim_50ms;
 uint32_t shift_pointer(uint32_t ptr, uint32_t align);
 E_INT_STATUS touch_control=int_enable;
+extern uint8_t TYPE_PRODUCT;
+
 
 void set_touchint(E_INT_STATUS x_status)
 {
@@ -619,7 +621,7 @@ void touch_dev_poll(void)
 			if (tmpX >= 0xfff) continue;
 			if (tmpY >= 0xfff) continue;
 			
-			if(READ_PRODUCTTYPE==PORDUCT_7INCH)
+			if(TYPE_PRODUCT==PORDUCT_7INCH)
 			{
 			tKey[kCnt][0] = (tmpX) ;
 			tKey[kCnt][1] = (tmpY) ;
@@ -627,7 +629,7 @@ void touch_dev_poll(void)
 			if(tKey[kCnt][1] >480) tKey[kCnt][0] = 480;
 			}
 			
-      if(READ_PRODUCTTYPE==PORDUCT_5INCH)
+      if(TYPE_PRODUCT==PORDUCT_5INCH)
 			{				
 			tKey[kCnt][0] = (tmpX) * 800 / 2048;
 			tKey[kCnt][1] = (tmpY) * 480 / 2048;
@@ -660,14 +662,14 @@ void touch_dev_poll(void)
 			tmpY = ((buf[1 + i * 4] & 0x0f) << 8) + buf[3 + i * 4];
 			if (tmpX >= 0xfff) continue;
 			if (tmpY >= 0xfff) continue;
-			if(READ_PRODUCTTYPE==PORDUCT_5INCH)
+			if(TYPE_PRODUCT==PORDUCT_5INCH)
 			{
 			tKey[kCnt][0] = (tmpX) * 800 / 2048;
 			tKey[kCnt][1] = (tmpY) * 480 / 2048;
 			if(tKey[kCnt][0] >800) tKey[kCnt][0] = 800;
 			if(tKey[kCnt][1] >480) tKey[kCnt][0] = 480;
 			}
-			if(READ_PRODUCTTYPE==PORDUCT_7INCH)
+			if(TYPE_PRODUCT==PORDUCT_7INCH)
 			{
 			tKey[kCnt][0] = (tmpX) ;
 			tKey[kCnt][1] = (tmpY) ;
