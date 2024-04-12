@@ -357,13 +357,14 @@ jump:
 		gs_AreaInfo[0].type = 0;
 		
 		W25Q128_Read();
+		
+		WriteAreaConfig_new();
+		  field_info_save();
 	}
 	
-	//ReadAreaConfig_new();
-	     WriteAreaConfig_new();
-		  field_info_save();
-		  para_init();
-	    //field_info_init();
+	    ReadAreaConfig_new();
+	    para_init();
+	    field_info_init();
 	    *(uint8_t *)(BaseData_ARR+LCD_Ver_index*9+8) = 8;
 	    memcpy(BaseData_ARR+LCD_Ver_index*9, SOFT_VERSION,*(uint8_t *)(BaseData_ARR+LCD_Ver_index*9+8));
 	    *(uint8_t *)(BaseData_ARR+BASE_data_ErrBlock*9+8) = 8;

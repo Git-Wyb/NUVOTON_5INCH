@@ -1103,7 +1103,7 @@ void init_gpio(void)
 		 //PC14 low
 		 REG_OPERATE(REG_SYS_GPC_MFPH,0X0F000000,clear);
 	   GPIO_OpenBit(GPIOC,BIT14, DIR_OUTPUT, PULL_UP);
-		 GPIO_Clr(GPIOC,BIT4);
+		 GPIO_Clr(GPIOC,BIT14);
 		 
 //    GPIO_OpenBit(GPIOB,BIT5, DIR_OUTPUT, PULL_UP);
 //    //����LED0��LED1
