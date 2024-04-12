@@ -14,5 +14,6 @@ void LVD_init_irq(void);
 uint16_t get_main_pwr_ad_value(void);
 void LVD_disable(void);
 vu32 GPIOHCallback(UINT32 status, UINT32 userData);
+void LOW_POWER_cyw(void);
 #endif
 

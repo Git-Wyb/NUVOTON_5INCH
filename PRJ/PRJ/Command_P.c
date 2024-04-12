@@ -43,6 +43,7 @@ extern  uint32_t logodata_basedata_BUFFER;
 extern uint32_t logodata_sdrambuffer_addr_arry[16]; 
 extern const uint32_t logodata_sdrambuffer_size_arry[];
 extern uint8_t LOGO_ERR;
+volatile uint8_t FLAG_NAND_busy = 0,FLAG_POWEROFF_wait=0;
 /*????????????*/  
 int tolower(int c)  
 {  
@@ -424,6 +425,9 @@ uint8_t SDRAM_TO_NANDFLASH(uint32_t x_sdram_start,uint32_t x_nandflash_start,uin
 	{
 		return 0;
 	}
+	
+	
+	FLAG_NAND_busy =1;
 	//HAL_NVIC_DisableIRQ(PVD_IRQn);
 	//__set_PRIMASK(1);
 	////sysSetLocalInterrupt(DISABLE_IRQ);
@@ -501,7 +505,7 @@ uint8_t SDRAM_TO_NANDFLASH(uint32_t x_sdram_start,uint32_t x_nandflash_start,uin
 	}
 	
 	///sysSetLocalInterrupt(ENABLE_IRQ);
-	
+	FLAG_NAND_busy=0;
 	//__set_PRIMASK(0);
 	//HAL_NVIC_EnableIRQ(PVD_IRQn);
 	

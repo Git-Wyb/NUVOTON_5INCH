@@ -445,6 +445,8 @@ int main(void)
 //////////			if(Tp_data == 2001) Tp_data = 0;
 			#ifdef POWER_AD_MODE
 			main_pwr_process( );
+			#else
+			poweroff_wait();
 			#endif
 			download_process();
 			//////////////WWDT_RELOAD_COUNTER();

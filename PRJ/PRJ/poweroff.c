@@ -42,15 +42,27 @@ uint8_t FLAG_WDT=0;
 extern uint8_t LOGO_ERR;
 uint8_t COMMAND_N=0;
 extern uint8_t TYPE_PRODUCT;
-
+extern volatile uint8_t FLAG_NAND_busy,FLAG_POWEROFF_wait;
+static uint8_t Low_power_flag=0;
 
 void LVD_IRQHandler(void)
 {
 	//inpw(REG_SYS_MISCISR);
 	//REG_OPERATE(REG_SYS_MISCISR,1,clear);
 	
-outpw(REG_NANDECTL, 0x0); /* lock write protect */
-while(1);
+if(Low_power_flag!=0)
+	{
+    GPIO_DisableInt(GPIOH);
+		outpw(REG_NANDECTL, 0x0); /* lock write protect */
+     while(1);
+	}
+	else
+	{
+		GPIO_DisableInt(GPIOH);
+		REG_OPERATE(REG_SYS_LVRDCR,1,clear);
+		LOW_POWER_cyw();
+		
+	}
 	//	sysprintf("\r\n--------------LVD INIT------------------\r\n");
 //	REG_OPERATE(REG_SYS_MISCISR,1,clear);
 //	////////////////REG_OPERATE(REG_CLK_PCLKEN0,1<<1,set);//ENABLE WWDT
@@ -303,6 +315,7 @@ void LOW_POWER_cyw(void)
 		#endif
 
 	power_save( );
+	 Low_power_flag = 1;
 	
 	if(LOGO_ERR == 1) goto HDLEFLAG;
 	if(COMMAND_N == 1) goto HDLEFLAG;
@@ -593,15 +606,38 @@ void LOW_POWER_cyw(void)
 	   	}
 }
 
+void poweroff_wait(void)
+{
+	if(((FLAG_POWEROFF_wait==1)&&(FLAG_NAND_busy==0))
+		||
+	  ((GPIO_ReadBit(GPIOH,BIT5)==0)&&(FLAG_NAND_busy==0)))
+	{
+		FLAG_POWEROFF_wait=0;
+		GPIO_DisableInt(GPIOH);
+		LOW_POWER_cyw();
+	}
+	
+}
+
 vu32 GPIOHCallback(UINT32 status, UINT32 userData)
 {
 	// sysprintf("i am here,status=%d\r\n",status);
 	if(status & BIT5)
 	 {
-	   //����жϱ�־λ
-    GPIO_ClrISRBit(GPIOH,status);
-		 GPIO_DisableInt(GPIOH);
-		 LOW_POWER_cyw();
+	   
+			 
+			 if(FLAG_NAND_busy==0)
+			 {
+					//����жϱ�־λ
+						GPIO_ClrISRBit(GPIOH,status);
+						GPIO_DisableInt(GPIOH);
+						LOW_POWER_cyw();
+			 }
+			 else
+			 {
+				    FLAG_POWEROFF_wait =1;
+			 }
+		 
 	 }
 	  //����жϱ�־λ
     GPIO_ClrISRBit(GPIOH,status);
