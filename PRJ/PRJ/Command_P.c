@@ -435,8 +435,17 @@ uint8_t SDRAM_TO_NANDFLASH(uint32_t x_sdram_start,uint32_t x_nandflash_start,uin
 		
 		
 		if(WriteReadAddr.Page %64 == 0)
-			NAND_EraseBlock(WriteReadAddr.Page/64);
-		
+		{
+			if(NAND_EraseBlock(WriteReadAddr.Page/64))
+			{
+				#ifdef  SYSUARTPRINTF_ActionTimers 
+			sysprintf("BAD BLOCK MARK_0,page=%d\r\n",WriteReadAddr.Page/64);
+			#endif
+				
+			}
+			
+			
+		}
 //		for(x_delay = 0;x_delay<2048;x_delay++)
 //		{
 //			TxBuffer[x_delay] = *(__IO uint8_t*) (x_sdram_start+Tp_i*NAND_PAGE_SIZE+x_delay);
@@ -450,6 +459,9 @@ uint8_t SDRAM_TO_NANDFLASH(uint32_t x_sdram_start,uint32_t x_nandflash_start,uin
 		{
 			#ifdef  SYSUARTPRINTF 
 			sysprintf("BAD BLOCK MARK");
+			#endif
+			#ifdef  SYSUARTPRINTF_ActionTimers 
+			sysprintf("BAD BLOCK MARK_1\r\n");
 			#endif
 			BAD_BLOCK_MARK(BAD_BLOCK_CHANGE(WriteReadAddr.Page/64));
 			SDRAM_TO_NANDFLASH(x_sdram_start,x_nandflash_start,x_block_num);
@@ -479,6 +491,9 @@ uint8_t SDRAM_TO_NANDFLASH(uint32_t x_sdram_start,uint32_t x_nandflash_start,uin
 		{
 			#ifdef  SYSUARTPRINTF 
 			sysprintf("BAD BLOCK MARK");
+			#endif
+			#ifdef  SYSUARTPRINTF_ActionTimers 
+			sysprintf("BAD BLOCK MARK_2,page=%d\r\n",WriteReadAddr.Page);
 			#endif
 			BAD_BLOCK_MARK(BAD_BLOCK_CHANGE(WriteReadAddr.Page/64));
 			SDRAM_TO_NANDFLASH(x_sdram_start,x_nandflash_start,x_block_num);
