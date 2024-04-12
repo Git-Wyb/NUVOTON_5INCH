@@ -13,7 +13,7 @@ void power_save(void);
 void ReadAreaConfig_new(void);
 void BASEDATA_RAM_INIT(void);
 void LOGO_handle(void);
-void UnitData_NandToSDRAM(uint8_t Tp_field,uint32_t Tp_addr);
+//void UnitData_NandToSDRAM(uint8_t Tp_field,uint32_t Tp_addr);
 #endif
 
 

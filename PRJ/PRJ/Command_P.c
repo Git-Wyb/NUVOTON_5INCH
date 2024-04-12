@@ -270,7 +270,7 @@ void NANDFLASH_BADMANAGE_INIT(void)
 		
 		
 		//SDRAM_TO_NANDFLASH((uint32_t)badmanage_str->BAD_MANAGE_arr,backup_tab_nandflash_start,1);//��ʼ��һ��  ����?�β��ȫ������?0
-	  NANDFLASH_backup_checksum();
+	  //NANDFLASH_backup_checksum();
 	  NAND_EraseBlock(backup_tab_nandflash_start);
 	  NAND_WritePage(backup_tab_nandflash_start,0,badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
 		
@@ -1167,15 +1167,15 @@ int cpoy_file(char *pSrc, char *pDst)
 	return 0;
 }
 
-void NANDFLASH_backup_checksum(void)
-{
-	uint32_t Tp_check=0,Tp_i=0;
-	for(Tp_i=0;Tp_i<(sizeof(badmanage_str->BAD_MANAGE_arr)-4);Tp_i++)
-	{
-		Tp_check = Tp_check + badmanage_str->BAD_MANAGE_arr[Tp_i];
-	}
-	badmanage_str->BAD_MANAGE_str.backup_checksum=Tp_check;
-}
+//void NANDFLASH_backup_checksum(void)
+//{
+//	uint32_t Tp_check=0,Tp_i=0;
+//	for(Tp_i=0;Tp_i<(sizeof(badmanage_str->BAD_MANAGE_arr)-4);Tp_i++)
+//	{
+//		Tp_check = Tp_check + badmanage_str->BAD_MANAGE_arr[Tp_i];
+//	}
+//	badmanage_str->BAD_MANAGE_str.backup_checksum=Tp_check;
+//}
 
 void NANDFLASH_P3PD_INX_SAVE(void)
 {
@@ -1186,7 +1186,7 @@ void NANDFLASH_P3PD_INX_SAVE(void)
 	 //*(uint32_t*)addr =badmanage_str->NANDFLASH_USER_INX ;
 	 //SDRAM_TO_NANDFLASH((uint32_t)badmanage_str,backup_tab_nandflash_start,1);
 //	sprintf("badmanage_str->BAD_MANAGE_str.NANDFLASH_USER_INX=%x,save\n\r",badmanage_str->BAD_MANAGE_str.NANDFLASH_USER_INX);
-	NANDFLASH_backup_checksum();
+//	NANDFLASH_backup_checksum();
 	NAND_EraseBlock(backup_tab_nandflash_start);
 	NAND_WritePage(backup_tab_nandflash_start,0,badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
 }
@@ -1706,7 +1706,7 @@ void UsbWriteNandFlash(char cmd, unsigned short *iFile, int cnt)
 			
 			if(IMAGE_SEARCHED)
 			{
-							 SDRAM_TO_NANDFLASH(bmp_tab_BUFFER+3*64*2048,image_tab__nandflash_start+3*64,1);
+							 SDRAM_TO_NANDFLASH(bmp_tab_BUFFER,image_tab__nandflash_start,4);
 				       //NANDFLASH_TO_SDRAM(bmp_tab_BUFFER,image_tab__nandflash_start,4);
 				       #ifdef  SYSUARTPRINTF 
 				       sysprintf("TAB SAVE FINISH\r\n");
@@ -1741,7 +1741,7 @@ void UsbWriteNandFlash(char cmd, unsigned short *iFile, int cnt)
 		        ret = cpoy_file(tmpFileName, nandFileName);
 		        if(IMAGE_SEARCHED)
 			      {
-							 SDRAM_TO_NANDFLASH(bmp_tab_BUFFER+3*64*2048,image_tab__nandflash_start+3*64,1);
+							 SDRAM_TO_NANDFLASH(bmp_tab_BUFFER,image_tab__nandflash_start,4);
 							 NANDFLASH_P3PD_INX_SAVE();
 							 Clear_sdram(0X4F);
 			      }

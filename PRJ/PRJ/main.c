@@ -99,7 +99,7 @@ IO_TYPE_status_E check_io_state(IO_TYPE_E x_type)
 	IO_TYPE_status_E Tp_result=0;
 	
 	
-	for(Tp_i=0;Tp_i<5;Tp_i++)
+	for(Tp_i=0;Tp_i<50;Tp_i++)
 	{
 		switch(x_type)
 		{
@@ -117,7 +117,7 @@ IO_TYPE_status_E check_io_state(IO_TYPE_E x_type)
 	{		
 		Tp_result=LEVEL_0;
 	}
-	else if(Tp_j==5)
+	else if(Tp_j==50)
 	{
 		Tp_result=LEVEL_1;
 	}

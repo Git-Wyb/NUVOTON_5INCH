@@ -385,69 +385,69 @@ jump:
 			
 }
 
-void UnitData_NandToSDRAM(uint8_t Tp_field,uint32_t Tp_addr)
-{
-	uint8_t Tp_flag=0;
-	uint16_t Tp_i =0;
-	uint8_t  Tp_cs=0;//cs??
-	
-	retry:	
-	      if(Tp_flag == 0)
-				{
-				NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr/2048,1);
-				}
-				if(Tp_flag == 1)
-				{
-				NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr/2048,1);
-				}
-				
-			 Tp_cs = 0;
-				for(Tp_i = 0;Tp_i <=MAX_LOGO_UINT_NUM; Tp_i++)
-			 {
-				 Tp_cs = Tp_cs + *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+UINT_START1_OFFSET+Tp_i);
-			 }
-			 if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS1_OFFSET) != Tp_cs)
-			 //if(1)
-			 {
-				  Tp_cs = 0; 
-				  for(Tp_i = 0;Tp_i <=MAX_LOGO_UINT_NUM; Tp_i++)
-			    {
-				     Tp_cs = Tp_cs + *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_START2_OFFSET +Tp_i);
-			    }
-					if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] +UINT_CS2_OFFSET) != Tp_cs)
-					{
-						  Tp_cs = 0; 
-						  for(Tp_i = 0;Tp_i <=MAX_LOGO_UINT_NUM; Tp_i++)
-			        {
-				         Tp_cs = Tp_cs + *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_START3_OFFSET +Tp_i);
-			        }
-							if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS3_OFFSET) != Tp_cs)
-							{
-								if(Tp_flag ==0)
-								{
-									Tp_flag = 1;
-									goto retry;
-									//Tp_field --;
-								}
-								else if(Tp_flag ==1)
-								{
-									Tp_flag =2;
-									NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr/2048,1);
-								}
-							}
-							else
-							{
-								 memcpy((uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]),(uint8_t *)logodata_sdrambuffer_addr_arry[Tp_field]+UINT_START3_OFFSET,MAX_LOGO_UINT_NUM+2);
-							}
-					}
-					else
-					{
-						 memcpy((uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]),(uint8_t *)logodata_sdrambuffer_addr_arry[Tp_field]+UINT_START2_OFFSET,MAX_LOGO_UINT_NUM+2);
-					}
-			 }
-			 if(Tp_flag ==0)  SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],unit_data__B_nandflash_start,1);
-			 if(Tp_flag ==1)  SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr/2048,1);
-}
+//void UnitData_NandToSDRAM(uint8_t Tp_field,uint32_t Tp_addr)
+//{
+//	uint8_t Tp_flag=0;
+//	uint16_t Tp_i =0;
+//	uint8_t  Tp_cs=0;//cs??
+//	
+//	retry:	
+//	      if(Tp_flag == 0)
+//				{
+//				NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr/2048,1);
+//				}
+//				if(Tp_flag == 1)
+//				{
+//				NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr/2048,1);
+//				}
+//				
+//			 Tp_cs = 0;
+//				for(Tp_i = 0;Tp_i <=MAX_LOGO_UINT_NUM; Tp_i++)
+//			 {
+//				 Tp_cs = Tp_cs + *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+UINT_START1_OFFSET+Tp_i);
+//			 }
+//			 if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS1_OFFSET) != Tp_cs)
+//			 //if(1)
+//			 {
+//				  Tp_cs = 0; 
+//				  for(Tp_i = 0;Tp_i <=MAX_LOGO_UINT_NUM; Tp_i++)
+//			    {
+//				     Tp_cs = Tp_cs + *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_START2_OFFSET +Tp_i);
+//			    }
+//					if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] +UINT_CS2_OFFSET) != Tp_cs)
+//					{
+//						  Tp_cs = 0; 
+//						  for(Tp_i = 0;Tp_i <=MAX_LOGO_UINT_NUM; Tp_i++)
+//			        {
+//				         Tp_cs = Tp_cs + *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_START3_OFFSET +Tp_i);
+//			        }
+//							if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS3_OFFSET) != Tp_cs)
+//							{
+//								if(Tp_flag ==0)
+//								{
+//									Tp_flag = 1;
+//									goto retry;
+//									//Tp_field --;
+//								}
+//								else if(Tp_flag ==1)
+//								{
+//									Tp_flag =2;
+//									NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr/2048,1);
+//								}
+//							}
+//							else
+//							{
+//								 memcpy((uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]),(uint8_t *)logodata_sdrambuffer_addr_arry[Tp_field]+UINT_START3_OFFSET,MAX_LOGO_UINT_NUM+2);
+//							}
+//					}
+//					else
+//					{
+//						 memcpy((uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]),(uint8_t *)logodata_sdrambuffer_addr_arry[Tp_field]+UINT_START2_OFFSET,MAX_LOGO_UINT_NUM+2);
+//					}
+//			 }
+//			 //if(Tp_flag ==0)  SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],unit_data__B_nandflash_start,1);
+//			// if(Tp_flag ==1)  SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr/2048,1);
+//}
 
 
 void NANDFLASH_TO_SDRAM_LOGOBASEDATA(void)
@@ -700,42 +700,42 @@ uint16_t Tp_month_losebat=0;
 				{
 			     //TP_view = *(__IO uint32_t*)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4) ;
 			     //*(__IO uint32_t*)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4) = *(__IO uint32_t*)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4) - 1;//????????? NO1?????			
-			   #ifdef  SYSUARTPRINTF_ActionTimers 
-					sysprintf("POWER ON\r\n");
-					sysprintf("logodata_sdrambuffer_addr_arry[Tp_field]_1=0x%x,0x%x,0x%x,0x%x\r\n",
-					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4),
-				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+5),
-					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+6),
-				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+7));
-					#endif
+//			   #ifdef  SYSUARTPRINTF_ActionTimers 
+//					sysprintf("POWER ON\r\n");
+//					sysprintf("logodata_sdrambuffer_addr_arry[Tp_field]_1=0x%x,0x%x,0x%x,0x%x\r\n",
+//					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4),
+//				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+5),
+//					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+6),
+//				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+7));
+//					#endif
 					
 					
 					
 					memcpy((void *)&Tp_System_poweron_time,(void *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4),4);
 						
 					
-					#ifdef  SYSUARTPRINTF_ActionTimers 
-					sysprintf("Tp_System_poweron_time1=0x%x\r\n",Tp_System_poweron_time);
-					
-					sysprintf("logodata_sdrambuffer_addr_arry[Tp_field]_1=0x%x,0x%x,0x%x,0x%x\r\n",
-					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4),
-				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+5),
-					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+6),
-				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+7));
-					#endif
+//					#ifdef  SYSUARTPRINTF_ActionTimers 
+//					sysprintf("Tp_System_poweron_time1=0x%x\r\n",Tp_System_poweron_time);
+//					
+//					sysprintf("logodata_sdrambuffer_addr_arry[Tp_field]_1=0x%x,0x%x,0x%x,0x%x\r\n",
+//					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4),
+//				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+5),
+//					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+6),
+//				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+7));
+//					#endif
 					
 					Tp_System_poweron_time--;
 					memcpy((void *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4),(void *)&Tp_System_poweron_time,4);
 				  
-					#ifdef  SYSUARTPRINTF_ActionTimers 
-					sysprintf("Tp_System_poweron_time2=0x%x\r\n",Tp_System_poweron_time);
-					
-					sysprintf("logodata_sdrambuffer_addr_arry[Tp_field]_2=0x%x,0x%x,0x%x,0x%x\r\n",
-					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4),
-				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+5),
-					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+6),
-				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+7));
-					#endif
+//					#ifdef  SYSUARTPRINTF_ActionTimers 
+//					sysprintf("Tp_System_poweron_time2=0x%x\r\n",Tp_System_poweron_time);
+//					
+//					sysprintf("logodata_sdrambuffer_addr_arry[Tp_field]_2=0x%x,0x%x,0x%x,0x%x\r\n",
+//					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4),
+//				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+5),
+//					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+6),
+//				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+7));
+//					#endif
 				
 				
 				}
@@ -754,41 +754,41 @@ uint16_t Tp_month_losebat=0;
 			case UnitPara_DATACLASS:
 				
 			
-			   UnitData_NandToSDRAM(Tp_field,gs_AreaInfo[Tp_field].addr+logodata_2gbit_change_addr);
-//				NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[Tp_field],(gs_AreaInfo[Tp_field].addr+logodata_2gbit_change_addr)/2048,1);
-//			 for(Tp_i = 0;Tp_i <=MAX_LOGO_UINT_NUM; Tp_i++)
-//			 {
-//				 Tp_cs = Tp_cs + *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+UINT_START1_OFFSET+Tp_i);
-//			 }
-//			 if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS1_OFFSET) != Tp_cs)
-//			 //if(1)
-//			 {
-//				  Tp_cs = 0; 
-//				  for(Tp_i = 0;Tp_i <=MAX_LOGO_UINT_NUM; Tp_i++)
-//			    {
-//				     Tp_cs = Tp_cs + *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_START2_OFFSET +Tp_i);
-//			    }
-//					if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] +UINT_CS2_OFFSET) != Tp_cs)
-//					{
-//						  Tp_cs = 0; 
-//						  for(Tp_i = 0;Tp_i <=MAX_LOGO_UINT_NUM; Tp_i++)
-//			        {
-//				         Tp_cs = Tp_cs + *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_START3_OFFSET +Tp_i);
-//			        }
-//							if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS3_OFFSET) != Tp_cs)
-//							{
-//								
-//							}
-//							else
-//							{
-//								 memcpy((uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]),(uint8_t *)logodata_sdrambuffer_addr_arry[Tp_field]+UINT_START3_OFFSET,MAX_LOGO_UINT_NUM+2);
-//							}
-//					}
-//					else
-//					{
-//						 memcpy((uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]),(uint8_t *)logodata_sdrambuffer_addr_arry[Tp_field]+UINT_START2_OFFSET,MAX_LOGO_UINT_NUM+2);
-//					}
-//			 }
+//			   UnitData_NandToSDRAM(Tp_field,gs_AreaInfo[Tp_field].addr+logodata_2gbit_change_addr);
+				NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[Tp_field],(gs_AreaInfo[Tp_field].addr+logodata_2gbit_change_addr)/2048,1);
+			 for(Tp_i = 0;Tp_i <=MAX_LOGO_UINT_NUM; Tp_i++)
+			 {
+				 Tp_cs = Tp_cs + *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+UINT_START1_OFFSET+Tp_i);
+			 }
+			 if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS1_OFFSET) != Tp_cs)
+			 //if(1)
+			 {
+				  Tp_cs = 0; 
+				  for(Tp_i = 0;Tp_i <=MAX_LOGO_UINT_NUM; Tp_i++)
+			    {
+				     Tp_cs = Tp_cs + *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_START2_OFFSET +Tp_i);
+			    }
+					if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] +UINT_CS2_OFFSET) != Tp_cs)
+					{
+						  Tp_cs = 0; 
+						  for(Tp_i = 0;Tp_i <=MAX_LOGO_UINT_NUM; Tp_i++)
+			        {
+				         Tp_cs = Tp_cs + *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_START3_OFFSET +Tp_i);
+			        }
+							if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS3_OFFSET) != Tp_cs)
+							{
+								
+							}
+							else
+							{
+								 memcpy((uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]),(uint8_t *)logodata_sdrambuffer_addr_arry[Tp_field]+UINT_START3_OFFSET,MAX_LOGO_UINT_NUM+2);
+							}
+					}
+					else
+					{
+						 memcpy((uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]),(uint8_t *)logodata_sdrambuffer_addr_arry[Tp_field]+UINT_START2_OFFSET,MAX_LOGO_UINT_NUM+2);
+					}
+			 }
 			 
 			  break;
 			case TestFinalData_DATACLASS:
