@@ -10,6 +10,7 @@
 #include "Aprotocol.h"
 #include "BSP_init.h"
 #include "RTC.h"
+#include "config.h"
 
 extern TIME_TYPE       pwr_on_time_app;
 
@@ -29,6 +30,8 @@ extern uint8_t *BaseData_ARR;
 extern uint32_t logodata_basedata_BUFFER;
 /*__attribute__((aligned(8))) */uint8_t *Image_Buf=0,*Image_Buf_bak=0;
 uint32_t shift_pointer(uint32_t ptr, uint32_t align);
+extern USBH_T     *_ohci;
+
 
 void write_para_to_sdram(void)
 {
@@ -285,6 +288,7 @@ static void Creste_new_backup_file_name(uint8_t *x_name)
 	memset(x_name,0,60);
 	x_name[file_sub++]='3';
 	x_name[file_sub++]=':';
+	x_name[file_sub++]='/';
 	x_name[file_sub++]='B';
 	x_name[file_sub++]='E';
 	x_name[file_sub++]='L';
@@ -420,7 +424,9 @@ int BackupDeviceData(void)
 			if(res||(bytesToWrite != 2048))//????
 	    {
 			//	SYSTEM_ERR_STATUS->bits.FATFS_SYSTEM_error =1;
+				#ifdef  SYSUARTPRINTF 
 				sysprintf("X command f_write=%X,bytesToWrite=%X\r\n",res,bytesToWrite);
+				#endif
 				systerm_error_status.bits.usb_canot_write_error=1;
 				break;
 				//??????
@@ -509,6 +515,97 @@ int BackupDeviceData(void)
 		return 1;
 }
 
+uint8_t stm7_format_handle(void)
+{
+	uint8_t Tp_i,Tp_j;
+	uint8_t data_8byte[20]={0};
+	FRESULT res;
+	uint32_t numOfReadBytes_backup = 0,Tp_data;
+	
+	
+	//f_lseek(file,0x5fe0016);
+	res =f_lseek(&file,0);
+	#ifdef  SYSUARTPRINTF 
+	sysprintf("res=%d",res);
+	#endif
+	
+	res =f_read(&file, (void *)data_8byte, 20, (void *)&numOfReadBytes_backup);
+	
+	#ifdef  SYSUARTPRINTF 
+		sysprintf("res=%d",res);
+		sysprintf("data_8byte=%X,%X,%X,%X,%X,%X,%X,%X\r\n",data_8byte[0],data_8byte[1],
+		data_8byte[2],data_8byte[3],data_8byte[4],data_8byte[5],data_8byte[6],data_8byte[7]);
+		#endif
+	
+	if((res!=0)||
+		(memcmp((void *)data_8byte,".....BACKUPDATA.....",20)!=0))
+		{
+			systerm_error_status.bits.usb_cannot_find_hexortxt = 1;
+			return 0;
+		}
+		
+		res =f_lseek(&file,0x5fe0016);
+	
+	
+	for(Tp_i=0;Tp_i<32;Tp_i++)
+	{
+		res = f_read(&file, (void *)data_8byte, 8, (void *)&numOfReadBytes_backup);
+		#ifdef  SYSUARTPRINTF 
+		sysprintf("res=%d",res);
+		sysprintf("data_8byte=%X,%X,%X,%X,%X,%X,%X,%X\r\n",data_8byte[0],data_8byte[1],
+		data_8byte[2],data_8byte[3],data_8byte[4],data_8byte[5],data_8byte[6],data_8byte[7]);
+		#endif
+		memcpy((void *)(BaseData_ARR+Tp_i*9),data_8byte,8);
+		*(uint8_t *)(BaseData_ARR+Tp_i*9 + 8)=0;
+		for(Tp_j=0;Tp_j<8;Tp_j++)
+		{
+			if(*(uint8_t *)(data_8byte + Tp_j)!=0)
+			{
+				*(uint8_t *)(BaseData_ARR+Tp_i*9 + 8)=*(uint8_t *)(BaseData_ARR+Tp_i*9 + 8)+1;
+			}
+		}
+		
+	}
+	
+	for(Tp_i=32;Tp_i<96;Tp_i++)
+	{
+		res = f_read(&file, (void *)data_8byte, 4, (void *)&numOfReadBytes_backup);
+		#ifdef  SYSUARTPRINTF 
+		sysprintf("res=%d",res);
+		sysprintf("data_8byte=%X,%X,%X,%X\r\n",data_8byte[0],data_8byte[1],
+		data_8byte[2],data_8byte[3]);
+		#endif
+		Tp_data = data_8byte[0] + (data_8byte[1]<<8)+(data_8byte[2]<<16)+(data_8byte[3]<<24);
+		#ifdef  SYSUARTPRINTF 
+		sysprintf("Tp_data=%08X",Tp_data);
+		#endif
+		switch((Tp_i-32)/16)
+		{
+			case 0:
+				sprintf((void *)(BaseData_ARR+(Tp_i-32)*4+32),"%08X",Tp_data);
+				break;
+			case 1:
+				sprintf((void *)(BaseData_ARR+(Tp_i-32)*4+32+1),"%08X",Tp_data);
+				break;
+			case 2:
+				sprintf((void *)(BaseData_ARR+(Tp_i-32)*4+32+3),"%08X",Tp_data);
+				break;
+			case 3:
+				sprintf((void *)(BaseData_ARR+(Tp_i-32)*4+32+2),"%08X",Tp_data);
+				break;
+			default:
+				break;
+		}
+	}
+	
+	
+	res =f_close(&file);
+	#ifdef  SYSUARTPRINTF 
+	sysprintf("res=%d",res);
+	#endif
+}
+
+
 int RestoreDeviceData(void)
 {
 	FRESULT res;
@@ -516,13 +613,120 @@ static char filename_new[60]={0};
 NAND_ADDRESS_STR WriteReadAddr;
 static uint32_t Tp_i = 0;
 static uint32_t numOfReadBytes_backup = 0;
+DIR tdir;
+	FILINFO fno;
+uint8_t file_format=2;//0-new style, 1=old stm file, 2-fail
+
+Creste_new_backup_file_name((uint8_t *)filename_new);
+
 //static uint8_t Tp_no3[9]={0},Tp_no4[9]={0};
+f_mount(0, "3:", 1);
+	res = f_mount(&usb_fatfs, "3:", 1); 
+	res =	f_opendir(&tdir,"3:/BELMONT_BACKUP");
+	if(res == FR_NO_PATH)//?????? ??????
+	{
+		//f_mkdir("3:/BELMONT_BACKUP");
+		//f_opendir(&tdir,"3:/BELMONT_BACKUP");  //?????????
+	  systerm_error_status.bits.usb_cannot_find_hexortxt = 1;
+		#ifdef  SYSUARTPRINTF 
+		sysprintf("f_opendir error\r\n");
+		#endif
+		return 0;
+	}
+	
+	//f_mount(&Tp_fatfs[0],"",0);
+	
+	for (;;) 
+			 {
+				  
+				   if(((_ohci->HcRhPortStatus[0]&0x01)==0)&&((_ohci->HcRhPortStatus[1]&0x01)==0))
+			     {
+				      #ifdef  SYSUARTPRINTF 
+		          sysprintf("USB disconnect\r\n");
+		           #endif
+						 break;
+			     }
+				   res = f_readdir(&tdir, &fno);
+           if (res != FR_OK || fno.fname[0] == 0) 
+					 {
+						    #ifdef  SYSUARTPRINTF 
+		          sysprintf("dir end\r\n");
+		           #endif
+						 break;
+					 }
+           if (fno.fname[0] == '.') continue;
+				   if (fno.fattrib & AM_DIR) 
+          {
+             #ifdef  SYSUARTPRINTF 
+		          sysprintf("dir find\r\n");
+		           #endif
+						continue;
+          } 
+          else 
+          {
+						if(memcmp((char *)fno.fname,"BACKUP",6)==0)//×Ö·ûÆ¥Åä
+						{
+							if((strstr((char *)fno.fname, ".txt")) || (strstr((char *)fno.fname, ".TXT")))//×Ö·û´®Æ¥Åä
+              {
+								 #ifdef  SYSUARTPRINTF 
+		             sysprintf("strlen(fno.fname)=%d\r\n",strlen(fno.fname));
+		              #endif
+								memcpy(filename_new+18,fno.fname,strlen(fno.fname));
+							   res = f_open(&file, filename_new, FA_OPEN_EXISTING | FA_READ);
+								 #ifdef  SYSUARTPRINTF 
+		             sysprintf("res=%d\r\n",res);
+								 sysprintf("filename_new=%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\r\n",
+								filename_new[0],filename_new[1],filename_new[2],filename_new[3],filename_new[4],filename_new[5],
+								filename_new[6],filename_new[7],filename_new[8],filename_new[9],filename_new[10],
+								filename_new[11],filename_new[12],filename_new[13],filename_new[14],filename_new[15],
+								filename_new[16],filename_new[17],filename_new[18],filename_new[19],filename_new[20],
+								filename_new[21],filename_new[22],filename_new[23],filename_new[24],filename_new[25],
+								filename_new[26],filename_new[27],filename_new[28],filename_new[29],filename_new[30],
+								filename_new[31],filename_new[32],filename_new[33],filename_new[34],filename_new[35],
+								filename_new[36],filename_new[37],filename_new[38],filename_new[39],filename_new[40],
+								filename_new[41],filename_new[42],filename_new[43],filename_new[44],filename_new[45],
+								filename_new[46],filename_new[47],filename_new[48],filename_new[49],filename_new[50],
+								filename_new[51],filename_new[52],filename_new[53],filename_new[54],filename_new[55],
+								filename_new[56],filename_new[57],filename_new[58],filename_new[59]);
+		              #endif
+								if(res == FR_OK)
+									{
+                     #ifdef  SYSUARTPRINTF 
+		             sysprintf("strlen(fno.fname)=%d\r\n",strlen(fno.fname));
+		              #endif
+										if(strlen(fno.fname)==10) file_format = 0;
+										else if((strlen(fno.fname)>10)&&(strlen(fno.fname)<=40)) file_format = 1;
+										 
+								  }
 
 
-   Creste_new_backup_file_name((uint8_t *)filename_new);
- 	res = f_open(&file, filename_new, FA_OPEN_EXISTING | FA_READ);
+                  
+									break;
+								 
+							}
+						}
+					}
+				   
+			 }
+	
+	  if(file_format ==2 )
+	  {
+		      //SYSTEM_ERR_STATUS->bits.FATFS_SYSTEM_error =1;
+			    
+			   systerm_error_status.bits.usb_cannot_find_hexortxt = 1;
+			  #ifdef  SYSUARTPRINTF 
+		    sysprintf("find file error\r\n");
+		    #endif
+			
+     			return 0;
+						//???????USB???
+	  }
+		
+		
 
-  if(res == FR_OK)
+  
+
+  if(file_format==0)
 	{
 		//memcpy(Tp_no3,BaseData_ARR[3],9);
 		//memcpy(Tp_no4,BaseData_ARR[4],9);
@@ -577,6 +781,18 @@ static uint32_t numOfReadBytes_backup = 0;
 	
 	
 	
+	}
+	else if(file_format==1)
+	{
+//		 #ifdef  SYSUARTPRINTF 
+//		    sysprintf("stm7_format_handle\r\n");
+//		    #endif
+//		return stm7_format_handle();
+			
+		f_close(&file);
+		
+		systerm_error_status.bits.usb_canot_write_error = 1;
+		  return 0;
 	}
 	else
 	{
