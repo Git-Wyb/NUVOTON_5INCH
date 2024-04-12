@@ -1017,8 +1017,8 @@ int cpoy_file(char *pSrc, char *pDst)
 								//	*(__IO uint16_t*)(CurrentFrameBuffer + (2*i/3)+(CNT*2))=((uint16_t)((Image_Buf[i+2] >> 3) << 11) | (uint16_t)((Image_Buf[i+1] >> 2) << 5) | (uint16_t)(Image_Buf[i] >> 3));	
 							
 									Tp_u16 = ((uint16_t)((*(uint8_t *)(bmpBuf_kkk+i+2)>>3 ) << 11) | (uint16_t)((*(uint8_t *)(bmpBuf_kkk+i+1)>>2 ) << 5) | (uint16_t)(*(uint8_t *)(bmpBuf_kkk+i)>>3 ));
-									Tp_lcdhigh = Tp_u16>>8;	
-						Tp_lcdlow  =  Tp_u16%256;	
+									Tp_lcdhigh = (uint8_t)(Tp_u16>>8);	
+						Tp_lcdlow  =  (uint8_t)(Tp_u16%256);	
 						*(uint8_t *)(Tp_Image_Buf+(Tp_oneline_long/3)*2-(i/3)*2-2) =Tp_lcdlow;	
 						*(uint8_t *)(Tp_Image_Buf+(Tp_oneline_long/3)*2-(i/3)*2-1) =Tp_lcdhigh;
 						#ifdef  SYSUARTPRINTF
@@ -1040,13 +1040,13 @@ int cpoy_file(char *pSrc, char *pDst)
 					 Tp_u16 = ((uint16_t)(((Tp_u161&0x7c00 )>>10)<<11) | (uint16_t)(((Tp_u161&0x3e0)>>5) << 6) | (uint16_t)((Tp_u161&0x1f)));
 						//?????????????16?????RGB555??ARM LTDC?RGB565
 						
-						Tp_lcdhigh = Tp_u16>>8;	
-					Tp_lcdlow  =  Tp_u16%256;	
+						Tp_lcdhigh = (uint8_t)(Tp_u16>>8);	
+					Tp_lcdlow  =  (uint8_t)(Tp_u16%256);	
 					//	Image_Buf[i] =Tp_lcdlow;	
 						//Image_Buf[i+1]=Tp_lcdhigh;
 						
-							*(uint8_t *)(Tp_Image_Buf+Tp_oneline_long-i-2) =Tp_lcdlow;	
-						  *(uint8_t *)(Tp_Image_Buf+Tp_oneline_long-i-1)=Tp_lcdhigh;
+							*(uint8_t *)(Tp_Image_Buf+(Tp_oneline_long-i-2)) =Tp_lcdlow;	
+						  *(uint8_t *)(Tp_Image_Buf+(Tp_oneline_long-i-1))=Tp_lcdhigh;
 						
 
 					} 

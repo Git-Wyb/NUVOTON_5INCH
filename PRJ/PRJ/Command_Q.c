@@ -88,11 +88,18 @@ int CpyNandToSdramCMd(char cmd, uint16_t *fileName,int cnt)
 			 
 		//	gs_Sdram_wrtie_pos =  shift_pointer(gs_Sdram_wrtie_pos,32);
 		//	gs_Sdram_wrtie_pos|=0x80000000;
-			if(gs_Sdram_wrtie_pos==NULL)//放不下
-			{
-				 systerm_error_status.bits.image_movenantosdram_error = 1;
-				 return 0;
-			}
+			 if((gs_Sdram_wrtie_pos==NULL)||(gs_Sdram_wrtie_pos>0x7b00000))//放不下，测试发现超过0x7b00000地址就会出现PQ死机，所以大于此地址就释放掉，指针清零
+            {//The test found that if the address exceeds 0x7b00000, PQ will crash, so if the address is greater than this, it will be released and the pointer will clear to zero
+                if(gs_Sdram_wrtie_pos)
+                {
+                    free((void *)gs_Sdram_wrtie_pos);
+                    gs_Sdram_wrtie_pos = 0;
+                    *(uint32_t *)(SDRAM_Q_SHIFT_TAB + 4 * *fileName ) =0;
+                    *(uint32_t *)(SDRAM_Q_TAB + 4 * *fileName ) =0;
+                }
+                systerm_error_status.bits.image_movenantosdram_error = 1;
+                return 0;
+            }
 			
 			//gs_Sdram_wrtie_pos = gs_Sdram_wrtie_pos|0x80000000;
 			#ifdef  SYSUARTPRINTF
