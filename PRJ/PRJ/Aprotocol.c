@@ -106,7 +106,7 @@ struct LOGO_Y5Y6_TYPE LOGO_Y5Y6_str;
 uint16_t FIELD_ERASE_STEP = 0;//????????
 uint16_t FIELD_ERASE_FLAG = 0;//??????? bit0 basedata bit1 field1
 extern DOWNLOAD_TYPE  download;
-
+extern uint32_t CHECK_SUM_NAND;
 
 void COMM_SOFT_DEINIT(void)
 {
@@ -3322,6 +3322,12 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 									 if(type == COMM_DATA_UARST)
 								      code_protocol_ack(Tp_xor,0,NULL,0);
 								       NAND_BMP_Read_checksum();
+//									     ack_buf[3]= CHECK_SUM_NAND&0XFF;
+//					             ack_buf[2]= (CHECK_SUM_NAND>>8)&0XFF;
+//					             ack_buf[1]= (CHECK_SUM_NAND>>16)&0XFF;
+//					             ack_buf[0]= (CHECK_SUM_NAND>>24)&0XFF;
+//					     
+//				               code_protocol_ack(Tp_xor,4,ack_buf,0);
 								  break;
 								case '1':
 									  if(type == COMM_DATA_UARST)

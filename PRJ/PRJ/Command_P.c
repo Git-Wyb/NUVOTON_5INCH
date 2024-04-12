@@ -1706,7 +1706,7 @@ void UsbWriteNandFlash(char cmd, unsigned short *iFile, int cnt)
 			
 			if(IMAGE_SEARCHED)
 			{
-							 SDRAM_TO_NANDFLASH(bmp_tab_BUFFER,image_tab__nandflash_start,4);
+							 SDRAM_TO_NANDFLASH(bmp_tab_BUFFER+3*64*2048,image_tab__nandflash_start+3*64,1);
 				       //NANDFLASH_TO_SDRAM(bmp_tab_BUFFER,image_tab__nandflash_start,4);
 				       #ifdef  SYSUARTPRINTF 
 				       sysprintf("TAB SAVE FINISH\r\n");
@@ -1741,7 +1741,7 @@ void UsbWriteNandFlash(char cmd, unsigned short *iFile, int cnt)
 		        ret = cpoy_file(tmpFileName, nandFileName);
 		        if(IMAGE_SEARCHED)
 			      {
-							 SDRAM_TO_NANDFLASH(bmp_tab_BUFFER,image_tab__nandflash_start,4);
+							 SDRAM_TO_NANDFLASH(bmp_tab_BUFFER+3*64*2048,image_tab__nandflash_start+3*64,1);
 							 NANDFLASH_P3PD_INX_SAVE();
 							 Clear_sdram(0X4F);
 			      }
