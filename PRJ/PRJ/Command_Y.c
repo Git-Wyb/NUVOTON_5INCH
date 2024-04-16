@@ -120,7 +120,7 @@ static void Create_new_logo_file_name(uint8_t x_field,uint8_t *x_name)
     uint8_t *Tp_point;
 	
 	file_sub = 0;
-	memset(x_name,0,60);
+	memset(x_name,0,61);
 	x_name[file_sub++]='3';
 	x_name[file_sub++]=':';
 	x_name[file_sub++]='F';
@@ -1166,7 +1166,7 @@ void LOGOData_Write_To_USB(uint32_t x_flag)
 	static FRESULT Tp_res;
 		
 //	char filename[]="0:FIELD01.CSV";
-  static char filename_new[60]={0};//	static char filename_new[44]={0};
+  static char filename_new[61]={0};//	static char filename_new[44]={0};
 //  static char basedata_foreword[]="0x0400_000*  ";
 	static uint8_t Tp_linshi[64];
 	static DIR tdir;	//????
