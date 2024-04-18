@@ -1545,7 +1545,7 @@ int CheckUsbDirFile(int cmd,int flag) //(0, 0);
 			{
 				//if (strlen(fileinfo.fname) == 20)
 				//{
-					if (memcmp(fileinfo.fname,"BELMONT_BMP",11) == 0)
+					if (memcmp(fileinfo.fname,"BELMONT_BMP_",12) == 0)
 					{
             #ifdef  SYSUARTPRINTF 
 						sysprintf("BELMONT_BMP_find\r\n");
@@ -1567,6 +1567,7 @@ int CheckUsbDirFile(int cmd,int flag) //(0, 0);
 			          SDRAM_TO_NANDFLASH(logodata_basedata_BUFFER,baseA_data__nandflash_start,1);
 			          SDRAM_TO_NANDFLASH(logodata_basedata_BUFFER,baseB_data__nandflash_start,1);
 							  W25Q128_Write();
+                            break;
 						}
 //						if(ret == 0)
 //						{

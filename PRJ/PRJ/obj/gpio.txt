@@ -31,8 +31,8 @@
     Program header entries: 1
     Section header entries: 16
 
-    Program header offset: 1061940 (0x00103434)
-    Section header offset: 1061972 (0x00103454)
+    Program header offset: 1061888 (0x00103400)
+    Section header offset: 1061920 (0x00103420)
 
     Section header string table index: 15
 
@@ -6798,96 +6798,96 @@
     $a
     i.CheckUsbDirFile
     CheckUsbDirFile
-        0x00004978:    e92d40f0    .@-.    PUSH     {r4-r7,lr}
-        0x0000497c:    e24ddf6d    m.M.    SUB      sp,sp,#0x1b4
+        0x00004978:    e92d4070    p@-.    PUSH     {r4-r6,lr}
+        0x0000497c:    e24dde1b    ..M.    SUB      sp,sp,#0x1b0
         0x00004980:    e1a06001    .`..    MOV      r6,r1
         0x00004984:    e3a01040    @...    MOV      r1,#0x40
         0x00004988:    e28d0e17    ....    ADD      r0,sp,#0x170
         0x0000498c:    ebfff14d    M...    BL       __aeabi_memclr4 ; 0xec8
         0x00004990:    e3a05000    .P..    MOV      r5,#0
-        0x00004994:    e28f1e13    ....    ADR      r1,{pc}+0x138 ; 0x4acc
+        0x00004994:    e28f1f4b    K...    ADR      r1,{pc}+0x134 ; 0x4ac8
         0x00004998:    e1a0000d    ....    MOV      r0,sp
         0x0000499c:    eb005fc3    ._..    BL       f_opendir ; 0x1c8b0
         0x000049a0:    e3500000    ..P.    CMP      r0,#0
-        0x000049a4:    1a000012    ....    BNE      0x49f4 ; CheckUsbDirFile + 124
+        0x000049a4:    1a000044    D...    BNE      0x4abc ; CheckUsbDirFile + 324
         0x000049a8:    e28d4050    P@..    ADD      r4,sp,#0x50
-        0x000049ac:    ea000040    @...    B        0x4ab4 ; CheckUsbDirFile + 316
+        0x000049ac:    ea00003b    ;...    B        0x4aa0 ; CheckUsbDirFile + 296
         0x000049b0:    e5dd006a    j...    LDRB     r0,[sp,#0x6a]
         0x000049b4:    e3500000    ..P.    CMP      r0,#0
-        0x000049b8:    0a00000b    ....    BEQ      0x49ec ; CheckUsbDirFile + 116
+        0x000049b8:    0a00003d    =...    BEQ      0x4ab4 ; CheckUsbDirFile + 316
         0x000049bc:    e350002e    ..P.    CMP      r0,#0x2e
-        0x000049c0:    0a00003b    ;...    BEQ      0x4ab4 ; CheckUsbDirFile + 316
+        0x000049c0:    0a000036    6...    BEQ      0x4aa0 ; CheckUsbDirFile + 296
         0x000049c4:    e5dd005c    \...    LDRB     r0,[sp,#0x5c]
         0x000049c8:    e3100010    ....    TST      r0,#0x10
-        0x000049cc:    0a000038    8...    BEQ      0x4ab4 ; CheckUsbDirFile + 316
-        0x000049d0:    e3a0200b    . ..    MOV      r2,#0xb
-        0x000049d4:    e28f10f4    ....    ADR      r1,{pc}+0xfc ; 0x4ad0
+        0x000049cc:    0a000033    3...    BEQ      0x4aa0 ; CheckUsbDirFile + 296
+        0x000049d0:    e3a0200c    . ..    MOV      r2,#0xc
+        0x000049d4:    e28f10f0    ....    ADR      r1,{pc}+0xf8 ; 0x4acc
         0x000049d8:    e284001a    ....    ADD      r0,r4,#0x1a
         0x000049dc:    fafff090    ....    BLX      memcmp ; 0xc24
         0x000049e0:    e3500000    ..P.    CMP      r0,#0
-        0x000049e4:    1a000032    2...    BNE      0x4ab4 ; CheckUsbDirFile + 316
-        0x000049e8:    ea000004    ....    B        0x4a00 ; CheckUsbDirFile + 136
-        0x000049ec:    e1a0000d    ....    MOV      r0,sp
-        0x000049f0:    eb005cc8    .\..    BL       f_closedir ; 0x1bd18
-        0x000049f4:    e1a00005    ....    MOV      r0,r5
-        0x000049f8:    e28ddf6d    m...    ADD      sp,sp,#0x1b4
-        0x000049fc:    e8bd80f0    ....    POP      {r4-r7,pc}
-        0x00004a00:    e284201a    . ..    ADD      r2,r4,#0x1a
-        0x00004a04:    e28f10d0    ....    ADR      r1,{pc}+0xd8 ; 0x4adc
-        0x00004a08:    e28d0e17    ....    ADD      r0,sp,#0x170
-        0x00004a0c:    faffef38    8...    BLX      __2sprintf ; 0x6f4
+        0x000049e4:    1a00002d    -...    BNE      0x4aa0 ; CheckUsbDirFile + 296
+        0x000049e8:    e284201a    . ..    ADD      r2,r4,#0x1a
+        0x000049ec:    e28f10e8    ....    ADR      r1,{pc}+0xf0 ; 0x4adc
+        0x000049f0:    e28d0e17    ....    ADD      r0,sp,#0x170
+        0x000049f4:    faffef3e    >...    BLX      __2sprintf ; 0x6f4
+        0x000049f8:    e28d0e17    ....    ADD      r0,sp,#0x170
+        0x000049fc:    fafff0b8    ....    BLX      strlen ; 0xce4
+        0x00004a00:    e3500017    ..P.    CMP      r0,#0x17
+        0x00004a04:    1a000004    ....    BNE      0x4a1c ; CheckUsbDirFile + 164
+        0x00004a08:    e1a02006    . ..    MOV      r2,r6
+        0x00004a0c:    e28f10d0    ....    ADR      r1,{pc}+0xd8 ; 0x4ae4
         0x00004a10:    e28d0e17    ....    ADD      r0,sp,#0x170
-        0x00004a14:    fafff0b2    ....    BLX      strlen ; 0xce4
-        0x00004a18:    e3500017    ..P.    CMP      r0,#0x17
-        0x00004a1c:    1a000004    ....    BNE      0x4a34 ; CheckUsbDirFile + 188
-        0x00004a20:    e1a02006    . ..    MOV      r2,r6
-        0x00004a24:    e28f10b8    ....    ADR      r1,{pc}+0xc0 ; 0x4ae4
-        0x00004a28:    e28d0e17    ....    ADD      r0,sp,#0x170
-        0x00004a2c:    eb0000dc    ....    BL       CpyDirBmpFileToDir ; 0x4da4
-        0x00004a30:    e1a05000    .P..    MOV      r5,r0
-        0x00004a34:    e59f00b8    ....    LDR      r0,[pc,#184] ; [0x4af4] = 0x2d083
-        0x00004a38:    e5d00000    ....    LDRB     r0,[r0,#0]
-        0x00004a3c:    e3500000    ..P.    CMP      r0,#0
-        0x00004a40:    0a00001b    ....    BEQ      0x4ab4 ; CheckUsbDirFile + 316
-        0x00004a44:    e59f00ac    ....    LDR      r0,[pc,#172] ; [0x4af8] = 0x305c0
-        0x00004a48:    e59f10ac    ....    LDR      r1,[pc,#172] ; [0x4afc] = 0x17e40
-        0x00004a4c:    e5900014    ....    LDR      r0,[r0,#0x14]
-        0x00004a50:    e3a02004    . ..    MOV      r2,#4
-        0x00004a54:    eb002e3b    ;...    BL       SDRAM_TO_NANDFLASH ; 0x10348
-        0x00004a58:    eb0018a9    ....    BL       NANDFLASH_P3PD_INX_SAVE ; 0xad04
-        0x00004a5c:    e3a0004f    O...    MOV      r0,#0x4f
-        0x00004a60:    eb00003c    <...    BL       Clear_sdram ; 0x4b58
-        0x00004a64:    e59f0094    ....    LDR      r0,[pc,#148] ; [0x4b00] = 0x2d1d4
-        0x00004a68:    e3a02008    . ..    MOV      r2,#8
-        0x00004a6c:    e5900028    (...    LDR      r0,[r0,#0x28]
-        0x00004a70:    e5c0202c    , ..    STRB     r2,[r0,#0x2c]
-        0x00004a74:    e28d1c01    ....    ADD      r1,sp,#0x100
-        0x00004a78:    e281107f    ....    ADD      r1,r1,#0x7f
-        0x00004a7c:    e2800024    $...    ADD      r0,r0,#0x24
-        0x00004a80:    ebfff0ae    ....    BL       __aeabi_memcpy ; 0xd40
-        0x00004a84:    eb003339    93..    BL       Updata_Basedata_No0_cyw ; 0x11770
-        0x00004a88:    eb0039a1    .9..    BL       basedata_ram_to_sdram ; 0x13114
-        0x00004a8c:    e59f7074    tp..    LDR      r7,[pc,#116] ; [0x4b08] = 0x2d108
-        0x00004a90:    e59f106c    l...    LDR      r1,[pc,#108] ; [0x4b04] = 0x1ebc0
-        0x00004a94:    e5970000    ....    LDR      r0,[r7,#0]
-        0x00004a98:    e3a02001    . ..    MOV      r2,#1
-        0x00004a9c:    eb002e29    )...    BL       SDRAM_TO_NANDFLASH ; 0x10348
-        0x00004aa0:    e59f1064    d...    LDR      r1,[pc,#100] ; [0x4b0c] = 0x17f40
-        0x00004aa4:    e5970000    ....    LDR      r0,[r7,#0]
-        0x00004aa8:    e3a02001    . ..    MOV      r2,#1
-        0x00004aac:    eb002e25    %...    BL       SDRAM_TO_NANDFLASH ; 0x10348
-        0x00004ab0:    eb003474    t4..    BL       W25Q128_Write ; 0x11c88
-        0x00004ab4:    e28d1050    P...    ADD      r1,sp,#0x50
-        0x00004ab8:    e1a0000d    ....    MOV      r0,sp
-        0x00004abc:    eb006068    h`..    BL       f_readdir ; 0x1cc64
-        0x00004ac0:    e3500000    ..P.    CMP      r0,#0
-        0x00004ac4:    1affffc8    ....    BNE      0x49ec ; CheckUsbDirFile + 116
-        0x00004ac8:    eaffffb8    ....    B        0x49b0 ; CheckUsbDirFile + 56
+        0x00004a14:    eb0000e2    ....    BL       CpyDirBmpFileToDir ; 0x4da4
+        0x00004a18:    e1a05000    .P..    MOV      r5,r0
+        0x00004a1c:    e59f00d0    ....    LDR      r0,[pc,#208] ; [0x4af4] = 0x2d083
+        0x00004a20:    e5d00000    ....    LDRB     r0,[r0,#0]
+        0x00004a24:    e3500000    ..P.    CMP      r0,#0
+        0x00004a28:    0a00001c    ....    BEQ      0x4aa0 ; CheckUsbDirFile + 296
+        0x00004a2c:    e59f00c4    ....    LDR      r0,[pc,#196] ; [0x4af8] = 0x305c0
+        0x00004a30:    e59f10c4    ....    LDR      r1,[pc,#196] ; [0x4afc] = 0x17e40
+        0x00004a34:    e5900014    ....    LDR      r0,[r0,#0x14]
+        0x00004a38:    e3a02004    . ..    MOV      r2,#4
+        0x00004a3c:    eb002e41    A...    BL       SDRAM_TO_NANDFLASH ; 0x10348
+        0x00004a40:    eb0018af    ....    BL       NANDFLASH_P3PD_INX_SAVE ; 0xad04
+        0x00004a44:    e3a0004f    O...    MOV      r0,#0x4f
+        0x00004a48:    eb000042    B...    BL       Clear_sdram ; 0x4b58
+        0x00004a4c:    e59f00ac    ....    LDR      r0,[pc,#172] ; [0x4b00] = 0x2d1d4
+        0x00004a50:    e3a02008    . ..    MOV      r2,#8
+        0x00004a54:    e5900028    (...    LDR      r0,[r0,#0x28]
+        0x00004a58:    e5c0202c    , ..    STRB     r2,[r0,#0x2c]
+        0x00004a5c:    e28d1c01    ....    ADD      r1,sp,#0x100
+        0x00004a60:    e281107f    ....    ADD      r1,r1,#0x7f
+        0x00004a64:    e2800024    $...    ADD      r0,r0,#0x24
+        0x00004a68:    ebfff0b4    ....    BL       __aeabi_memcpy ; 0xd40
+        0x00004a6c:    eb00333f    ?3..    BL       Updata_Basedata_No0_cyw ; 0x11770
+        0x00004a70:    eb0039a7    .9..    BL       basedata_ram_to_sdram ; 0x13114
+        0x00004a74:    e59f408c    .@..    LDR      r4,[pc,#140] ; [0x4b08] = 0x2d108
+        0x00004a78:    e59f1084    ....    LDR      r1,[pc,#132] ; [0x4b04] = 0x1ebc0
+        0x00004a7c:    e5940000    ....    LDR      r0,[r4,#0]
+        0x00004a80:    e3a02001    . ..    MOV      r2,#1
+        0x00004a84:    eb002e2f    /...    BL       SDRAM_TO_NANDFLASH ; 0x10348
+        0x00004a88:    e59f107c    |...    LDR      r1,[pc,#124] ; [0x4b0c] = 0x17f40
+        0x00004a8c:    e5940000    ....    LDR      r0,[r4,#0]
+        0x00004a90:    e3a02001    . ..    MOV      r2,#1
+        0x00004a94:    eb002e2b    +...    BL       SDRAM_TO_NANDFLASH ; 0x10348
+        0x00004a98:    eb00347a    z4..    BL       W25Q128_Write ; 0x11c88
+        0x00004a9c:    ea000004    ....    B        0x4ab4 ; CheckUsbDirFile + 316
+        0x00004aa0:    e28d1050    P...    ADD      r1,sp,#0x50
+        0x00004aa4:    e1a0000d    ....    MOV      r0,sp
+        0x00004aa8:    eb00606d    m`..    BL       f_readdir ; 0x1cc64
+        0x00004aac:    e3500000    ..P.    CMP      r0,#0
+        0x00004ab0:    0affffbe    ....    BEQ      0x49b0 ; CheckUsbDirFile + 56
+        0x00004ab4:    e1a0000d    ....    MOV      r0,sp
+        0x00004ab8:    eb005c96    .\..    BL       f_closedir ; 0x1bd18
+        0x00004abc:    e1a00005    ....    MOV      r0,r5
+        0x00004ac0:    e28dde1b    ....    ADD      sp,sp,#0x1b0
+        0x00004ac4:    e8bd8070    p...    POP      {r4-r6,pc}
     $d
-        0x00004acc:    00003a33    3:..    DCD    14899
-        0x00004ad0:    4d4c4542    BELM    DCD    1296844098
-        0x00004ad4:    5f544e4f    ONT_    DCD    1599360591
-        0x00004ad8:    00504d42    BMP.    DCD    5262658
+        0x00004ac8:    00003a33    3:..    DCD    14899
+        0x00004acc:    4d4c4542    BELM    DCD    1296844098
+        0x00004ad0:    5f544e4f    ONT_    DCD    1599360591
+        0x00004ad4:    5f504d42    BMP_    DCD    1599098178
+        0x00004ad8:    00000000    ....    DCD    0
         0x00004adc:    252f3a33    3:/%    DCD    623852083
         0x00004ae0:    00000073    s...    DCD    115
         0x00004ae4:    422f3a30    0:/B    DCD    1110391344
@@ -50294,7 +50294,7 @@
 
 
 ** Section #5 '.debug_frame' (SHT_PROGBITS)
-    Size   : 20024 bytes
+    Size   : 20020 bytes
 
 
 ** Section #6 '.debug_info' (SHT_PROGBITS)
@@ -50302,11 +50302,11 @@
 
 
 ** Section #7 '.debug_line' (SHT_PROGBITS)
-    Size   : 134888 bytes
+    Size   : 134884 bytes
 
 
 ** Section #8 '.debug_loc' (SHT_PROGBITS)
-    Size   : 74644 bytes
+    Size   : 74600 bytes
 
 
 ** Section #9 '.debug_macinfo' (SHT_PROGBITS)
