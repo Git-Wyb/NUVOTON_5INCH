@@ -9,7 +9,7 @@
 #include "Aprotocol.h"
 #include "Command_P.h"
 #include "nand_nand.h"
-#include "Command_I.h"
+#include "Command_all.h"
 
 extern uint16_t FIELD_ERASE_STEP;//????????
 extern uint16_t FIELD_ERASE_FLAG ;//??????? bit0 basedata bit1 field1
@@ -140,6 +140,8 @@ void INIT_LOGO_DATA(DATACLASS_TYPE x_datatype,uint8_t x_field)
                 case 	TestAllData_DATACLASS:
 						    case  AnomalyRecord_DATACLASS:
 						
+                            
+                            field_info_save();
 							       //?????????
 						          Clear_sdram(1<<(Tp_field+8));//AREANO
 						    //Tp_field =Tp_data1;
@@ -155,6 +157,8 @@ void INIT_LOGO_DATA(DATACLASS_TYPE x_datatype,uint8_t x_field)
 						             break;
 						    case ActionRecord_DATACLASS:
 							  //?????????
+                            field_info_save();
+                            
 						           Clear_sdram(1<<(Tp_field+8));//AREANO
 						    //Tp_field =Tp_data1;
 						     *(__IO uint8_t*)(logodata_sdrambuffer_addr_arry[Tp_field]) = 0xE0;
