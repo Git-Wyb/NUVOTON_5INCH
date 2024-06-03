@@ -24,6 +24,7 @@
 #include "wwdt.h"
 #include "Aprotocol.h"
 #include "DIP_SW.h"
+#include "W25Q128.h"
 
 
 //usb
@@ -59,7 +60,7 @@ extern uint32_t NANDFLASH_USER_INX;
 
 extern  BADMANAGE_TAB_TYPE_U badmanage_str[1];
 extern RTC_TIME_DATA_T pwr_on_time_ground;
-
+extern uint8_t MODE_WORKTEST ;
 
 int nand_curr_device = -1;
 
@@ -89,7 +90,6 @@ uint8_t *RxBuffer_noshift;
  uint8_t flag_usb_init=0;
  extern int gs_usb_mount_flag;
  extern uint8_t TYPE_PRODUCT;
-extern uint8_t MODE_WORKTEST;
  
 void  REG_OPERATE(uint32_t x_reg,uint32_t x_data,ENUM_REG x_type)
 {
@@ -550,12 +550,13 @@ void SDRAM_DATA_INIT(void)
 {
 	
 	uint16_t width,height,Tp_i;
-//		union 
-//	{
-//		uint32_t DATA_U32;
-//		uint8_t  DATA_U8[4];
-//	}Tp_CHECK;
+		union 
+	{
+		uint32_t DATA_U32;
+		uint8_t  DATA_U8[4];
+	}Tp_CHECK;
 	
+	W25Q128_Read(access_BLOCK_CHECKSUM);
 	
 	display_layer_sdram.IMAGE_TAB_BUFFER = (uint32_t )malloc((4*64*2048)+64);
 	display_layer_sdram.IMAGE_TAB_BUFFER = 32+shift_pointer((uint32_t)display_layer_sdram.IMAGE_TAB_BUFFER, 32);
@@ -654,47 +655,60 @@ void SDRAM_DATA_INIT(void)
 	
 	
 	NAND_ReadPage(backup_tab_nandflash_start,0,(uint8_t *)badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
-//	Tp_CHECK.DATA_U32 = 0;
-//	for(Tp_i=0;Tp_i<(sizeof(badmanage_str->BAD_MANAGE_arr)-4);Tp_i++)
-//	{
-//		Tp_CHECK.DATA_U32 =Tp_CHECK.DATA_U32 + badmanage_str->BAD_MANAGE_arr[Tp_i];
-//	}
+	Tp_CHECK.DATA_U32 = 0;
+	for(Tp_i=0;Tp_i<(sizeof(badmanage_str->BAD_MANAGE_arr)-4);Tp_i++)
+	{
+		Tp_CHECK.DATA_U32 =Tp_CHECK.DATA_U32 + badmanage_str->BAD_MANAGE_arr[Tp_i];
+	}
 	
 	//sprintf("badmanage_str->BAD_MANAGE_str.NANDFLASH_USER_INX=%x,read\n\r",badmanage_str->BAD_MANAGE_str.NANDFLASH_USER_INX);
 	//NANDFLASH_BADMANAGE_INIT();
-	#ifdef  SYSUARTPRINTF
-////  	badmanage_str->BAD_MANAGE_str.ERR_NUMBER = 70;
-////		for(Tp_i=0;Tp_i<70;Tp_i++)
-////		{
-////			badmanage_str->BAD_MANAGE_str.ERR_BLOCK[Tp_i] = 1+Tp_i;
-////			badmanage_str->BAD_MANAGE_str.BACKUP_BLOCK[Tp_i] = 1968+Tp_i;
-////		}
-////		NANDFLASH_P3PD_INX_SAVE();
-		
-	sysprintf("ERR_NUMBER=0x%08x\r\n",badmanage_str->BAD_MANAGE_str.ERR_NUMBER);
+	#ifdef  SYSUARTPRINTF_ActionTimers 
+//	  	badmanage_str->BAD_MANAGE_str.ERR_NUMBER = 75;
+//		for(Tp_i=0;Tp_i<75;Tp_i++)
+//		{
+//			badmanage_str->BAD_MANAGE_str.ERR_BLOCK[Tp_i] = 1+Tp_i;
+//			badmanage_str->BAD_MANAGE_str.BACKUP_BLOCK[Tp_i] = 1968+Tp_i;
+//		}
+//		NANDFLASH_P3PD_INX_SAVE();
+	
+	sysprintf("badmanage_str->BAD_MANAGE_str.flag=0x%08x,badmanage_str->BAD_MANAGE_str.num=0x%08x\r\n",badmanage_str->BAD_MANAGE_str.flag,badmanage_str->BAD_MANAGE_str.ERR_NUMBER);
+	sysprintf("badmanage_str->BAD_MANAGE_str.backup_checksum=0x%08x\r\n",badmanage_str->BAD_MANAGE_str.backup_checksum);
+	if(badmanage_str->BAD_MANAGE_str.ERR_NUMBER<BAD_BLOCK_TOTAL)
+	{
 	for(Tp_i=0;Tp_i<badmanage_str->BAD_MANAGE_str.ERR_NUMBER;Tp_i++)
 	{
 		sysprintf("errblock=0x%08x,backupblock=0x%08x\r\n",badmanage_str->BAD_MANAGE_str.ERR_BLOCK[Tp_i],badmanage_str->BAD_MANAGE_str.BACKUP_BLOCK[Tp_i]);
 	}
+  }
+	
 	#endif
+	
+	
 	if((READ_PIN_SW1_6!=SW_ON)&&
-		 ((badmanage_str->BAD_MANAGE_str.flag!=BAD_BLOCK_LOCK))&&
+		 ((badmanage_str->BAD_MANAGE_str.flag!=BAD_BLOCK_LOCK)||(Tp_CHECK.DATA_U32!=badmanage_str->BAD_MANAGE_str.backup_checksum)||(badmanage_str->BAD_MANAGE_str.ERR_NUMBER>BAD_BLOCK_TOTAL))&&
 	   (MODE_WORKTEST==WORK_FUNCTION)) 
 	{		
+	
+	W25Q128_Read(access_BLOCK_0_BACKUP);
+	#ifdef  SYSUARTPRINTF_ActionTimers 
+	//sysprintf("badmanage_str->BAD_MANAGE_str.flag=0x%08x,badmanage_str->BAD_MANAGE_str.num=0x%08x\r\n",badmanage_str->BAD_MANAGE_str.flag,badmanage_str->BAD_MANAGE_str.ERR_NUMBER);
+	#endif
+	NAND_EraseBlock(backup_tab_nandflash_start);
+	NAND_WritePage(backup_tab_nandflash_start,0,badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
 	power_checkreset();
 	//HAL_NVIC_SystemReset( );
 	while(1);
 	
 	}
 	
-	
-	if(MODE_WORKTEST==WORK_TEST)
+	if(MODE_WORKTEST == WORK_TEST)
 	{
 		badmanage_str->BAD_MANAGE_str.ERR_NUMBER=0;
 	}
 //	if((READ_PIN_SW1_6==SW_ON)&&
 //		 ((Tp_CHECK.DATA_U32!=badmanage_str->BAD_MANAGE_str.backup_checksum))&&
-//	   (READ_WORKMODE==WORK_FUNCTION))
+//	   (MODE_WORKTEST==WORK_FUNCTION))
 //	{
 //		badmanage_str->BAD_MANAGE_str.ERR_NUMBER=0;
 //	}
@@ -1081,6 +1095,7 @@ void init_gpio(void)
 		 REG_OPERATE(REG_SYS_GPI_MFPH,0XF000000,clear);
 			GPIO_OpenBit(GPIOI,BIT14,DIR_OUTPUT,NO_PULL_UP);
 			AUDIO_AMPLIFIER_SHUT_DOWN	;
+			AUDIO_AMPLIFIER_WORK_modify;
 			
 			//pi12 AMP BUSY
 			 REG_OPERATE(REG_SYS_GPI_MFPH,0XF0000,clear);
@@ -1099,8 +1114,7 @@ void init_gpio(void)
 		 GPIO_Set(GPIOG,BIT3);
 		 #endif
 		 
-		 
-		 //PC14 low
+		  //PC14 low
 		 REG_OPERATE(REG_SYS_GPC_MFPH,0X0F000000,clear);
 	   GPIO_OpenBit(GPIOC,BIT14, DIR_OUTPUT, PULL_UP);
 		 GPIO_Clr(GPIOC,BIT14);

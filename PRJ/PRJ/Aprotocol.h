@@ -63,7 +63,7 @@
 #define sdram_field_offset6(Tp_field)       *(__IO uint8_t*)(logodata_sdrambuffer_addr_arry[Tp_field]+6)
 #define sdram_field_offset7(Tp_field)       *(__IO uint8_t*)(logodata_sdrambuffer_addr_arry[Tp_field]+7)
 
-#define logodata_2gbit_change_addr             0x5fa0000
+#define logodata_2gbit_change_addr              0x5fa0000 //0x5fa0000
 
 #define MAX_LOGO_ACTION_MONTH 240//????????????????????????
 #define MAX_LOGO_UINT_NUM     999//???????????
@@ -178,6 +178,7 @@ uint16_t convet_2_hex_ASCII_to_hex(uint8_t *buff);
 void COMM_SOFT_DEINIT(void);
 void judge_uart2_receive_end(void);
 int8_t convert_1_hex_to_hex_ascii(int8_t a);
+uint16_t CHANGE_HEXDATA_2BYTE(uint8_t  *x_data);
 void send_code_protocol_error(void);
 uint16_t GET_READ_RXNUM(uint16_t x_rx_in,uint16_t x_rx_out,uint16_t x_buff_max);
 void code_protocol_error(int8_t type,uint8_t Value_1,uint16_t Value_2,uint8_t cnt) ;

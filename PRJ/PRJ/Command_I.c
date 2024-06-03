@@ -29,6 +29,8 @@ extern uint32_t logodata_basedata_BUFFER,logodata_field1_BUFFER,logodata_field2_
 					logodata_field15_BUFFER;
 extern TIME_TYPE timeandday_now_app;
 extern UINT32 volatile time1ms_count;
+extern uint8_t Field_unit;
+extern uint32_t logodata_sdrambuffer_addr_arry[16];
 
 uint32_t CharToHex(char *x_char)
 {
@@ -221,3 +223,13 @@ void basedata_ram_to_sdram(void)
 		memcpy((uint8_t*)(logodata_basedata_BUFFER +Basedata_copy2),BaseData_ARR,logodata_Basedata_SIZE);
 }
 
+
+void unit_ram_to_sdram(void)
+{
+	uint16_t Tp_i;
+	//uint8_t Tp_checksum=0;
+	memcpy((uint8_t*)(logodata_sdrambuffer_addr_arry[Field_unit]+UINT_START2_OFFSET),(uint8_t*)(logodata_sdrambuffer_addr_arry[Field_unit]),MAX_LOGO_UINT_NUM+2);
+	memcpy((uint8_t*)(logodata_sdrambuffer_addr_arry[Field_unit]+UINT_START3_OFFSET),(uint8_t*)(logodata_sdrambuffer_addr_arry[Field_unit]),MAX_LOGO_UINT_NUM+2);
+	
+	
+}

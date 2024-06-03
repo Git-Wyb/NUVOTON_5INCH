@@ -28,6 +28,8 @@ DOWNLOAD_TYPE  download={0};
 uint8_t screen_reverse_bit;
 extern uint8_t updata_hex_fromSW2;
 extern Download_ERR_U Download_code;
+extern uint8_t TYPE_PRODUCT;
+
 
 void POWER_5V_SETTING_initover(void)
 {
@@ -146,7 +148,15 @@ void check_sw234(void) //100ms run one
 				state.sw1_4=1;
 				SetZuobiao(10, 400 + 60);
 				lcd_printf_new("Download BackupData");
-			BackupDeviceData( );
+				 if(TYPE_PRODUCT==PORDUCT_7INCH)
+				 {
+			     BackupDeviceData_7( );
+					  BackupDeviceData_5( );
+				 }
+				  if(TYPE_PRODUCT==PORDUCT_5INCH)
+					{
+				    BackupDeviceData_5( );
+					}
 				//SetZuobiao(10, 400 + 60);
 				//lcd_printf_new("Backup End         ");
 				FLAG_SW_FINISH = FLAG_SW_FINISH|0x08;

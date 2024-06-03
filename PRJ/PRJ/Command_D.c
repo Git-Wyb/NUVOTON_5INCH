@@ -18,6 +18,8 @@ uint8_t  Dma2d_busy=0;
 extern uint8_t *RxBuffer; //[NAND_PAGE_SIZE];
 uint32_t shift_pointer(uint32_t ptr, uint32_t align);
 extern BMP_RPOTOCOL_TYPE  bmp_protocol_bak[3];
+extern uint8_t flag_layer23_draw;
+
 
 int GetSdramImgInfoByIdx(int idx, uint16_t *width, uint16_t *height, void **pBuf)  //根据idx为输入，判断内存中有没有对应图像，有则把图像的长宽内存位置返回给width height pbuf
 {
@@ -487,6 +489,10 @@ void DisPlaySdramBmpByIdx(char Cmd, uint16_t idx, int x, int y,int layer)
 			pBmpInfo->idx = idx;
 				DisplayBmpToFrame(pBmpInfo->x, pBmpInfo->y, pBmpInfo->width, pBmpInfo->height, pBmpInfo->pBuf, layer);
 			}
+			else
+			{
+				flag_layer23_draw = 1;
+			}
 			
     }			
 			  
@@ -531,6 +537,12 @@ void DisPlaySdramBmpByIdx(char Cmd, uint16_t idx, int x, int y,int layer)
 					pBmpInfo->idx = idx;
 					gs_layer[layer].bmpCnt++;
 					DisplayBmpToFrame(pBmpInfo->x, pBmpInfo->y, pBmpInfo->width, pBmpInfo->height, GetSdramLastPos(),layer);
+				}
+				else
+				{
+
+				  flag_layer23_draw = 1;
+			
 				}
 				
 		  }			

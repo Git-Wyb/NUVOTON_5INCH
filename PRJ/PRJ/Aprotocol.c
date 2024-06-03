@@ -27,8 +27,9 @@ volatile uint16_t  RX_COUNT_OUT = 0;
 uint8_t  *UART2_TX_BUFF_NEW=0;//[TX_BUFF_MAX_UART]={0};
 uint16_t  TX_COUNT_IN = 0;
 uint16_t  TX_COUNT_OUT = 0;
+static uint16_t  COMMAND_IN;
 UINT8 *RX_Test=0,*TX_Test=0;//[500];
-static uint8_t COMMAND_AP,COMMAND_IN ;
+static uint8_t COMMAND_AP ;
 uint8_t  command_xor=0x00;  //����USB����COPY��ͼƬӦ��
 char  USB_IMAGE_TYPE = ' ';
 uint8_t  USB_HAS_USABLE_IMG=0;
@@ -72,6 +73,8 @@ volatile  uint32_t UART_TX_REAL=0,UART_TX_WANT=0;
 //extern uint8_t *TX_Test;
 extern uint8_t checksum_flag;
 extern int gs_layFlag ;
+uint8_t flag_layer23_draw = 0;																
+																
 																
 typedef enum COMM_HANDLE_STATUS
 {
@@ -150,6 +153,8 @@ uint16_t CHANGE_HEXDATA_2BYTE(uint8_t  *x_data)
 {
 	static uint16_t Tp_long=0xffff;
 	Tp_long=0xffff;
+	//sysprintf("x_data[0]=%X,x_data[1]=%X\r\n",x_data[0],x_data[1]);
+	
 	if(((x_data[0]>=0x30)&&(x_data[0]<=0x39))||((x_data[0]>=0x41)&&(x_data[0]<=0x46)))
 	{
 		if(((x_data[1]>=0x30)&&(x_data[1]<=0x39))||((x_data[1]>=0x41)&&(x_data[1]<=0x46)))
@@ -172,6 +177,9 @@ uint16_t CHANGE_HEXDATA_2BYTE(uint8_t  *x_data)
 			}
 	  }
 	}
+	
+	//sysprintf("Tp_long=%X\r\n",Tp_long);
+	
 	return Tp_long;
 }
 
@@ -501,6 +509,9 @@ void code_protocol_ack(uint8_t  x_xor,uint8_t len,uint8_t *buff,uint8_t type)  /
 	
 	if(tx_buff_uart2_temp==0)
 	{
+		#ifdef  SYSUARTPRINTF_ActionTimers 
+					sysprintf("mallco tx_buff_uart2_temp\r\n");
+		#endif
 	tx_buff_uart2_temp_noshift = malloc(TX_BUFF_UART2_MAX_LEN+64);
 	tx_buff_uart2_temp = (uint8_t *)((32+(uint8_t   *)shift_pointer((uint32_t)tx_buff_uart2_temp_noshift,32)));
 	tx_buff_uart2_temp = (uint8_t *)((uint32_t)tx_buff_uart2_temp|0x80000000);
@@ -1145,8 +1156,15 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 								if(bmp_protocol[0].num) Tp_layerover=Tp_layerover|(1<<0);
 								if(bmp_protocol[1].num) Tp_layerover=Tp_layerover|(1<<1);
 								if(bmp_protocol[2].num) Tp_layerover=Tp_layerover|(1<<2);
+								
+								flag_layer23_draw = 0;
 								DisCmdDisplay((buff[4] - '0'),bmp_protocol[0].bmp,bmp_protocol[0].num,bmp_protocol[1].bmp,bmp_protocol[1].num,bmp_protocol[2].bmp,bmp_protocol[2].num);                                                         
 						
+								if(flag_layer23_draw==1)
+								{
+									return 0;
+								}
+								
 								systerm_error_status.bits.nand_canot_find_Q_bmp_error=0; //DisCmdDisplay ?l???1?????????????????
 
 
@@ -1823,8 +1841,8 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
       sysprintf("Icommand start\r\n");
 	    if(LOGO_DATA_OUT_FLAG!=3 )    return 0;   
 			if((buff[23]!=',')&&(buff[23]!='*')) return 0;//��ֹ�ļ�����1λҲ����
-      
-		 	if((buff[4]=='0')||(buff[4]=='1'))//????????
+      if((TYPE_PRODUCT == PORDUCT_5INCH)&&(buff[4]=='2')) return 0;
+		 	if((buff[4]=='0')||(buff[4]=='1')||(buff[4]=='2'))//????????
 				{
 					
 					if(buff[4]=='0')//?�??????????j??????
@@ -1878,7 +1896,7 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 					//if((tp_field.addr + tp_field.space)>=0x9DC0000) return 0;//��С����NANDFLASH���ܴ�С�� ���������� ��Ϊ��2Gbit���豸���Ա����
 					//if((tp_field.addr + tp_field.space)>=0x9B40000) return 0;
 					//if((tp_field.addr + tp_field.space)>=0x98A0000) return 0;
-					if((tp_field.addr + tp_field.space)>=0x9640000) return 0;
+					if((tp_field.addr + tp_field.space)>0x9620000) return 0;
 					if(tp_field.addr < 0x6000000 )  return 0; //��ʼ��ַ����LOGO����Ӧ���ڵķ�Χ�� 20171016
 					
 					if((tp_field.addr %0x20000)!=0)  return 0;	
@@ -2082,10 +2100,9 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 							  //?????????
 						     //if(buff[4]=='2')
 						     //if(0)
-						   // if(buff[4]=='2')
-						     if(0)
+						    if(buff[4]=='2')
 								{
-									//UnitData_NandToSDRAM(Tp_field,Tp_gs_AreaInfo[Tp_field].addr+logodata_2gbit_change_addr);
+									UnitData_NandToSDRAM(Tp_field,Tp_gs_AreaInfo[Tp_field].addr+logodata_2gbit_change_addr);
 								}
 								else
 								{
@@ -2099,7 +2116,7 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 								 *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS2_OFFSET) = 0X18;
 								 *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS3_OFFSET) = 0X18;
 								  SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],(Tp_gs_AreaInfo[Tp_field].addr+logodata_2gbit_change_addr)/2048,1);
-								 // SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],unit_data__B_nandflash_start,1);
+								  SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],unit_data__B_nandflash_start,1);
 								}
 						    break;
 						case 	TestFinalData_DATACLASS:
@@ -2164,7 +2181,6 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 						
                 for(Q0_addr=0;Q0_addr<(Tp_gs_AreaInfo[Tp_field].space/0x20000);Q0_addr++)
 								 {
-									 
 									 NAND_EraseBlock((Tp_gs_AreaInfo[Tp_field].addr+logodata_2gbit_change_addr)/0x20000+Q0_addr);
 								 }
 								 
@@ -2371,7 +2387,7 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 						 *(__IO uint8_t*)(logodata_sdrambuffer_addr_arry[filed_num] + Tp_data3 +  UINT_START3_OFFSET) = Tp_field_addr ;
 					 
 					 SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[filed_num],(gs_AreaInfo[filed_num].addr+logodata_2gbit_change_addr)/2048,1);
-				//   SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[filed_num],unit_data__B_nandflash_start,1);
+				   SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[filed_num],unit_data__B_nandflash_start,1);
 //					//Tp_field = filed_num;
 //					Tp_data3 =convet_3_dec_asccii_to_hex(buff + 5);//����ǵ�Ԫ����
 //					if(Tp_data3 == 0xffff) return 0;//���ݲ��Ϲ淶
@@ -2480,14 +2496,14 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 						   Tp_field_addr = (gs_AreaInfo[filed_num].addr+logodata_2gbit_change_addr)/2048 + Fieldx_Info[filed_num].cycle*64;		
 			         NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[filed_num],Tp_field_addr,1);
 					 }
-//					 else
-//					 {
-//						 if(TYPE_PRODUCT==PORDUCT_7INCH)
-//						 {
-//							Tp_field_addr =(gs_AreaInfo[filed_num].addr+logodata_2gbit_change_addr)/2048 + Fieldx_Info[filed_num].cycle*64;
-//							SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[filed_num],Tp_field_addr,1);
-//						 }
-//					 }
+					 else
+					 {
+						 if(TYPE_PRODUCT==PORDUCT_7INCH)
+						 {
+							Tp_field_addr =(gs_AreaInfo[filed_num].addr+logodata_2gbit_change_addr)/2048 + Fieldx_Info[filed_num].cycle*64;
+							SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[filed_num],Tp_field_addr,1);
+						 }
+					 }
 //          buff[5+p_gs_AreaInfo->size]=0x00;//���溯�������ָ���������Ҫ��0x00��β
 //					if(AreaWriteCmd(0,filed_num,0,&buff[5], p_gs_AreaInfo->size)==0)  //����������û�õ�
 //					{
@@ -2992,8 +3008,9 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 					}	
 				   
 				 
-
-           i_return_flag =    BackupDeviceData( );
+          if(TYPE_PRODUCT==PORDUCT_7INCH)
+					{
+           i_return_flag =    BackupDeviceData_7( );
 						  if(systerm_error_status.bits.usb_canot_write_error)
             {
 							return 1;
@@ -3003,6 +3020,21 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
             {
 							return 0;
 						}
+					}
+					
+					 if(TYPE_PRODUCT==PORDUCT_5INCH)
+					 {
+						i_return_flag =    BackupDeviceData_5( );
+						  if(systerm_error_status.bits.usb_canot_write_error)
+            {
+							return 1;
+							
+             }
+						if(i_return_flag==0)  //DOWNLOAD_LOGO_INIT(0X0000FFFF);
+            {
+							return 0;
+						}
+					}
 
 					 ack_buf[0] = 0X1C;//20170721 ITEM2 ָ����������
 		         	     command_xor=Tp_xor;//IMAGE_FCS = Tp_FSC;

@@ -136,7 +136,7 @@ extern volatile uint32_t  time1ms_count;
 uint32_t Tp_data = 0;
 uint8_t TYPE_PRODUCT=0;
 uint8_t MODE_WORKTEST = 0;
-
+extern uint8_t *BaseData_ARR;
 
 #ifdef SYSUARTPRINTF_p
 
@@ -313,8 +313,9 @@ int main(void)
 			MODE_WORKTEST=check_io_state(MODE_SELECT);
 		}
 		while(MODE_WORKTEST==STATUS_Err);
+	//	MODE_WORKTEST = WORK_TEST;
 		TYPE_PRODUCT = PORDUCT_5INCH;
-		MODE_WORKTEST = WORK_FUNCTION;
+		MODE_WORKTEST =WORK_FUNCTION;
 		
 	 while((get_main_pwr_ad_value()<VOLT_WORK));
 	 LED_POWER_ON();
@@ -329,17 +330,30 @@ int main(void)
 		REG_OPERATE(REG_SYS_LVRDCR,1,clear);
 		#ifdef POWER_INT_MODE
 		
-		power_int_init();
+	 power_int_init();
 		#endif
 		
 		
     W25Q128_init();
-    
+    //W25Q128_test();
 		nandflash_init();
     SDRAM_DATA_INIT();
 		
-	
+//	  NAND_EraseBlock(backup_tab_nandflash_start);
   
+//		NAND_EraseBlock(1533);
+//    NAND_EraseBlock(1534);
+//		NAND_EraseBlock(1966);
+//  NAND_EraseBlock(1967);
+//		NAND_EraseBlock(1529);
+//		NAND_EraseBlock(1530);
+//		NAND_EraseBlock(1531);
+//		NAND_EraseBlock(1532);
+
+//   memset((uint8_t *)BaseData_ARR,0XFF,logodata_Basedata_SIZE);
+//   W25Q128_Write(access_BLOCK_1967_BASEDATA);
+//		while(1);
+		
 		check_sw5();
 		POWER_5V_SETTING_initover();
 		
@@ -424,11 +438,13 @@ int main(void)
 //	*(uint8_t *)(display_layer_sdram.LCD_FRAME1_BUFFER+4));
 	 
 		//if(0)
+		
+		
 	 if(MODE_WORKTEST==WORK_FUNCTION)
 		{
 		while(1)
 		{
-	TimeProcess( );
+	   TimeProcess( );
      if(pwr_on_cnt==0)
 		{
 			// sysFlushCache(I_D_CACHE);

@@ -201,7 +201,7 @@ int AreaWriteCmd(char cmd, int field, int idx,void *data,int len)		//√¸¡Ó FILED 
 			
 			if((idx==Master_Ver_index)||(idx==BMP_Ver_index)||(idx==PCB_Checked_5inch)||(idx==VBAT_FLAG_5inch))
 			{
-				W25Q128_Write();
+				W25Q128_Write(accsee_BASEDATA_PARA_5INCH);
 			}
 			return 1;
 			

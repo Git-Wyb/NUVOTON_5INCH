@@ -28,6 +28,7 @@
 #define BASE_data_checksum 163
 #define BASE_data_4byte_end 164
 
+
 #define U2N_P0			0
 #define U2N_P1			1
 #define U2N_P2			2
@@ -51,16 +52,18 @@
 #define BAD_BLOCK_LOCK 0x36373839
 #define BAD_BLOCK_TOTAL 80
 
-#define backup_tab_nandflash_start      0//0         //  0x0000_0000锟斤拷0x0001_FFFF
+#define backup_tab_nandflash_start      0//0         //  0x0000_0000??0x0001_FFFF
 #define image_file_nandflash_start      (1*64)//(1*64)//64        
 #define image_user_nandflash_start      (1425*64)//(669*64)//(1425*64)//42816
 #define image_tab__nandflash_start      (1529*64)//(765*64)//(1529*64)//48960
 #define baseB_data__nandflash_start      (1533*64)//(769*64)//(1533*64)//49152   //SAVE
 #define logo_data__nandflash_start      (1534*64)//(770*64)//(1534*64)//49216
-//#define unit_data__B_nandflash_start      (1966*64)
+#define unit_data__B_nandflash_start      (1966*64)
 #define baseA_data__nandflash_start      (1967*64)//POWERDOWN DON'T SAVE
 #define backupdata_nandflash_start      (1968*64)//(1004*64)//(2008*64)//64256
 #define nandflash______________end      (2048*64)//(1024*64)//(2048*64)//65536     // 
+
+#define NAND_CHECKSUM_IN_SPIFLASH     6
 
 
 #define bmp_LCD_BUFFER 				display_layer_sdram.LCD_CACHE_BUFFER
@@ -140,7 +143,7 @@ typedef struct BADMANAGE_TAB
 	uint32_t NANDFLASH_CUSTOMER_INX;
 	uint32_t NANDFLASH_USER_INX;
 	uint32_t flag;//被检测后置位为一个定值0x36373839
-	uint8_t  ERR_NUMBER;//坏块个数只在flag被置位为定值时才有效
+	uint32_t  ERR_NUMBER;//坏块个数只在flag被置位为定值时才有效
 	uint16_t ERR_BLOCK[BAD_BLOCK_TOTAL];//检查出有问题的块
 	uint16_t BACKUP_BLOCK[BAD_BLOCK_TOTAL];//对应替换的块
   uint32_t backup_checksum;
@@ -152,6 +155,11 @@ typedef union BADMANGE_TAB_U
 	uint8_t  BAD_MANAGE_arr[BAD_BLOCK_TOTAL*4+20];
 }BADMANAGE_TAB_TYPE_U;
 	
+typedef union Checksum_SPI_U
+{
+	uint32_t U32_ARRY[NAND_CHECKSUM_IN_SPIFLASH];
+	uint8_t U8_ARRY[NAND_CHECKSUM_IN_SPIFLASH*4];
+}TAB_Checksum_SPI_U;
 
 void UsbWriteNandFlash(char cmd, unsigned short *iFile, int cnt);			// P0~P4 PA~PD
 uint8_t SDRAM_TO_NANDFLASH(uint32_t x_sdram_start,uint32_t x_nandflash_start,uint16_t x_block_num);
@@ -164,7 +172,7 @@ uint8_t Clear_sdram(uint32_t x_Flag);
 uint8_t get_command_xor(void);
 uint16_t BAD_BLOCK_CHANGE(uint16_t x_block);
 void check_sum_nand(uint32_t x_addr,uint16_t x_width,uint16_t x_height);
+void NANDFLASH_backup_checksum(void);
 void NANDFLASH_P3PD_INX_SAVE(void);
 void poweroff_wait(void);
-//void NANDFLASH_backup_checksum(void);
 #endif 

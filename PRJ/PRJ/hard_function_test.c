@@ -51,6 +51,33 @@ extern uint8_t *BaseData_ARR;
 extern uint8_t wt588h_send_step;
 static uint32_t time_display=0;
 extern UINT32 volatile time1ms_count;
+extern uint8_t TYPE_PRODUCT;
+
+void TEST_LCDSHOW(void)
+{
+	uint32_t  Tp_i=0,Tp_j=0;
+	
+	Tp_i = display_layer_sdram.LCD_CACHE_BUFFER&(~0x80000000);
+	
+	memset((void*)(Tp_i),0xFF,768000);
+	
+	for(Tp_j=0;Tp_j<768000;Tp_j=Tp_j+2)
+	{
+	if(((Tp_j/2)%800)%40==0)
+	{
+		*(__IO uint16_t*) (Tp_i+Tp_j) = 0;
+	}
+	if(((Tp_j/2)/800)%40==0)
+	{
+		*(__IO uint16_t*) (Tp_i+Tp_j) = 0;
+	}
+	//if((Tp_i/480)%5==0)
+	//{
+	//	*(__IO uint16_t*) (Tp_i+Tp_j) = 0xffff;
+	//}
+  }
+}
+
 
 void AD_init_8V(void)
 {
@@ -1061,8 +1088,15 @@ void hard_function_test(void)
 						 Flag_int = 0;
 						 FT5x06_RD_Reg(0, buf, 42);
 						 SetZuobiao(10, 400 + 40);
-						 test_e = LCD_forward_direction;
-						 }
+							if(TYPE_PRODUCT==PORDUCT_5INCH) 
+							{
+						   test_e = LCD_forward_direction;
+						  }
+							if(TYPE_PRODUCT==PORDUCT_7INCH) 
+							{
+						   test_e = pre_Touch_middle;
+						  }
+						}
 					 }
 				    break;		 
 			case LCD_forward_direction:
@@ -1282,11 +1316,35 @@ void hard_function_test(void)
 							{
 								if((gs_tpInfo[Tp_i].x>678)&&(gs_tpInfo[Tp_i].x<725)&&(gs_tpInfo[Tp_i].y>415)&&(gs_tpInfo[Tp_i].y<465))
 								{
-									test_e = AD_BAT_INIT;
+									test_e = Dis_gezi;
 									break;
 								}
 							}
 						 break;
+			case Dis_gezi:
+				    // memset((void *)(display_layer_sdram.LCD_CACHE_BUFFER&(~0x80000000)),0xff,800*480*2);
+			        if(touch_send_imm==0)
+							{
+			       TEST_LCDSHOW();
+			        SetZuobiao(10, 400 + 40);     
+						lcd_printf_new("test LCDshow(touch)");
+								test_e = Dis_gezi_wait;
+							}
+				    break;
+			case Dis_gezi_wait:
+				    if(Flag_int==1)
+					 {
+						 delay_ms(50);
+						 Flag_int=0;
+						 delay_ms(50);
+						 if(Flag_int==1)
+						 {
+						 Flag_int = 0;
+						 FT5x06_RD_Reg(0, buf, 42);
+						 test_e = AD_BAT_INIT;
+						 }
+					 }
+				   break;
 			case 	AD_BAT_INIT:
 				 memset((void *)(display_layer_sdram.LCD_CACHE_BUFFER&(~0x80000000)),0xff,800*480*2);
 			   if(touch_send_imm==0)
@@ -1589,6 +1647,7 @@ void hard_function_test(void)
 							 for(Q_Num=0;Q_Num<4;Q_Num++)
 							 {
 								 free((void *)(Q_ADDR[Q_Num]));
+								 Q_ADDR[Q_Num]=0;
 							 }
 							  delay_ms(5000);
 							 test_e = Nand_check;
@@ -1667,9 +1726,9 @@ void hard_function_test(void)
 						{
 							
 				    memset((void *)(BaseData_ARR),Tp_i,164*9);
-			      W25Q128_Write();
+			      W25Q128_Write(accsee_BASEDATA_PARA_5INCH);
 							memset((void *)(BaseData_ARR),0,164*9);
-							W25Q128_Read();
+							W25Q128_Read(accsee_BASEDATA_PARA_5INCH);
 							if((*(uint8_t *)(BaseData_ARR+3*9)!=Tp_i)||
 								(*(uint8_t *)(BaseData_ARR+4*9)!=Tp_i)||
 							   (*(uint8_t *)(BaseData_ARR+12*9)!=Tp_i)||
@@ -1699,6 +1758,8 @@ void hard_function_test(void)
 							if(Tp_i == 0) break;
 							
 				    }
+						
+						
 				    test_e = Updata_image;
 				   break;
 			case Updata_image:
@@ -1944,10 +2005,11 @@ void hard_function_test(void)
 					 SetZuobiao(10, 400 + 40); 
 				         lcd_printf_new("VOICE Start");
 					 
-					 tts.file = 9;
+					 tts.file = 0x9;
 					 tts.voice = 0XF;
 					 tts.interval=1000;
-					 tts.play_num = 0xa;
+					 tts.play_num = 0xf;
+					 
 					  tts.interval_cnt=0; 
 					 tts.ack_flag = 1;
 					 // sprintf((char *)UART2_RX_BUFF,"%S","@07BAF905*");
@@ -2116,7 +2178,12 @@ void hard_function_test(void)
 							}
 				 break;
 			 case powersave_end:
+				 SetZuobiao(10, 400 + 40); 	
+			 lcd_printf_new("                                                                         ");
+			 SetZuobiao(10, 400 + 40); 
+				lcd_printf_new("please Wait");
 				TEST_NANDFLASH();
+			  W25Q128_earse();
 			  power_save();
 			  REG_OPERATE(REG_CLK_PCLKEN0,1<<1,set);//ENABLE WWDT
 				WWDT_Open(WWDT_PRESCALER_2048,0x3f,TRUE);

@@ -249,7 +249,10 @@ void  USB_free(void *alloc_addr)
     if ((addr < _MemoryPoolBase) || (addr >= _MemoryPoolEnd))
     {
         if (addr)
+				{
             free(alloc_addr);
+					  alloc_addr = 0;
+				}
         return;
     }
 

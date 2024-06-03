@@ -31,6 +31,8 @@ void ff_memfree (
 )
 {
 	free(mblock);	/* Free the memory block with POSIX API */
+  mblock = 0;
+
 }
 
 #endif

@@ -49,8 +49,7 @@ void LVD_IRQHandler(void)
 {
 	//inpw(REG_SYS_MISCISR);
 	//REG_OPERATE(REG_SYS_MISCISR,1,clear);
-	
-if(Low_power_flag!=0)
+	if(Low_power_flag!=0)
 	{
     GPIO_DisableInt(GPIOH);
 		outpw(REG_NANDECTL, 0x0); /* lock write protect */
@@ -220,7 +219,8 @@ void power_save(void)
 	
 	LCD_PWR_OFF();
 	 POWER_5V_OFF();
-	download_gpio_set_output();
+	 download_gpio_set_output();
+	
 	 //Backlinght_Control_Init_HARDV4(255);
 	
 	
@@ -235,7 +235,7 @@ void power_save(void)
    //REG_OPERATE(REG_CLK_PCLKEN0,1<<16,clear);//UART0  sysuart
 	// REG_OPERATE(REG_CLK_PCLKEN0,1<<17,clear);//UART1
 	// REG_OPERATE(REG_CLK_PCLKEN0,1<<7,clear);//TIM2 CLK DISABLE
-		#if defined  SYSUARTPRINTF || defined SYSUARTPRINTF_lowpower //|| SYSUARTPRINTF_ActionTimers
+		#if defined  SYSUARTPRINTF || defined SYSUARTPRINTF_lowpower || SYSUARTPRINTF_ActionTimers
 		REG_OPERATE(REG_CLK_PCLKEN0,(1<<7)|(1<<17),clear);
 	#else
 	REG_OPERATE(REG_CLK_PCLKEN0,(1<<7)|(1<<16)|(1<<17),clear);
@@ -248,7 +248,8 @@ void power_save(void)
 	REG_OPERATE(REG_CLK_PCLKEN1,0X10,clear);//SPI0
 //////////////////	 
 	 LED_POWERLOW_ON();
-	 AUDIO_AMPLIFIER_SHUT_DOWN;
+//	 AUDIO_AMPLIFIER_SHUT_DOWN;
+  AUDIO_AMPLIFIER_SHUT_DOWN_modify;
 	AMP_POWER_OFF;
 	AMP_DATA_0;
   //PB3 PWM 20221011
@@ -313,8 +314,10 @@ void LOW_POWER_cyw(void)
 	#ifdef  SYSUARTPRINTF_lowpower
 		sysprintf("----POWER OFF \r\n");
 		#endif
-
+ 
+	
 	power_save( );
+	
 	 Low_power_flag = 1;
 	
 	if(LOGO_ERR == 1) goto HDLEFLAG;
@@ -381,15 +384,15 @@ void LOW_POWER_cyw(void)
 				#endif
 				
 				
-//				#ifdef  SYSUARTPRINTF_ActionTimers 
-//					sysprintf("POWER OFF\r\n");
-//					sysprintf("logodata_sdrambuffer_addr_arry[Tp_field]_3=0x%x,0x%x,0x%x,0x%x\r\n",
-//					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4),
-//				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+5),
-//					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+6),
-//				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+7));
-//					#endif
-//					
+				#ifdef  SYSUARTPRINTF_ActionTimers 
+					sysprintf("POWER OFF\r\n");
+					sysprintf("logodata_sdrambuffer_addr_arry[Tp_field]_3=0x%x,0x%x,0x%x,0x%x\r\n",
+					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4),
+				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+5),
+					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+6),
+				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+7));
+					#endif
+					
 				
 				Tp_addr = (gs_AreaInfo[Tp_field].addr+logodata_2gbit_change_addr)/2048 + ((para.dataclass_1_2_action_count*4)/64)*64;		
        // NANDFLASH_TO_SDRAM_RANDOM(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr,logodata_ActionNumber_SIZE,4);//????????????????????
@@ -399,18 +402,18 @@ void LOW_POWER_cyw(void)
 			
 			 
 			
-//				#ifdef  SYSUARTPRINTF_ActionTimers 
-//				
-//				
-//				 NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr,1);
-//				
-//					//sysprintf("POWER OFF\r\n");
-//					sysprintf("logodata_sdrambuffer_addr_arry[Tp_field]_4=0x%x,0x%x,0x%x,0x%x\r\n",
-//					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4),
-//				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+5),
-//					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+6),
-//				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+7));
-//					#endif
+				#ifdef  SYSUARTPRINTF_ActionTimers 
+				
+				
+				 NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr,1);
+				
+					//sysprintf("POWER OFF\r\n");
+					sysprintf("logodata_sdrambuffer_addr_arry[Tp_field]_4=0x%x,0x%x,0x%x,0x%x\r\n",
+					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4),
+				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+5),
+					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+6),
+				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+7));
+					#endif
 			
 			
 			   //LED_POWER_ON();
@@ -431,7 +434,7 @@ void LOW_POWER_cyw(void)
 			    	break;
 				case UnitPara_DATACLASS://
 					  //???h??????????????????????????
-					  //if(TYPE_PRODUCT==PORDUCT_7INCH) continue;
+					  if(TYPE_PRODUCT==PORDUCT_7INCH) continue;
 				    SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],(gs_AreaInfo[Tp_field].addr+logodata_2gbit_change_addr)/2048,1);//??????
 					  break;
 				case TestFinalData_DATACLASS:
@@ -458,7 +461,7 @@ void LOW_POWER_cyw(void)
 			  case AnomalyRecord_DATACLASS:
 				 if(LOGO_DOUBLE_VISIT == Tp_field) continue;//????????????????????h?? SDRAM???????????????????????? 
 					 // if((flag_logo_change&(1<<Tp_field))==0)  continue;
-				 //if(TYPE_PRODUCT==PORDUCT_7INCH) continue;
+				 if(TYPE_PRODUCT==PORDUCT_7INCH) continue;
 				
 				Tp_addr = (gs_AreaInfo[Tp_field].addr+logodata_2gbit_change_addr)/2048 + Fieldx_Info[Tp_field].cycle*64;		
 			      //??????????

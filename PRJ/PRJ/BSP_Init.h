@@ -90,8 +90,11 @@ typedef enum
 
 
 //AMP SD
-#define     AUDIO_AMPLIFIER_WORK					GPIO_Set(GPIOI,BIT14)//GPIO_Clr(GPIOI,BIT14)
-#define    AUDIO_AMPLIFIER_SHUT_DOWN				GPIO_Clr(GPIOI,BIT14)       //GPIO_Set(GPIOI,BIT14)
+#define     AUDIO_AMPLIFIER_WORK					  //GPIO_Set(GPIOI,BIT14)//GPIO_Clr(GPIOI,BIT14)
+#define    AUDIO_AMPLIFIER_SHUT_DOWN				//GPIO_Clr(GPIOI,BIT14)       //GPIO_Set(GPIOI,BIT14)
+#define    AUDIO_AMPLIFIER_WORK_modify           GPIO_Set(GPIOI,BIT14)
+#define    AUDIO_AMPLIFIER_SHUT_DOWN_modify      GPIO_Clr(GPIOI,BIT14) 
+
 
 #define logodata_field0_SIZE 0x20000
 #define logodata_field1_SIZE 0x20000

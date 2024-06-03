@@ -7,6 +7,7 @@
 #include "ff.h"
 #include "Command_all.h"
 #include "Aprotocol.h"
+#include "BSP_init.h"
 
 
 extern int gs_usb_mount_flag;
@@ -27,6 +28,7 @@ extern uint32_t logodata_sdrambuffer_addr_arry[16];
 uint32_t Tp_data1;
 extern struct LOGO_Y5Y6_TYPE LOGO_Y5Y6_str;
 extern FATFS usb_fatfs;
+extern uint8_t TYPE_PRODUCT;
 
 void DIVIDED_DATA_DEC3BYTE(uint16_t x_DATA,uint8_t *x_BUFF)
 {
@@ -120,9 +122,10 @@ static void Create_new_logo_file_name(uint8_t x_field,uint8_t *x_name)
     uint8_t *Tp_point;
 	
 	file_sub = 0;
-	memset(x_name,0,61);
+	memset(x_name,0,62);
 	x_name[file_sub++]='3';
 	x_name[file_sub++]=':';
+	x_name[file_sub++]='/';
 	x_name[file_sub++]='F';
 	x_name[file_sub++]='U';
 	x_name[file_sub++]='N';
@@ -278,8 +281,100 @@ void Printf_Header(void)
 	FRESULT res;
 	uint8_t  Tp_byte;
 	
-	
+	if(TYPE_PRODUCT==PORDUCT_7INCH)
+	{
 	memset(writeTextBuff,0,0x2000+1);
+	
+	for(Tp_i=0;Tp_i<6;Tp_i++)
+	{
+	  Tp_byte =  HEXTODEC(*(uint8_t *)(BaseData_ARR+Tp_i));
+		writeTextBuff[bytesToWrite++] = Tp_byte/10+'0';
+		writeTextBuff[bytesToWrite++] = Tp_byte%10+'0';
+	}
+	writeTextBuff[bytesToWrite++] =',';
+	
+	for(Tp_i=0;Tp_i<9*15;Tp_i++)
+	{
+		if(Tp_i%9 == 8)
+		{
+			writeTextBuff[bytesToWrite++] = ',';
+			Tp_j  = 0;
+		}
+		else
+		{
+			if((Tp_i%9)<(*(uint8_t  *)(BaseData_ARR+(Tp_i/9+1)*9+8)))
+			{
+			writeTextBuff[bytesToWrite++] = *(uint8_t *)(BaseData_ARR + (Tp_i/9)*9 +9 +Tp_j);
+				Tp_j ++;
+			}
+			else
+			{
+			writeTextBuff[bytesToWrite++]=' ';
+			//writeTextBuff[bytesToWrite++] = *(uint8_t *)(logodata_sdrambuffer_addr_arry[0]+(Tp_i/9)*8 + Tp_i%9 + 8);
+		
+			}
+		}
+//		if((uint8_t)writeTextBuff[bytesToWrite-1]==0xff)//??????????? 20171018
+//		{
+//			writeTextBuff[bytesToWrite-1]=' ';
+//		}
+	}
+	bytesToWrite = bytesToWrite -1;
+	writeTextBuff[bytesToWrite++] = 0x0D;
+	writeTextBuff[bytesToWrite++] = 0x0A;
+	
+	for(Tp_i=0;Tp_i<4;Tp_i++)
+	{
+		writeTextBuff[bytesToWrite++] = ' ';
+	}
+	
+	Tp_j  = 0;
+	
+	for(Tp_i=0;Tp_i<9*16;Tp_i++)
+	{
+		if(Tp_i%9 == 8)
+		{
+			writeTextBuff[bytesToWrite++] = ',';
+			Tp_j  = 0;
+		}
+		else
+		{
+			if((Tp_i%9)<(*(uint8_t *)(BaseData_ARR+(Tp_i/9+16)*9+8)))
+			{
+				 writeTextBuff[bytesToWrite++] = *(uint8_t *)(BaseData_ARR+ 9*16 +  (Tp_i/9)*9  +Tp_j);
+				 Tp_j++;
+			}
+			else
+			{
+			
+					writeTextBuff[bytesToWrite++]=' ';
+				//writeTextBuff[bytesToWrite++] = *(uint8_t *)(logodata_sdrambuffer_addr_arry[0]+(Tp_i/9)*8 + Tp_i%9 + 8*16);
+			  
+			}
+		}
+//		if((uint8_t)writeTextBuff[bytesToWrite-1]==0xff)//??????????? 20171018
+//		{
+//			writeTextBuff[bytesToWrite-1]=' ';
+//		}
+	}
+	bytesToWrite = bytesToWrite -1;
+	writeTextBuff[bytesToWrite++] = 0x0D;
+	writeTextBuff[bytesToWrite++] = 0x0A;
+	
+	res= f_write (&file, writeTextBuff, bytesToWrite, (void *)&bytesWritten); 
+	
+	if(res||(bytesToWrite != bytesWritten))//????????
+	{
+		//SYSTEM_ERR_STATUS->bits.FATFS_SYSTEM_error =1;
+		systerm_error_status.bits.usb_canot_write_error=1;
+		//while(1);
+	}
+//	free(writeTextBuff);
+
+  }
+	else if(TYPE_PRODUCT==PORDUCT_5INCH)
+	{
+		memset(writeTextBuff,0,0x2000+1);
 	
 	for(Tp_i=0;Tp_i<6;Tp_i++)
 	{
@@ -364,6 +459,7 @@ void Printf_Header(void)
 		//while(1);
 	}
 //	free(writeTextBuff);
+	}
 }
 
 void DATATOSTR_LSB(char *x_des,uint8_t *x_sou,uint32_t x_long)
@@ -431,6 +527,58 @@ void Printf_One_Line_TestAll(const char *x_name,uint8_t *x_sou,uint8_t x_long,ui
 		//while(1);
 	}
 }
+
+
+void Printf_One_Line_ASCII_left(const char *x_name,uint8_t *x_sou)
+{
+	const char char2_const[]={0X0D,0X0A,0};
+	static uint32_t Tp_i =0;
+	uint16_t  bytesWritten,bytesToWrite;
+	FRESULT res;
+	uint8_t Tp_long = x_sou[8];
+	
+	
+
+	memset(writeTextBuff,0,0x2000+1);
+	strcpy(writeTextBuff,x_name);
+	
+	
+	
+	if(Tp_long>8) 
+	{
+		writeTextBuff[strlen(writeTextBuff)] = 'E';
+		writeTextBuff[strlen(writeTextBuff)] = 'r';
+		writeTextBuff[strlen(writeTextBuff)] = 'r';
+	}
+	else
+	{
+		for(Tp_i=0;Tp_i<Tp_long;Tp_i++)
+		{
+			writeTextBuff[strlen(writeTextBuff)] = x_sou[Tp_i];
+		}
+		for(Tp_i=0;Tp_i<8-Tp_long;Tp_i++)
+		{
+			writeTextBuff[strlen(writeTextBuff)] = ' ';
+		}
+		
+		
+	}
+	
+		strcpy(writeTextBuff+strlen(writeTextBuff),char2_const);
+  bytesToWrite = strlen(writeTextBuff); 
+  res= f_write (&file, writeTextBuff, bytesToWrite, (void *)&bytesWritten); 
+	
+	if(res||(bytesToWrite != bytesWritten))//????????
+	{
+		systerm_error_status.bits.usb_canot_write_error=1;
+		//while(1);
+	}
+   
+	
+
+}
+
+
 void Printf_One_Line_ASCII_right(const char *x_name,uint8_t *x_sou)
 {
 	const char char2_const[]={0X0D,0X0A,0};
@@ -478,7 +626,6 @@ void Printf_One_Line_ASCII_right(const char *x_name,uint8_t *x_sou)
 
 }
 
-
 void Printf_One_Line_ASCII(const char *x_name,uint8_t *x_sou,uint8_t x_long,uint32_t x_num)
 {
 		const char char2_const[]={0X0D,0X0A};
@@ -522,6 +669,7 @@ void Printf_One_Line_ASCII(const char *x_name,uint8_t *x_sou,uint8_t x_long,uint
 	
 		
 }
+
 
 void Printf_One_Line_NO96(const char *x_name,uint8_t *x_sou)
 {
@@ -1024,7 +1172,8 @@ void Data_Negate(uint8_t *x_des,uint8_t *x_sou,uint8_t x_num)
 		Tpdata = *(uint32_t *)(x_sou+Tp_i*4);
 		
 		Tpdata = ~Tpdata;
-		*(uint32_t *)(x_des+Tp_i*4) = Tpdata;
+		//*(uint32_t *)(x_des+Tp_i*4) = Tpdata;
+		memcpy((void *)(x_des+Tp_i*4),(void *)&Tpdata, 4);
 	}
 }
 
@@ -1166,7 +1315,7 @@ void LOGOData_Write_To_USB(uint32_t x_flag)
 	static FRESULT Tp_res;
 		
 //	char filename[]="0:FIELD01.CSV";
-  static char filename_new[61]={0};//	static char filename_new[44]={0};
+  static char filename_new[62]={0};//	static char filename_new[44]={0};
 //  static char basedata_foreword[]="0x0400_000*  ";
 	static uint8_t Tp_linshi[64];
 	static DIR tdir;	//????
@@ -1272,7 +1421,24 @@ void LOGOData_Write_To_USB(uint32_t x_flag)
 //					  Tp_res = f_write(&file,writeTextBuff,strlen((char *)writeTextBuff),(void *)&bytesToWrite);
 				 
 					    Printf_One_Line_TestAll("YY/MM/DD HH:MM:SS ,\0",(uint8_t *)BaseData_ARR,6,1,0);
-					      Printf_One_Line_ASCII_right("RESERVED          ,\0",(uint8_t *)BaseData_ARR+9);
+							
+							if(TYPE_PRODUCT==PORDUCT_7INCH)
+							{
+					      Printf_One_Line_ASCII_left("RESERVED          ,\0",(uint8_t *)BaseData_ARR+9);
+					      Printf_One_Line_ASCII_left("LCD MCU VER       ,\0",(uint8_t *)BaseData_ARR+LCD_Ver_index*9);
+					      Printf_One_Line_ASCII_left("MCU VER           ,\0",(uint8_t *)BaseData_ARR+Master_Ver_index*9);
+					      Printf_One_Line_ASCII_left("IMAGE FILE VER    ,\0",(uint8_t *)BaseData_ARR+BMP_Ver_index*9);
+					      Printf_One_Line_ASCII_left("RESERVED          ,\0",(uint8_t *)BaseData_ARR+45);
+					      Printf_One_Line_ASCII_left("SERIAL_NO1        ,\0",(uint8_t *)BaseData_ARR+IDNumber_High_index*9);
+					      Printf_One_Line_ASCII_left("SERIAL_NO2        ,\0",(uint8_t *)BaseData_ARR+IDNumber_Low_index*9);
+					for(Tp_j=0; Tp_j<24; Tp_j++)
+					{
+						    Printf_One_Line_ASCII_left("RESERVED          ,\0",(uint8_t *)BaseData_ARR+72+Tp_j*9);
+					}
+				     }
+							else if(TYPE_PRODUCT==PORDUCT_5INCH)
+							{
+								Printf_One_Line_ASCII_right("RESERVED          ,\0",(uint8_t *)BaseData_ARR+9);
 					      Printf_One_Line_ASCII_right("LCD MCU VER       ,\0",(uint8_t *)BaseData_ARR+LCD_Ver_index*9);
 					      Printf_One_Line_ASCII_right("MCU VER           ,\0",(uint8_t *)BaseData_ARR+Master_Ver_index*9);
 					      Printf_One_Line_ASCII_right("IMAGE FILE VER    ,\0",(uint8_t *)BaseData_ARR+BMP_Ver_index*9);
@@ -1283,6 +1449,8 @@ void LOGOData_Write_To_USB(uint32_t x_flag)
 					{
 						    Printf_One_Line_ASCII_right("RESERVED          ,\0",(uint8_t *)BaseData_ARR+72+Tp_j*9);
 					}
+							}
+							
 					//Printf_One_Line_ADDRANDSIZE("FIELD START_ADDR  ,",(uint8_t *)logodata_sdrambuffer_addr_arry[0]+Basedata_fieldinformation,4,16);
 				  Printf_One_Line_ADDRANDSIZE("FIELD START_ADDR  ,\0",(uint8_t *)BaseData_ARR+32*9-1,8,16);
 					Printf_One_Line_ADDRANDSIZE("FIELD SIZE        ,\0",(uint8_t *)BaseData_ARR+33*9-1,8,16);

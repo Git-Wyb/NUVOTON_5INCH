@@ -50,9 +50,18 @@ extern 	uint32_t System_Runtime_Lasttime;
 extern uint8_t *bmpBuf_kkk,*bmpBuf_kkk_bak;
 extern uint8_t *Image_Buf,*Image_Buf_bak;
 extern uint32_t logodata_sdrambuffer_addr_arry_bak[16];
+uint8_t Field_unit=0;
+extern volatile uint8_t FLAG_NAND_busy;
+extern volatile uint16_t  RX_COUNT_IN ;
+extern volatile uint16_t  RX_COUNT_OUT ;
+extern uint16_t  TX_COUNT_IN ;
+extern uint16_t  TX_COUNT_OUT ;
+extern uint8_t wt588h_send_step;
+extern uint8_t touch_send_imm;
+extern volatile uint16_t command_D8_D9_time;
 //extern uint8_t *Tp_Image_Buf;
 
-char SOFT_VERSION[] = "TBNUVA05";
+char SOFT_VERSION[] = "TBNUVA06";
  uint8_t flag_AB=0;
 
 uint8_t LOGO_ERR = 0;
@@ -270,7 +279,7 @@ void BASEDATA_RAM_INIT(void)
   {
 	  Tp_checksum2+=*(char*)(logodata_basedata_BUFFER+Tp_i);
   }
-	if(Tp_checksum1 ==Tp_checksum2 )
+	if((Tp_checksum1 ==Tp_checksum2)&&(memcmp((void *)(logodata_basedata_BUFFER),(void *)(logodata_basedata_BUFFER+Basedata_copy2),163*9)==0) )
 	{
 		memcpy(BaseData_ARR,(void *)(logodata_basedata_BUFFER),logodata_Basedata_SIZE);
 		goto jump;
@@ -281,7 +290,7 @@ void BASEDATA_RAM_INIT(void)
   {
 	  Tp_checksum2+=*(char*)(logodata_basedata_BUFFER+Basedata_copy0+Tp_i);
   }
-	if(Tp_checksum1 ==Tp_checksum2 )
+	if((Tp_checksum1 ==Tp_checksum2)&& (memcmp((void *)(logodata_basedata_BUFFER+Basedata_copy1),(void *)(logodata_basedata_BUFFER+Basedata_copy0),163*9)==0))
 	{
 		memcpy(BaseData_ARR,(void *)(logodata_basedata_BUFFER+Basedata_copy0),logodata_Basedata_SIZE);
 		goto jump;
@@ -292,7 +301,7 @@ void BASEDATA_RAM_INIT(void)
   {
 	  Tp_checksum2+=*(char*)(logodata_basedata_BUFFER+Basedata_copy1+Tp_i);
   }
-	if(Tp_checksum1 ==Tp_checksum2 )
+	if((Tp_checksum1 ==Tp_checksum2) &&(memcmp((void *)(logodata_basedata_BUFFER+Basedata_copy1),(void *)(logodata_basedata_BUFFER+Basedata_copy2),163*9)==0))
 	{
 		memcpy(BaseData_ARR,(void *)(logodata_basedata_BUFFER+Basedata_copy1),logodata_Basedata_SIZE);
 		goto jump;
@@ -303,7 +312,7 @@ void BASEDATA_RAM_INIT(void)
   {
 	  Tp_checksum2+=*(char*)(logodata_basedata_BUFFER+Basedata_copy2+Tp_i);
   }
-	if(Tp_checksum1 ==Tp_checksum2 )
+	if((Tp_checksum1 ==Tp_checksum2)&&(memcmp((void *)(logodata_basedata_BUFFER+Basedata_copy2),(void *)(logodata_basedata_BUFFER+Basedata_copy0),163*9)==0) )
 	{
 		memcpy(BaseData_ARR,(void *)(logodata_basedata_BUFFER+Basedata_copy2),logodata_Basedata_SIZE);
 		goto jump;
@@ -337,6 +346,9 @@ jump:
 	
 	if(LOGO_ERR == 1)
 	{
+		#ifdef  SYSUARTPRINTF  
+		sysprintf("BASEDATA ABerror\r\n");
+		#endif
 		
 		Clear_sdram(0X100);
 		
@@ -356,11 +368,12 @@ jump:
 		gs_AreaInfo[0].space = 0x20000;
 		gs_AreaInfo[0].type = 0;
 		
-		W25Q128_Read();
+		W25Q128_Read(accsee_BASEDATA_PARA_5INCH);
 		
 		WriteAreaConfig_new();
-		  field_info_save();
+		field_info_save();
 	}
+	
 	
 	    ReadAreaConfig_new();
 	    para_init();
@@ -391,69 +404,74 @@ jump:
 			
 }
 
-//void UnitData_NandToSDRAM(uint8_t Tp_field,uint32_t Tp_addr)
-//{
-//	uint8_t Tp_flag=0;
-//	uint16_t Tp_i =0;
-//	uint8_t  Tp_cs=0;//cs??
-//	
-//	retry:	
-//	      if(Tp_flag == 0)
-//				{
-//				NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr/2048,1);
-//				}
-//				if(Tp_flag == 1)
-//				{
-//				NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr/2048,1);
-//				}
-//				
-//			 Tp_cs = 0;
-//				for(Tp_i = 0;Tp_i <=MAX_LOGO_UINT_NUM; Tp_i++)
-//			 {
-//				 Tp_cs = Tp_cs + *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+UINT_START1_OFFSET+Tp_i);
-//			 }
-//			 if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS1_OFFSET) != Tp_cs)
-//			 //if(1)
-//			 {
-//				  Tp_cs = 0; 
-//				  for(Tp_i = 0;Tp_i <=MAX_LOGO_UINT_NUM; Tp_i++)
-//			    {
-//				     Tp_cs = Tp_cs + *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_START2_OFFSET +Tp_i);
-//			    }
-//					if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] +UINT_CS2_OFFSET) != Tp_cs)
-//					{
-//						  Tp_cs = 0; 
-//						  for(Tp_i = 0;Tp_i <=MAX_LOGO_UINT_NUM; Tp_i++)
-//			        {
-//				         Tp_cs = Tp_cs + *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_START3_OFFSET +Tp_i);
-//			        }
-//							if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS3_OFFSET) != Tp_cs)
-//							{
-//								if(Tp_flag ==0)
-//								{
-//									Tp_flag = 1;
-//									goto retry;
-//									//Tp_field --;
-//								}
-//								else if(Tp_flag ==1)
-//								{
-//									Tp_flag =2;
-//									NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr/2048,1);
-//								}
-//							}
-//							else
-//							{
-//								 memcpy((uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]),(uint8_t *)logodata_sdrambuffer_addr_arry[Tp_field]+UINT_START3_OFFSET,MAX_LOGO_UINT_NUM+2);
-//							}
-//					}
-//					else
-//					{
-//						 memcpy((uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]),(uint8_t *)logodata_sdrambuffer_addr_arry[Tp_field]+UINT_START2_OFFSET,MAX_LOGO_UINT_NUM+2);
-//					}
-//			 }
-//			 //if(Tp_flag ==0)  SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],unit_data__B_nandflash_start,1);
-//			// if(Tp_flag ==1)  SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr/2048,1);
-//}
+void UnitData_NandToSDRAM(uint8_t Tp_field,uint32_t Tp_addr)
+{
+	uint8_t Tp_flag=0;
+	uint16_t Tp_i =0;
+	uint8_t  Tp_cs=0;//cs??
+	
+	retry:	
+	      if(Tp_flag == 0)
+				{
+				NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr/2048,1);
+				}
+				if(Tp_flag == 1)
+				{
+				NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[Tp_field],unit_data__B_nandflash_start,1);
+				}
+				
+			 Tp_cs = 0;
+				for(Tp_i = 0;Tp_i <=MAX_LOGO_UINT_NUM; Tp_i++)
+			 {
+				 Tp_cs = Tp_cs + *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+UINT_START1_OFFSET+Tp_i);
+			 }
+			 
+			 #ifdef SYSUARTPRINTF_ActionTimers
+			 sysprintf("Tp_cs=%X,Tp_cs_offset=%X\r\n",Tp_cs,*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS1_OFFSET));
+			 #endif
+			 
+			 if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS1_OFFSET) != Tp_cs)
+			 //if(1)
+			 {
+				  Tp_cs = 0; 
+				  for(Tp_i = 0;Tp_i <=MAX_LOGO_UINT_NUM; Tp_i++)
+			    {
+				     Tp_cs = Tp_cs + *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_START2_OFFSET +Tp_i);
+			    }
+					if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] +UINT_CS2_OFFSET) != Tp_cs)
+					{
+						  Tp_cs = 0; 
+						  for(Tp_i = 0;Tp_i <=MAX_LOGO_UINT_NUM; Tp_i++)
+			        {
+				         Tp_cs = Tp_cs + *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_START3_OFFSET +Tp_i);
+			        }
+							if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS3_OFFSET) != Tp_cs)
+							{
+								if(Tp_flag ==0)
+								{
+									Tp_flag = 1;
+									goto retry;
+									//Tp_field --;
+								}
+								else if(Tp_flag ==1)
+								{
+									Tp_flag =2;
+									NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr/2048,1);
+								}
+							}
+							else
+							{
+								 memcpy((uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]),(uint8_t *)logodata_sdrambuffer_addr_arry[Tp_field]+UINT_START3_OFFSET,MAX_LOGO_UINT_NUM+2);
+							}
+					}
+					else
+					{
+						 memcpy((uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]),(uint8_t *)logodata_sdrambuffer_addr_arry[Tp_field]+UINT_START2_OFFSET,MAX_LOGO_UINT_NUM+2);
+					}
+			 }
+			 if(Tp_flag ==0)  SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],unit_data__B_nandflash_start,1);
+			 if(Tp_flag ==1)  SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr/2048,1);
+}
 
 
 void NANDFLASH_TO_SDRAM_LOGOBASEDATA(void)
@@ -706,42 +724,42 @@ uint16_t Tp_month_losebat=0;
 				{
 			     //TP_view = *(__IO uint32_t*)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4) ;
 			     //*(__IO uint32_t*)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4) = *(__IO uint32_t*)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4) - 1;//????????? NO1?????			
-//			   #ifdef  SYSUARTPRINTF_ActionTimers 
-//					sysprintf("POWER ON\r\n");
-//					sysprintf("logodata_sdrambuffer_addr_arry[Tp_field]_1=0x%x,0x%x,0x%x,0x%x\r\n",
-//					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4),
-//				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+5),
-//					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+6),
-//				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+7));
-//					#endif
+			   #ifdef  SYSUARTPRINTF_ActionTimers 
+					sysprintf("POWER ON\r\n");
+					sysprintf("logodata_sdrambuffer_addr_arry[Tp_field]_1=0x%x,0x%x,0x%x,0x%x\r\n",
+					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4),
+				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+5),
+					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+6),
+				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+7));
+					#endif
 					
 					
 					
 					memcpy((void *)&Tp_System_poweron_time,(void *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4),4);
 						
 					
-//					#ifdef  SYSUARTPRINTF_ActionTimers 
-//					sysprintf("Tp_System_poweron_time1=0x%x\r\n",Tp_System_poweron_time);
-//					
-//					sysprintf("logodata_sdrambuffer_addr_arry[Tp_field]_1=0x%x,0x%x,0x%x,0x%x\r\n",
-//					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4),
-//				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+5),
-//					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+6),
-//				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+7));
-//					#endif
+					#ifdef  SYSUARTPRINTF_ActionTimers 
+					sysprintf("Tp_System_poweron_time1=0x%x\r\n",Tp_System_poweron_time);
+					
+					sysprintf("logodata_sdrambuffer_addr_arry[Tp_field]_1=0x%x,0x%x,0x%x,0x%x\r\n",
+					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4),
+				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+5),
+					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+6),
+				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+7));
+					#endif
 					
 					Tp_System_poweron_time--;
 					memcpy((void *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4),(void *)&Tp_System_poweron_time,4);
 				  
-//					#ifdef  SYSUARTPRINTF_ActionTimers 
-//					sysprintf("Tp_System_poweron_time2=0x%x\r\n",Tp_System_poweron_time);
-//					
-//					sysprintf("logodata_sdrambuffer_addr_arry[Tp_field]_2=0x%x,0x%x,0x%x,0x%x\r\n",
-//					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4),
-//				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+5),
-//					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+6),
-//				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+7));
-//					#endif
+					#ifdef  SYSUARTPRINTF_ActionTimers 
+					sysprintf("Tp_System_poweron_time2=0x%x\r\n",Tp_System_poweron_time);
+					
+					sysprintf("logodata_sdrambuffer_addr_arry[Tp_field]_2=0x%x,0x%x,0x%x,0x%x\r\n",
+					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+4),
+				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+5),
+					*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+6),
+				*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+(para.dataclass_1_2_action_count%16)*4*2048+7));
+					#endif
 				
 				
 				}
@@ -759,42 +777,42 @@ uint16_t Tp_month_losebat=0;
 				break;
 			case UnitPara_DATACLASS:
 				
-			
-//			   UnitData_NandToSDRAM(Tp_field,gs_AreaInfo[Tp_field].addr+logodata_2gbit_change_addr);
-				NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[Tp_field],(gs_AreaInfo[Tp_field].addr+logodata_2gbit_change_addr)/2048,1);
-			 for(Tp_i = 0;Tp_i <=MAX_LOGO_UINT_NUM; Tp_i++)
-			 {
-				 Tp_cs = Tp_cs + *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+UINT_START1_OFFSET+Tp_i);
-			 }
-			 if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS1_OFFSET) != Tp_cs)
-			 //if(1)
-			 {
-				  Tp_cs = 0; 
-				  for(Tp_i = 0;Tp_i <=MAX_LOGO_UINT_NUM; Tp_i++)
-			    {
-				     Tp_cs = Tp_cs + *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_START2_OFFSET +Tp_i);
-			    }
-					if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] +UINT_CS2_OFFSET) != Tp_cs)
-					{
-						  Tp_cs = 0; 
-						  for(Tp_i = 0;Tp_i <=MAX_LOGO_UINT_NUM; Tp_i++)
-			        {
-				         Tp_cs = Tp_cs + *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_START3_OFFSET +Tp_i);
-			        }
-							if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS3_OFFSET) != Tp_cs)
-							{
-								
-							}
-							else
-							{
-								 memcpy((uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]),(uint8_t *)logodata_sdrambuffer_addr_arry[Tp_field]+UINT_START3_OFFSET,MAX_LOGO_UINT_NUM+2);
-							}
-					}
-					else
-					{
-						 memcpy((uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]),(uint8_t *)logodata_sdrambuffer_addr_arry[Tp_field]+UINT_START2_OFFSET,MAX_LOGO_UINT_NUM+2);
-					}
-			 }
+			   Field_unit = Tp_field;
+			   UnitData_NandToSDRAM(Tp_field,gs_AreaInfo[Tp_field].addr+logodata_2gbit_change_addr);
+//				NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[Tp_field],(gs_AreaInfo[Tp_field].addr+logodata_2gbit_change_addr)/2048,1);
+//			 for(Tp_i = 0;Tp_i <=MAX_LOGO_UINT_NUM; Tp_i++)
+//			 {
+//				 Tp_cs = Tp_cs + *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+UINT_START1_OFFSET+Tp_i);
+//			 }
+//			 if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS1_OFFSET) != Tp_cs)
+//			 //if(1)
+//			 {
+//				  Tp_cs = 0; 
+//				  for(Tp_i = 0;Tp_i <=MAX_LOGO_UINT_NUM; Tp_i++)
+//			    {
+//				     Tp_cs = Tp_cs + *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_START2_OFFSET +Tp_i);
+//			    }
+//					if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] +UINT_CS2_OFFSET) != Tp_cs)
+//					{
+//						  Tp_cs = 0; 
+//						  for(Tp_i = 0;Tp_i <=MAX_LOGO_UINT_NUM; Tp_i++)
+//			        {
+//				         Tp_cs = Tp_cs + *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_START3_OFFSET +Tp_i);
+//			        }
+//							if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS3_OFFSET) != Tp_cs)
+//							{
+//								
+//							}
+//							else
+//							{
+//								 memcpy((uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]),(uint8_t *)logodata_sdrambuffer_addr_arry[Tp_field]+UINT_START3_OFFSET,MAX_LOGO_UINT_NUM+2);
+//							}
+//					}
+//					else
+//					{
+//						 memcpy((uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]),(uint8_t *)logodata_sdrambuffer_addr_arry[Tp_field]+UINT_START2_OFFSET,MAX_LOGO_UINT_NUM+2);
+//					}
+//			 }
 			 
 			  break;
 			case TestFinalData_DATACLASS:
@@ -1009,6 +1027,42 @@ void MEM_CLEAR(void)
 	//if(Tp_Image_Buf) free(Tp_Image_Buf);
 }
 
+uint32_t LOG_TIME=0;
+uint8_t  LOG_FLAG = 0;
+void LOGO_Save(void)
+{
+	if(LOG_FLAG)
+	{
+		#ifdef  SYSUARTPRINTF_ActionTimers 
+		sysprintf("LOG_FLAG!=0\r\n");
+		#endif
+		if((RX_COUNT_IN==RX_COUNT_OUT)&&(TX_COUNT_IN==TX_COUNT_OUT)&&(wt588h_send_step==0)&&(touch_send_imm==0)&&(command_D8_D9_time==0))
+		{
+			if(get_timego(LOG_TIME)>TIM_100MS)
+			{
+				#ifdef  SYSUARTPRINTF_ActionTimers 
+		    sysprintf("LOG_FLAG save\r\n");
+		    #endif
+				
+				FLAG_NAND_busy =1;
+				if(LOG_FLAG&0x01)
+				{
+					W25Q128_Write(access_BLOCK_1967_BASEDATA);
+					LOG_FLAG&=~0x01;
+				}
+				if(LOG_FLAG&0x02)
+				{
+					W25Q128_Write(access_BLOCK_1966_UNIT);
+					LOG_FLAG&=~0x02;
+				}
+				FLAG_NAND_busy =0;
+			}
+		}
+			
+	}
+		
+}
+
 
 void LOGO_handle(void)
 {
@@ -1046,7 +1100,8 @@ void LOGO_handle(void)
 //	
 //	
 //	
-    LOGO_CLEAR();//???LOGO???? ????????????????????
+    LOGO_Save();
+	  LOGO_CLEAR();//???LOGO???? ????????????????????
     MEM_CLEAR();
 	
 }

@@ -57,6 +57,8 @@ typedef enum
 	Touch_Left_Down_re,
 	Touch_Right_Down,
 	Touch_Right_Down_re,
+	Dis_gezi,
+	Dis_gezi_wait,
 	AD_8V_INIT,
 	AD_8V_wait,
 	AD_8V,

@@ -29,7 +29,8 @@ extern uint8_t  USB_HAS_USABLE_IMG;
  uint8_t flag_checksum =1;
  uint32_t CHECK_SUM_USB=0,CHECK_SUM_NAND=0;
  BADMANAGE_TAB_TYPE_U badmanage_str[1]={0};
- 
+ extern uint32_t LOG_TIME;
+extern uint8_t  LOG_FLAG;
 uint8_t *RxBuffer =0;//[NAND_PAGE_SIZE];
 //uint8_t *TxBuffer =0;//[NAND_PAGE_SIZE];
  
@@ -44,9 +45,21 @@ extern uint32_t logodata_sdrambuffer_addr_arry[16];
 extern const uint32_t logodata_sdrambuffer_size_arry[];
 extern uint8_t LOGO_ERR;
 volatile uint8_t FLAG_NAND_busy = 0,FLAG_POWEROFF_wait=0;
+extern   TAB_Checksum_SPI_U Dataclass1_U;
+extern UINT32 volatile time1ms_count;
+ 
+ 
+ const uint32_t checksum_addr_nand_Arr[NAND_CHECKSUM_IN_SPIFLASH]=
+{image_tab__nandflash_start,
+ image_tab__nandflash_start+64,
+ image_tab__nandflash_start+128,
+ image_tab__nandflash_start+192,
+  unit_data__B_nandflash_start,
+  baseA_data__nandflash_start};
+ 
 /*????????????*/  
 int tolower(int c)  
-{  
+{
     if (c >= 'A' && c <= 'Z')  
     {  
         return c + 'a' - 'A';  
@@ -236,6 +249,8 @@ void NANDFLASH_BADMANAGE_INIT(void)
 		sysprintf("badmanage_str->ERR_NUMBER = 0x%x\r\n",badmanage_str->BAD_MANAGE_str.ERR_NUMBER);
 		#endif
 		
+		
+		
 		for(Tp_i=0;Tp_i<badmanage_str->BAD_MANAGE_str.ERR_NUMBER;Tp_i++)
 		{
 //			flag111:		
@@ -272,9 +287,13 @@ void NANDFLASH_BADMANAGE_INIT(void)
 		
 		//SDRAM_TO_NANDFLASH((uint32_t)badmanage_str->BAD_MANAGE_arr,backup_tab_nandflash_start,1);//��ʼ��һ��  ����?�β��ȫ������?0
 	  //NANDFLASH_backup_checksum();
-	  NAND_EraseBlock(backup_tab_nandflash_start);
-	  NAND_WritePage(backup_tab_nandflash_start,0,badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
-		
+	  //NAND_EraseBlock(backup_tab_nandflash_start);
+	  //NAND_WritePage(backup_tab_nandflash_start,0,badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
+		NANDFLASH_P3PD_INX_SAVE();
+	 
+	  DATACLASS1_Check_init();
+	  W25Q128_Write(access_BLOCK_CHECKSUM);
+	 
 	  *(uint8_t *)(BaseData_ARR+BASE_data_ErrBlock*9+8) = 8;
 		sprintf((char *)(BaseData_ARR+BASE_data_ErrBlock*9),"%08X",badmanage_str->BAD_MANAGE_str.ERR_NUMBER );
 		
@@ -410,31 +429,43 @@ static uint8_t  TX_NEW[2048];
 uint8_t SDRAM_TO_NANDFLASH(uint32_t x_sdram_start,uint32_t x_nandflash_start,uint16_t x_block_num)
 {
 	NAND_ADDRESS_STR WriteReadAddr;
-	 uint32_t Tp_i=0;//,Tp_j=0;
+	 uint32_t Tp_i=0,Tp_j=0;
 	uint16_t  x_delay;
-	//static uint16_t Tp_backup;
+//	static uint16_t Tp_backup;
+	//uint32_t sdram_start_backup = x_sdram_start,nandflash_start_backup=x_nandflash_start,block_num_backup=x_block_num;
+	
+	union 
+	{
+		uint32_t DATA_U32;
+		uint8_t  DATA_U8[4];
+	}Tp_CHECK;
+
+	#ifdef  SYSUARTPRINTF_ActionTimers 
+	sysprintf("DDR TO NAND=0X%X\r\n",x_nandflash_start/64);
+	#endif
+	
 	
 	rewrite:
 	
-	#ifdef  SYSUARTPRINTF 
-	sysprintf("SDRAM_TO_NANDFLASH=x_sdram_start=0x%x,x_nandflash_start=0x%x,x_block_num=0x%x\r\n",x_sdram_start,x_nandflash_start,x_block_num);
-	#endif
+	Tp_CHECK.DATA_U32 = 0;
+	
+	
+	
 	//x_nandflash_start = x_nandflash_start*64;
 	
 	if((x_nandflash_start%64)!=0)
 	{
 		return 0;
 	}
-	
-	
-	FLAG_NAND_busy =1;
 	//HAL_NVIC_DisableIRQ(PVD_IRQn);
 	//__set_PRIMASK(1);
 	////sysSetLocalInterrupt(DISABLE_IRQ);
+	FLAG_NAND_busy =1;
+	
 	
 	for(Tp_i=0;Tp_i<64*x_block_num;Tp_i++)
 	{
-		//rewrite:
+		
 		WriteReadAddr.Zone = 0x00;
     WriteReadAddr.Block = 0x00;
     WriteReadAddr.Page = x_nandflash_start+Tp_i;
@@ -454,11 +485,15 @@ uint8_t SDRAM_TO_NANDFLASH(uint32_t x_sdram_start,uint32_t x_nandflash_start,uin
 		
 		memcpy(TX_NEW,(void *)(x_sdram_start+Tp_i*NAND_PAGE_SIZE),2048);
 		//for(x_delay = 0;x_delay<2048;x_delay++);
+		for(Tp_j=0;Tp_j<2048;Tp_j++)
+		{
+				Tp_CHECK.DATA_U32+=TX_NEW[Tp_j];
+		}
 		
 		if(NAND_WritePage(WriteReadAddr.Page,0,TX_NEW, NAND_PAGE_SIZE))
 		{
 			#ifdef  SYSUARTPRINTF 
-			sysprintf("BAD BLOCK MARK1,Tp_i=0x%d\r\n",Tp_i);
+			sysprintf("BAD BLOCK MARK");
 			#endif
 			BAD_BLOCK_MARK(BAD_BLOCK_CHANGE(WriteReadAddr.Page/64));
 			goto rewrite;
@@ -483,15 +518,15 @@ uint8_t SDRAM_TO_NANDFLASH(uint32_t x_sdram_start,uint32_t x_nandflash_start,uin
 //				goto rewrite ;
 //			}
 		}
-			#ifdef  SYSUARTPRINTF 
-			sysprintf("Tp_iTp_i=0x%d\r\n",Tp_i);
-			#endif
+		
+		
+		for(x_delay = 0;x_delay<2048;x_delay++);
 		
 		NAND_ReadPage(WriteReadAddr.Page,0,RxBuffer, NAND_PAGE_SIZE);
 		if(memcmp(TX_NEW,RxBuffer,NAND_PAGE_SIZE)!=0)
 		{
 			#ifdef  SYSUARTPRINTF 
-			sysprintf("BAD BLOCK MARK2,Tp_i=0x%d\r\n",Tp_i);
+			sysprintf("BAD BLOCK MARK");
 			#endif
 			BAD_BLOCK_MARK(BAD_BLOCK_CHANGE(WriteReadAddr.Page/64));
 			goto rewrite;
@@ -502,10 +537,55 @@ uint8_t SDRAM_TO_NANDFLASH(uint32_t x_sdram_start,uint32_t x_nandflash_start,uin
 //			BAD_BLOCK_MARK(WriteReadAddr.Page/64);
 //			SDRAM_TO_NANDFLASH(x_sdram_start,x_nandflash_start,x_block_num);
 //		}
+		
+		if(Tp_i%64==63)
+		{
+			for(Tp_j=0;Tp_j<NAND_CHECKSUM_IN_SPIFLASH;Tp_j++)
+	    {
+				if((x_nandflash_start+Tp_i-63)==checksum_addr_nand_Arr[Tp_j])
+				{
+					switch(Tp_j)
+					{
+						case access_BLOCK_1967_BASEDATA:
+							  LOG_FLAG|=0X01;
+						    LOG_TIME = time1ms_count;
+							  //W25Q128_Write(access_BLOCK_1967_BASEDATA);
+							  break;
+						case access_BLOCK_1966_UNIT:
+							  LOG_FLAG|=0X02;
+						     LOG_TIME = time1ms_count;
+							  // W25Q128_Write(access_BLOCK_1966_UNIT);
+							  break;
+						case access_BLOCK_1532_TAB3:
+			          W25Q128_Write(access_BLOCK_1532_TAB3);
+			          break;
+		        case access_BLOCK_1531_TAB2:
+			          W25Q128_Write(access_BLOCK_1531_TAB2);
+                break;
+		        case access_BLOCK_1530_TAB1:
+			          W25Q128_Write(access_BLOCK_1530_TAB1);
+		            break;
+		        case access_BLOCK_1529_TAB0:
+			         W25Q128_Write(access_BLOCK_1529_TAB0);
+		           break;
+						default :
+							  
+							   break;
+					}
+					Dataclass1_U.U32_ARRY[Tp_j] = Tp_CHECK.DATA_U32;
+					W25Q128_Write(access_BLOCK_CHECKSUM);
+				}
+	    }
+			Tp_CHECK.DATA_U32=0;
+		}
+		
 	}
 	
+	
+	
 	///sysSetLocalInterrupt(ENABLE_IRQ);
-	FLAG_NAND_busy=0;
+	FLAG_NAND_busy = 0;
+	
 	//__set_PRIMASK(0);
 	//HAL_NVIC_EnableIRQ(PVD_IRQn);
 	
@@ -515,10 +595,23 @@ uint8_t SDRAM_TO_NANDFLASH(uint32_t x_sdram_start,uint32_t x_nandflash_start,uin
 uint8_t NANDFLASH_TO_SDRAM(uint32_t x_sdram_start,uint32_t x_nandflash_start,uint16_t x_block_num)
 {
 	NAND_ADDRESS_STR WriteReadAddr;
-	 uint32_t Tp_i=0;//,Tp_j=0;
+	 uint32_t Tp_i=0,Tp_j=0;
 	uint16_t  x_delay;
 	uint32_t Tp_nandflash_status;
+	uint8_t flag_tab=0;
 	
+	union 
+	{
+		uint32_t DATA_U32;
+		uint8_t  DATA_U8[4];
+	}Tp_CHECK;
+	
+	#ifdef  SYSUARTPRINTF_ActionTimers 
+	sysprintf("NAND TO DDR=0X%X\r\n",x_nandflash_start/64);
+	#endif
+	
+	
+	Tp_CHECK.DATA_U32 = 0;
 	//x_nandflash_start = x_nandflash_start*64;
 	
 	if((x_nandflash_start%64)!=0)
@@ -537,8 +630,8 @@ uint8_t NANDFLASH_TO_SDRAM(uint32_t x_sdram_start,uint32_t x_nandflash_start,uin
     WriteReadAddr.Page = x_nandflash_start+Tp_i;
 		
 	 // BAD_BLOCK_CHANGE(&WriteReadAddr);
-		
-		
+		//for(x_delay = 0;x_delay<2048;x_delay++);
+	
 		
 		Tp_nandflash_status = NAND_ReadPage(WriteReadAddr.Page,0,RxBuffer,NAND_PAGE_SIZE);
 		if((Tp_nandflash_status&NAND_READY)!=NAND_READY)
@@ -551,9 +644,66 @@ uint8_t NANDFLASH_TO_SDRAM(uint32_t x_sdram_start,uint32_t x_nandflash_start,uin
 		{
 			*(__IO uint8_t*) (x_sdram_start+Tp_i*NAND_PAGE_SIZE+x_delay) = RxBuffer[x_delay];
 		}
+		
+			for(Tp_j=0;Tp_j<2048;Tp_j++)
+			{
+				Tp_CHECK.DATA_U32+=RxBuffer[Tp_j];
+			}
+			
+			
+			if(Tp_i%64==63)
+			{
+				
+				for(Tp_j=0;Tp_j<NAND_CHECKSUM_IN_SPIFLASH;Tp_j++)
+	     {
+				if((x_nandflash_start+Tp_i-63)==checksum_addr_nand_Arr[Tp_j])
+				{
+					if(Dataclass1_U.U32_ARRY[Tp_j] != Tp_CHECK.DATA_U32)
+					{
+						switch(Tp_j)
+					  {
+						   case access_BLOCK_1967_BASEDATA:
+							      W25Q128_Read(access_BLOCK_1967_BASEDATA);
+							      basedata_ram_to_sdram();
+							  break;
+							 case access_BLOCK_1966_UNIT:
+								     W25Q128_Read(access_BLOCK_1966_UNIT);
+							       unit_ram_to_sdram();
+								break;
+							 case access_BLOCK_1532_TAB3:
+			          W25Q128_Read(access_BLOCK_1532_TAB3);
+							 flag_tab = 1;
+			          break;
+		           case access_BLOCK_1531_TAB2:
+			          W25Q128_Read(access_BLOCK_1531_TAB2);
+							 flag_tab =1;
+                break;
+		            case access_BLOCK_1530_TAB1:
+			          W25Q128_Read(access_BLOCK_1530_TAB1);
+								flag_tab =1;
+		            break;
+		           case access_BLOCK_1529_TAB0:
+			         W25Q128_Read(access_BLOCK_1529_TAB0);
+							 flag_tab =1;
+		           break;
+						   default :
+							   break;
+					  }
+						
+						#ifdef  SYSUARTPRINTF_ActionTimers 
+						sysprintf("CHECKSUM ERR=%X,read%X!=cal%X\r\n",Tp_j,Dataclass1_U.U32_ARRY[Tp_j],Tp_CHECK.DATA_U32);
+						#endif
+					}
+				}
+	      }
+			  Tp_CHECK.DATA_U32=0;
+			}
 	//	for(x_delay = 0;x_delay<2048;x_delay++);
 //		memcpy((void *)(x_sdram_start+Tp_i*NAND_PAGE_SIZE),RxBuffer,2048);
 	}
+	
+	if(flag_tab==1) SDRAM_TO_NANDFLASH(bmp_tab_BUFFER,image_tab__nandflash_start,4);
+	
 	return 1;
 }
 
@@ -881,7 +1031,7 @@ int cpoy_file(char *pSrc, char *pDst)
 		systerm_error_status.bits.image_filenobmp_error=1;	
 		return 1;//?????????????????
 	}
-	
+	//mark
 	if((*(uint8_t *)bmpBuf_kkk!=0x42)||(*(uint8_t *)(bmpBuf_kkk+1)!=0x4d))//???????BMP?l? ?????l????????24???????????????
 	{ 
 		systerm_error_status.bits.image_filenobmp_error=1;
@@ -903,6 +1053,8 @@ int cpoy_file(char *pSrc, char *pDst)
 		systerm_error_status.bits.image_bmp800480_large_error = 1;
 		return 1;
 	}
+	//mark
+	
 	if(Cover_Flag == 2)
 	{
 	  READ_TAB_FROMSDRAM(x_order,0,x_bmp);
@@ -957,7 +1109,7 @@ int cpoy_file(char *pSrc, char *pDst)
 	
 	Tp_sdram_addr = bmp_layer3_BUFFER;
 	
-	
+	//mark
 	while (1)
   {
 		memset(bmpBuf_kkk,0,IMAGE_BUFFER_SIZE);
@@ -1019,8 +1171,8 @@ int cpoy_file(char *pSrc, char *pDst)
 									Tp_u16 = ((uint16_t)((*(uint8_t *)(bmpBuf_kkk+i+2)>>3 ) << 11) | (uint16_t)((*(uint8_t *)(bmpBuf_kkk+i+1)>>2 ) << 5) | (uint16_t)(*(uint8_t *)(bmpBuf_kkk+i)>>3 ));
 									Tp_lcdhigh = (uint8_t)(Tp_u16>>8);	
 						Tp_lcdlow  =  (uint8_t)(Tp_u16%256);	
-						*(uint8_t *)(Tp_Image_Buf+(Tp_oneline_long/3)*2-(i/3)*2-2) =Tp_lcdlow;	
-						*(uint8_t *)(Tp_Image_Buf+(Tp_oneline_long/3)*2-(i/3)*2-1) =Tp_lcdhigh;
+						*(uint8_t *)(Tp_Image_Buf+((Tp_oneline_long/3)*2-(i/3)*2-2)) =Tp_lcdlow;	
+						*(uint8_t *)(Tp_Image_Buf+((Tp_oneline_long/3)*2-(i/3)*2-1)) =Tp_lcdhigh;
 						#ifdef  SYSUARTPRINTF
 					  // sysprintf("Tp_lcdlow=%d,Tp_lcdhigh=%d\r\n",Tp_lcdlow,Tp_lcdhigh);
 					#endif
@@ -1113,7 +1265,7 @@ int cpoy_file(char *pSrc, char *pDst)
   	#ifdef  SYSUARTPRINTF
 	sysprintf("Tp_NANDFLASH_INDEX=0x%x\n\r",Tp_NANDFLASH_INDEX);
 	#endif
-	  Tp_addr = SAVE_IMAGE_20170816(Tp_NANDFLASH_INDEX*2048,Tp_sdram_addr,x_order,Cover_Flag);
+	 Tp_addr = SAVE_IMAGE_20170816(Tp_NANDFLASH_INDEX*2048,Tp_sdram_addr,x_order,Cover_Flag);
 	
 	if(systerm_error_status.bits.image_outofrange_error == 1)
 	{
@@ -1139,14 +1291,14 @@ int cpoy_file(char *pSrc, char *pDst)
 	#endif
 	//if(bmpBuf_kkk) free(bmpBuf_kkk);
   //if(Tp_Image_Buf) free(Tp_Image_Buf);
-  if(bmpBuf_kkk) 
+  if(bmpBuf_kkk_bak) 
   {
 		#ifdef SYSUARTPRINTF_p
 	 sysprintf("bmpBuf_kkk=%08X,bmpBuf_kkk_bak=%08X, free\r\n",bmpBuf_kkk,bmpBuf_kkk_bak);
 	 #endif
-	//	free(bmpBuf_kkk_bak);
-	//	bmpBuf_kkk=0;
-	//	bmpBuf_kkk_bak=0;
+		free(bmpBuf_kkk_bak);
+		bmpBuf_kkk=0;
+		bmpBuf_kkk_bak=0;
 		
 	}
 	else
@@ -1161,9 +1313,9 @@ int cpoy_file(char *pSrc, char *pDst)
 		#ifdef SYSUARTPRINTF_p
 	 sysprintf("Tp_Image_Buf=%08X,Tp_Image_Buf_noshift=%08X, free\r\n",Tp_Image_Buf,Tp_Image_Buf_noshift);
 	 #endif
-	//free(Tp_Image_Buf_noshift);
-	//	Tp_Image_Buf_noshift =0;
-	//	Tp_Image_Buf=0;
+	free(Tp_Image_Buf_noshift);
+		Tp_Image_Buf_noshift =0;
+		Tp_Image_Buf=0;
 	}
 	else
 	{
@@ -1182,15 +1334,15 @@ int cpoy_file(char *pSrc, char *pDst)
 	return 0;
 }
 
-//void NANDFLASH_backup_checksum(void)
-//{
-//	uint32_t Tp_check=0,Tp_i=0;
-//	for(Tp_i=0;Tp_i<(sizeof(badmanage_str->BAD_MANAGE_arr)-4);Tp_i++)
-//	{
-//		Tp_check = Tp_check + badmanage_str->BAD_MANAGE_arr[Tp_i];
-//	}
-//	badmanage_str->BAD_MANAGE_str.backup_checksum=Tp_check;
-//}
+void NANDFLASH_backup_checksum(void)
+{
+	uint32_t Tp_check=0,Tp_i=0;
+	for(Tp_i=0;Tp_i<(sizeof(badmanage_str->BAD_MANAGE_arr)-4);Tp_i++)
+	{
+		Tp_check = Tp_check + badmanage_str->BAD_MANAGE_arr[Tp_i];
+	}
+	badmanage_str->BAD_MANAGE_str.backup_checksum=Tp_check;
+}
 
 void NANDFLASH_P3PD_INX_SAVE(void)
 {
@@ -1201,9 +1353,10 @@ void NANDFLASH_P3PD_INX_SAVE(void)
 	 //*(uint32_t*)addr =badmanage_str->NANDFLASH_USER_INX ;
 	 //SDRAM_TO_NANDFLASH((uint32_t)badmanage_str,backup_tab_nandflash_start,1);
 //	sprintf("badmanage_str->BAD_MANAGE_str.NANDFLASH_USER_INX=%x,save\n\r",badmanage_str->BAD_MANAGE_str.NANDFLASH_USER_INX);
-//	NANDFLASH_backup_checksum();
+	NANDFLASH_backup_checksum();
 	NAND_EraseBlock(backup_tab_nandflash_start);
 	NAND_WritePage(backup_tab_nandflash_start,0,badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
+	W25Q128_Write(access_BLOCK_0_BACKUP);
 }
 	
 int check_u_disk_img_file(char *udir)  //���u��BELMONT_BMPXX�ļ�����û��ͼ�� 0 ��ʾ�� 1��ʾ��
@@ -1566,8 +1719,8 @@ int CheckUsbDirFile(int cmd,int flag) //(0, 0);
 			          basedata_ram_to_sdram();
 			          SDRAM_TO_NANDFLASH(logodata_basedata_BUFFER,baseA_data__nandflash_start,1);
 			          SDRAM_TO_NANDFLASH(logodata_basedata_BUFFER,baseB_data__nandflash_start,1);
-							  W25Q128_Write();
-                            break;
+							  W25Q128_Write(accsee_BASEDATA_PARA_5INCH);
+							 break;
 						}
 //						if(ret == 0)
 //						{
@@ -1722,7 +1875,7 @@ void UsbWriteNandFlash(char cmd, unsigned short *iFile, int cnt)
 			
 			if(IMAGE_SEARCHED)
 			{
-							 SDRAM_TO_NANDFLASH(bmp_tab_BUFFER,image_tab__nandflash_start,4);
+							 SDRAM_TO_NANDFLASH(bmp_tab_BUFFER+3*64*2048,image_tab__nandflash_start+3*64,1);
 				       //NANDFLASH_TO_SDRAM(bmp_tab_BUFFER,image_tab__nandflash_start,4);
 				       #ifdef  SYSUARTPRINTF 
 				       sysprintf("TAB SAVE FINISH\r\n");
@@ -1757,7 +1910,7 @@ void UsbWriteNandFlash(char cmd, unsigned short *iFile, int cnt)
 		        ret = cpoy_file(tmpFileName, nandFileName);
 		        if(IMAGE_SEARCHED)
 			      {
-							 SDRAM_TO_NANDFLASH(bmp_tab_BUFFER,image_tab__nandflash_start,4);
+							 SDRAM_TO_NANDFLASH(bmp_tab_BUFFER+3*64*2048,image_tab__nandflash_start+3*64,1);
 							 NANDFLASH_P3PD_INX_SAVE();
 							 Clear_sdram(0X4F);
 			      }

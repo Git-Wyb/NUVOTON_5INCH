@@ -3,10 +3,13 @@
 #include <stdlib.h>
 
 #include "nuc970.h"
+#include "gpio.h"
 #include "sys.h"
 #include "W25Q128.h"
 #include "BSP_Init.h"
 #include "spi.h"
+#include "Command_all.h"
+#include "Aprotocol.h"
 
 
 
@@ -25,8 +28,16 @@
 #define CMD_WREN      0x06                          // Write Enable
 #define CMD_WRDI      0x04                          // Write Disable
 #define CMD_RDID      0x9F                          // JEDEC ID read
+
+extern BADMANAGE_TAB_TYPE_U badmanage_str[1];
 extern  uint8_t *BaseData_ARR;
+extern uint8_t Field_unit;
+extern uint32_t logodata_sdrambuffer_addr_arry[16];
+  TAB_Checksum_SPI_U Dataclass1_U;
+extern  LAYER_SDRAM_STR display_layer_sdram;
  
+ void DATACLASS1_Check_Write(void);
+ void DATACLASS1_Check_Read(void);
  
 uint16_t SpiFlash_ReadMidDid(void)
 {
@@ -229,10 +240,12 @@ void SpiFlash_SectorErase(uint32_t StartAddress)
 			u8DataBuffer：写入数据存入指针
 返回值：				无
 */
-void SpiFlash_NormalPageProgram(uint32_t StartAddress, uint8_t *u8DataBuffer)
+
+
+void SpiFlash_NormalPageProgram(uint32_t StartAddress, uint8_t *u8DataBuffer,uint16_t x_len)
 {
     uint32_t i = 0;
-
+    
     // /CS: 使能
     spiIoctl(0, SPI_IOC_ENABLE_SS, SPI_SS_SS0, 0);
 
@@ -287,7 +300,7 @@ void SpiFlash_NormalPageProgram(uint32_t StartAddress, uint8_t *u8DataBuffer)
     while(spiGetBusyStatus(0));
     
     // 写数据
-    for(i=0;i<36;i++)
+    for(i=0;i<x_len;i++)
     {
         spiWrite(0, 0, u8DataBuffer[i]);
         spiIoctl(0, SPI_IOC_TRIGGER, 0, 0);
@@ -298,6 +311,54 @@ void SpiFlash_NormalPageProgram(uint32_t StartAddress, uint8_t *u8DataBuffer)
 		
 		SpiFlash_WaitReady();
 }
+
+void SpiFlash_NormalPageProgram_16(uint32_t StartAddress, uint8_t *u8DataBuffer,uint16_t x_len)
+{
+	uint16_t Tp_i,Tp_long;
+	if(StartAddress%0x1000!=0)  return;
+	if(x_len>4096)             return;
+	
+	
+	SpiFlash_SectorErase(StartAddress);
+	
+	 if(x_len>256) Tp_long=256;
+	 else Tp_long = x_len;
+	 
+	 while(Tp_long)
+	 {
+		 SpiFlash_NormalPageProgram(StartAddress,u8DataBuffer,Tp_long);
+		
+		 x_len = x_len - Tp_long;
+		 
+		 if(x_len!=0)
+		 {
+			  u8DataBuffer = u8DataBuffer + Tp_long;
+		    StartAddress = StartAddress + Tp_long;
+		 }
+		 
+		 if(x_len>256) Tp_long=256;
+	   else Tp_long = x_len;
+	 }
+}
+
+void SpiFlash_NormalPageProgram_32(uint32_t StartAddress, uint8_t *u8DataBuffer,uint32_t x_len)
+{
+	uint16_t Tp_i,Tp_long;
+	if(StartAddress%0x10000!=0)  return;
+	if(x_len!=131072)             return;
+	
+	 for(Tp_i=0;Tp_i<32;Tp_i++)
+	{
+		
+		SpiFlash_NormalPageProgram_16(StartAddress,u8DataBuffer,0x1000);
+		if(Tp_i!=31)
+		{
+		StartAddress = StartAddress+0x1000;
+		u8DataBuffer = u8DataBuffer + 0x1000;
+		}
+	}
+}
+
 /*
 函数名：SpiFlash_NormalRead(uint32_t StartAddress, uint8_t *u8DataBuffer)
 功能：读取SpiFlash数据
@@ -306,7 +367,7 @@ void SpiFlash_NormalPageProgram(uint32_t StartAddress, uint8_t *u8DataBuffer)
 			u8DataBuffer：读取数据存入指针
 返回值：				无
 */
-void SpiFlash_NormalRead(uint32_t StartAddress, uint8_t *u8DataBuffer)
+void SpiFlash_NormalRead(uint32_t StartAddress, uint8_t *u8DataBuffer,uint16_t x_len)
 {
     uint32_t i;
 
@@ -334,7 +395,7 @@ void SpiFlash_NormalRead(uint32_t StartAddress, uint8_t *u8DataBuffer)
    // delay_ms(1);
      
     // 数据读取
-    for(i=0; i<36; i++) {
+    for(i=0; i<x_len; i++) {
         spiWrite(0, 0, 0x00);
         spiIoctl(0, SPI_IOC_TRIGGER, 0, 0);
         while(spiGetBusyStatus(0));
@@ -344,30 +405,244 @@ void SpiFlash_NormalRead(uint32_t StartAddress, uint8_t *u8DataBuffer)
 		SpiFlash_WaitReady();
 }
 
-
-void W25Q128_Write(void)
+void SpiFlash_NormalRead_16(uint32_t StartAddress, uint8_t *u8DataBuffer,uint16_t x_len)
 {
-	uint8_t Tp_data[36]={0};
-	memcpy((void *)Tp_data,(void *)(BaseData_ARR+3*9),9);
-	memcpy((void *)(Tp_data+9),(void *)(BaseData_ARR+4*9),9);
-	memcpy((void *)(Tp_data+18),(void *)(BaseData_ARR+12*9),9);
-	memcpy((void *)(Tp_data+27),(void *)(BaseData_ARR+13*9),9);
-	SpiFlash_SectorErase(0xFFFF00);
-	SpiFlash_NormalPageProgram(0xFFFF00,Tp_data);
+		uint16_t Tp_i,Tp_long;
+	if(StartAddress%0x1000!=0)  return;
+	if(x_len>4096)             return;
+	
+	 if(x_len>256) Tp_long=256;
+	 else Tp_long = x_len;
+	 
+	 while(Tp_long)
+	 {
+		 SpiFlash_NormalRead(StartAddress,u8DataBuffer,Tp_long);
+		 
+		 x_len = x_len - Tp_long;
+		 
+		 if(x_len!=0)
+		 {
+			 StartAddress = StartAddress + Tp_long;
+		   u8DataBuffer = u8DataBuffer + Tp_long;
+		 }
+		 
+		 if(x_len>256) Tp_long=256;
+	   else Tp_long = x_len;
+	}
 }
 
-void W25Q128_Read(void)
+void SpiFlash_NormalRead_32(uint32_t StartAddress, uint8_t *u8DataBuffer,uint32_t x_len)
+{
+	uint16_t Tp_i,Tp_long;
+	if(StartAddress%0x10000!=0)  return;
+	if(x_len!=131072)             return;
+	
+	 for(Tp_i=0;Tp_i<32;Tp_i++)
+	{
+		
+		SpiFlash_NormalRead_16(StartAddress,u8DataBuffer,0x1000);
+		if(Tp_i!=31)
+		{
+		StartAddress = StartAddress+0x1000;
+		u8DataBuffer = u8DataBuffer + 0x1000;
+		}
+	}
+}
+
+
+void W25Q128_Write(access_TYPE_E x_type)
 {
 	uint8_t Tp_data[36]={0};
 	
-	SpiFlash_NormalRead(0xFFFF00,Tp_data);
-	memcpy((void *)(BaseData_ARR+3*9),(void *)(Tp_data),9);
-	memcpy((void *)(BaseData_ARR+4*9),(void *)(Tp_data+9),9);
-	memcpy((void *)(BaseData_ARR+12*9),(void *)(Tp_data+18),9);
-	memcpy((void *)(BaseData_ARR+13*9),(void *)(Tp_data+27),9);
+	switch(x_type)
+	{
+		case accsee_BASEDATA_PARA_5INCH: 
+			memcpy((void *)Tp_data,(void *)(BaseData_ARR+3*9),9);
+	    memcpy((void *)(Tp_data+9),(void *)(BaseData_ARR+4*9),9);
+	    memcpy((void *)(Tp_data+18),(void *)(BaseData_ARR+12*9),9);
+	    memcpy((void *)(Tp_data+27),(void *)(BaseData_ARR+13*9),9);
+	    SpiFlash_SectorErase(W_block255_sector15);
+	    SpiFlash_NormalPageProgram(W_block255_sector15,Tp_data,36);
+			break;
+		case access_BLOCK_CHECKSUM:
+			DATACLASS1_Check_Write();
+			break;
+		case access_BLOCK_0_BACKUP:
+			//SpiFlash_SectorErase(W_block255_sector0);
+		  SpiFlash_NormalPageProgram_16(W_block255_sector0,badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
+		  
+			break;
+		case access_BLOCK_1967_BASEDATA:
+			//SpiFlash_SectorErase(W_block253_sector0);
+			 SpiFlash_NormalPageProgram_16(W_block253_sector0,(uint8_t *)BaseData_ARR,logodata_Basedata_SIZE);
+			break;
+		case access_BLOCK_1966_UNIT:
+			 //SpiFlash_SectorErase(W_block251_sector0);
+		   SpiFlash_NormalPageProgram_16(W_block251_sector0,(uint8_t *)logodata_sdrambuffer_addr_arry[Field_unit],MAX_LOGO_UINT_NUM+2);
+			break;
+		case access_BLOCK_1532_TAB3:
+			SpiFlash_NormalPageProgram_32(W_block249_sector0,(uint8_t *)(bmp_tab_BUFFER+3*131072),131072);
+		  break;
+		case access_BLOCK_1531_TAB2:
+			SpiFlash_NormalPageProgram_32(W_block247_sector0,(uint8_t *)(bmp_tab_BUFFER+2*131072),131072);
+		  break;
+		case access_BLOCK_1530_TAB1:
+			SpiFlash_NormalPageProgram_32(W_block245_sector0,(uint8_t *)(bmp_tab_BUFFER+1*131072),131072);
+		  break;
+		case access_BLOCK_1529_TAB0:
+			SpiFlash_NormalPageProgram_32(W_block243_sector0,(uint8_t *)(bmp_tab_BUFFER),131072);
+		  break;
+		default:
+			break;
+	}
 	
 }
 
+void W25Q128_Read(access_TYPE_E x_type)
+{
+	uint8_t Tp_data[36]={0};
+	
+	switch(x_type)
+	{
+		case accsee_BASEDATA_PARA_5INCH: 
+			SpiFlash_NormalRead(W_block255_sector15,Tp_data,36);
+	    memcpy((void *)(BaseData_ARR+3*9),(void *)(Tp_data),9);
+	    memcpy((void *)(BaseData_ARR+4*9),(void *)(Tp_data+9),9);
+	    memcpy((void *)(BaseData_ARR+12*9),(void *)(Tp_data+18),9);
+	    memcpy((void *)(BaseData_ARR+13*9),(void *)(Tp_data+27),9);
+			break;
+		case access_BLOCK_CHECKSUM:
+			DATACLASS1_Check_Read();
+			break;
+		case access_BLOCK_0_BACKUP:
+			SpiFlash_NormalRead_16(W_block255_sector0,badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
+			break;
+		case access_BLOCK_1967_BASEDATA:
+			SpiFlash_NormalRead_16(W_block253_sector0,(uint8_t *)BaseData_ARR,logodata_Basedata_SIZE);
+			break;
+		case access_BLOCK_1966_UNIT:
+			SpiFlash_NormalRead_16(W_block251_sector0,(uint8_t *)logodata_sdrambuffer_addr_arry[Field_unit],MAX_LOGO_UINT_NUM+2);
+			break;
+		case access_BLOCK_1532_TAB3:
+			SpiFlash_NormalRead_32(W_block249_sector0,(uint8_t *)(bmp_tab_BUFFER+3*131072),131072);
+			break;
+		case access_BLOCK_1531_TAB2:
+			SpiFlash_NormalRead_32(W_block247_sector0,(uint8_t *)(bmp_tab_BUFFER+2*131072),131072);
+		  break;
+		case access_BLOCK_1530_TAB1:
+			SpiFlash_NormalRead_32(W_block245_sector0,(uint8_t *)(bmp_tab_BUFFER+1*131072),131072);
+		  break;
+		case access_BLOCK_1529_TAB0:
+			SpiFlash_NormalRead_32(W_block243_sector0,(uint8_t *)(bmp_tab_BUFFER),131072);
+		  break;
+		default:
+			break;
+	}
+	
+}
+
+
+void DATACLASS1_Check_init(void)
+{
+	uint16_t Tp_i;
+	for(Tp_i=0;Tp_i<NAND_CHECKSUM_IN_SPIFLASH;Tp_i++)
+	{
+	Dataclass1_U.U32_ARRY[Tp_i]=0x1fe0000;
+	}
+}
+
+void DATACLASS1_Check_Write(void)
+{
+	
+	SpiFlash_SectorErase(W_block255_sector14);
+	SpiFlash_NormalPageProgram(W_block255_sector14,Dataclass1_U.U8_ARRY,NAND_CHECKSUM_IN_SPIFLASH*4);
+	#ifdef  SYSUARTPRINTF_ActionTimers 
+	sysprintf("CHECKSUM Write=%X,%X,%X,%X,%X,%X\r\n",Dataclass1_U.U32_ARRY[0],Dataclass1_U.U32_ARRY[1],Dataclass1_U.U32_ARRY[2],
+	                                 Dataclass1_U.U32_ARRY[3],Dataclass1_U.U32_ARRY[4],Dataclass1_U.U32_ARRY[5]);
+	#endif
+}
+
+void DATACLASS1_Check_Read(void)
+{
+	SpiFlash_NormalRead(W_block255_sector14,Dataclass1_U.U8_ARRY,NAND_CHECKSUM_IN_SPIFLASH*4);
+	#ifdef  SYSUARTPRINTF_ActionTimers 
+	sysprintf("CHECKSUM Read=%X,%X,%X,%X,%X,%X\r\n",Dataclass1_U.U32_ARRY[0],Dataclass1_U.U32_ARRY[1],Dataclass1_U.U32_ARRY[2],
+	                                 Dataclass1_U.U32_ARRY[3],Dataclass1_U.U32_ARRY[4],Dataclass1_U.U32_ARRY[5]);
+	#endif
+}
+
+
+void W25Q128_test(void)
+{
+	uint8_t Tp_data_w[36]={0},Tp_data_r[36]={0};
+	uint16_t Tp_i;
+	
+	memset((void *)BaseData_ARR,0xaa,logodata_Basedata_SIZE);
+	W25Q128_Write(access_BLOCK_1967_BASEDATA);
+	memset((void *)BaseData_ARR,0,logodata_Basedata_SIZE);
+	W25Q128_Read(access_BLOCK_1967_BASEDATA);
+	
+	for(Tp_i=0;Tp_i<logodata_Basedata_SIZE;Tp_i++)
+	{
+		if(BaseData_ARR[Tp_i]!=0xaa)
+		{
+			LED_POWERLOW_ON();
+	   	while(1);
+		}
+	}
+	
+	memset((void *)BaseData_ARR,0xbb,logodata_Basedata_SIZE);
+	W25Q128_Write(access_BLOCK_1967_BASEDATA);
+	memset((void *)BaseData_ARR,0,logodata_Basedata_SIZE);
+	W25Q128_Read(access_BLOCK_1967_BASEDATA);
+	
+	for(Tp_i=0;Tp_i<logodata_Basedata_SIZE;Tp_i++)
+	{
+		if(BaseData_ARR[Tp_i]!=0xbb)
+		{
+			LED_FLASHERR_ON();
+	   	while(1);
+		}
+	}
+	
+//	memset((void *)Tp_data_w,0x55,36);
+//	SpiFlash_SectorErase(W_block255_sector15);
+//	SpiFlash_NormalPageProgram(0xFFFF00,Tp_data_w,32);
+//	memset((void *)Tp_data_r,0,36);
+//	SpiFlash_NormalRead(0xFFFF00,Tp_data_r,32);
+//	
+//	if(memcmp((void *)Tp_data_w,(void *)Tp_data_r,32)!=0)
+//	{
+//		LED_FLASHERR_ON();
+//		while(1);
+//	}
+//	
+//	memset((void *)Tp_data_w,0xaa,36);
+//	SpiFlash_SectorErase(W_block255_sector15);
+//	SpiFlash_NormalPageProgram(0xFFFF00,Tp_data_w,32);
+//	memset((void *)Tp_data_r,0,36);
+//	SpiFlash_NormalRead(0xFFFF00,Tp_data_r,32);
+//	
+//	if(memcmp((void *)Tp_data_w,(void *)Tp_data_r,32)!=0)
+//	{
+//		LED_POWERLOW_ON();
+//		while(1);
+//	}
+}
+
+
+void W25Q128_earse(void)
+{
+	uint32_t Tp_i;
+	for(Tp_i=W_block243_sector0;Tp_i<=W_block255_sector15;Tp_i=Tp_i+0x1000)
+	{
+		SpiFlash_SectorErase(Tp_i);
+	}
+	
+	DATACLASS1_Check_init();
+	DATACLASS1_Check_Write();
+	
+}
 //void SPI_FLASH_CS (uint8_t cs) {
 
 //  if (cs == CS_HIGH) {

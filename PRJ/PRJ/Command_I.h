@@ -34,6 +34,7 @@ void WriteAreaConfig_new(void);
 void Updata_Basedata_No0_cyw(void);
 void basedata_ram_to_sdram(void);
 uint32_t CharToHex(char *x_char);
+void unit_ram_to_sdram(void);
 #endif 
 
 
