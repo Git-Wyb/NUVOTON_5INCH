@@ -142,13 +142,13 @@ extern uint8_t *BaseData_ARR;
 
 extern  uint8_t *bmpBuf_kkk,*bmpBuf_kkk_bak;
 #endif
-
+extern uint8_t NAND_EraseBlock(uint32_t BlockNum);
 /******************************������************************/
 int main(void)
 {
 
 	//	uint8_t *u8FrameBufPtr, *u8OSDFrameBufPtr,i; 
-	//int cnt;	
+	int cnt;	
 	//void *_ColorSrcBufferPtr2;
 
 	
@@ -330,7 +330,7 @@ int main(void)
 		REG_OPERATE(REG_SYS_LVRDCR,1,clear);
 		#ifdef POWER_INT_MODE
 		
-	 power_int_init();
+	 //power_int_init();
 		#endif
 		
 		
@@ -438,8 +438,11 @@ int main(void)
 //	*(uint8_t *)(display_layer_sdram.LCD_FRAME1_BUFFER+4));
 	 
 		//if(0)
-		
-		
+    NAND_EraseBlock(0);
+	for(cnt=1425; cnt<2048; cnt++)	NAND_EraseBlock(cnt);
+    SetZuobiao(10, 280);
+    lcd_printf_new("ERASE OK...");
+     while(1);
 	 if(MODE_WORKTEST==WORK_FUNCTION)
 		{
 		while(1)
