@@ -26,6 +26,9 @@ cyw317164627 on 2023/5/23上午9:47:51
 6、提交给客人的NAND映射表浪费了1块。A06修正(I命令时，分配LOG区域最后一块1965时判定为报错，变更为可以设定，改为if((tp_field.addr + tp_field.space)>0x9620000))。
 7、TYPE_PRODUCT = PORDUCT_5INCH;区分5寸/7寸。
 
+2024.06.12  TBNUVA06  checksum：C190  下午发给了客人。
+编译器版本改为了V5.06 update 5(build 528)生成的A06版本，与软件陈工的编译器版本一样。
+
 
 
 
