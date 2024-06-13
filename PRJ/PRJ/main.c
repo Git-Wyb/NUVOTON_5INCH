@@ -314,7 +314,7 @@ int main(void)
 		}
 		while(MODE_WORKTEST==STATUS_Err);
 	//	MODE_WORKTEST = WORK_TEST;
-		TYPE_PRODUCT = PORDUCT_5INCH;
+		TYPE_PRODUCT = PORDUCT_7INCH;
 		MODE_WORKTEST =WORK_FUNCTION;
 		
 	 while((get_main_pwr_ad_value()<VOLT_WORK));
