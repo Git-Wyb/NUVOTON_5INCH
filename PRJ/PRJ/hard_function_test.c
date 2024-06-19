@@ -23,7 +23,7 @@
 #include "W25Q128.h"
 
 extern LAYER_SDRAM_STR display_layer_sdram;
-test_E test_e=test_Reset;//test_Reset;//download_pin_test;//test_Reset;
+test_E test_e=W25Q128_check;//test_Reset;//download_pin_test;//test_Reset;
 extern volatile uint8_t Flag_int ;
 extern UINT32 _ClipTL, _ClipBR;
 extern BOOL _ClipEnable;
@@ -52,6 +52,9 @@ extern uint8_t wt588h_send_step;
 static uint32_t time_display=0;
 extern UINT32 volatile time1ms_count;
 extern uint8_t TYPE_PRODUCT;
+extern PARA_TYPE para;
+extern uint8_t Field_unit;
+extern uint32_t logodata_sdrambuffer_addr_arry[16];
 
 void TEST_LCDSHOW(void)
 {
@@ -197,7 +200,7 @@ void hard_function_test(void)
 	static uint8_t buf[64];
 	//static UINT32 _ClipTL, _ClipBR;
 	static UINT32 width,height,x,y;
-	static uint32_t Tp_i ;
+	static uint32_t Tp_i ,Tp_j;
 	static uint32_t sdram_total = 0,sdram_new_addr;
 	static	uint32_t Tp_data_vbat,Tp_data_normal;
 	static  float Tp_advalue;
@@ -1722,41 +1725,59 @@ void hard_function_test(void)
 				   break;
 			case W25Q128_check:
 				    Tp_i=0;
+			      Field_unit = 1;
 				    while(1)
 						{
-							
-				    memset((void *)(BaseData_ARR),Tp_i,164*9);
-			      W25Q128_Write(accsee_BASEDATA_PARA_5INCH);
-							memset((void *)(BaseData_ARR),0,164*9);
-							W25Q128_Read(accsee_BASEDATA_PARA_5INCH);
-							if((*(uint8_t *)(BaseData_ARR+3*9)!=Tp_i)||
-								(*(uint8_t *)(BaseData_ARR+4*9)!=Tp_i)||
-							   (*(uint8_t *)(BaseData_ARR+12*9)!=Tp_i)||
-							   (*(uint8_t *)(BaseData_ARR+13*9)!=Tp_i))
+							if(logodata_sdrambuffer_addr_arry[Field_unit]==0)
 							{
+							logodata_sdrambuffer_addr_arry[Field_unit] = (uint32_t )malloc((2048*64)+64);
+							logodata_sdrambuffer_addr_arry[Field_unit] = 32+shift_pointer(logodata_sdrambuffer_addr_arry[Field_unit],32);
+							}
+				    memset((uint8_t *)logodata_sdrambuffer_addr_arry[Field_unit],Tp_i,999+2);
+			      W25Q128_Write(access_BLOCK_1966_UNIT);
+							memset((uint8_t *)logodata_sdrambuffer_addr_arry[Field_unit],0,999+2);
+							W25Q128_Read(access_BLOCK_1966_UNIT);
+							
+							for(Tp_j=0;Tp_j<1001;Tp_j++)
+							{
+							if((*(uint8_t *)(logodata_sdrambuffer_addr_arry[Field_unit]+Tp_j)!=Tp_i))
+		          {
+								SetZuobiao(10, 400 + 40);  
+				        lcd_printf_new("                                               ");
 								SetZuobiao(10, 400 + 40);  
 				         lcd_printf_new("W25Q128 err");
 								#ifdef  SYSUARTPRINTF 
 								SetZuobiao(10, 400 + 40);	
 								lcd_printf_new("                                               ");
 								SetZuobiao(10, 400 + 40);	
-								sysprintf("W25Q128 err=%X\r\n",Tp_i);
+								sysprintf("W25Q128 err=%X,%X\r\n",Tp_i,para.sw36_count);
 								#endif
 								 while(1);
 							}
 							else
 							{
-								SetZuobiao(10, 400 + 40);  
-				         lcd_printf_new("                                               ");
-								SetZuobiao(10, 400 + 40); 
-								lcd_printf_new("W25Q128 ok");
-								#ifdef  SYSUARTPRINTF 
-								sysprintf("W25Q128 ok=%X\r\n",Tp_i);
-								#endif
+								//SetZuobiao(10, 400 + 40);  
+				        // lcd_printf_new("                                               ");
+								//SetZuobiao(10, 400 + 40); 
+								//lcd_printf_new("W25Q128 ok");
+								//#ifdef  SYSUARTPRINTF 
+								//sysprintf("W25Q128 ok=%X\r\n",Tp_i);
+								//#endif
 							}
-							Tp_i = (Tp_i+1)%256;
-							if(Tp_i == 0) break;
 							
+						 }
+							
+						  
+							Tp_i = (Tp_i+1)%256;
+							if(Tp_i == 0) 
+							{
+								para.sw36_count++;
+								SetZuobiao(10, 400 + 40);  
+				        lcd_printf_new("                                               ");
+						    SetZuobiao(10, 400 + 40); 
+							  lcd_printf_new("W25Q128 ok,%X",para.sw36_count);
+							}
+						 
 				    }
 						
 						

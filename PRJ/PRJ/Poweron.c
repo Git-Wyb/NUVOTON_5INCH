@@ -61,7 +61,7 @@ extern uint8_t touch_send_imm;
 extern volatile uint16_t command_D8_D9_time;
 //extern uint8_t *Tp_Image_Buf;
 
-char SOFT_VERSION[] = "TBNUVA06";
+char SOFT_VERSION[] = "TB240501";
  uint8_t flag_AB=0;
 
 uint8_t LOGO_ERR = 0;
@@ -219,7 +219,7 @@ void para_default(void)
 	para.lcd_back_light.state=0; 
 	para.rtc_coarse_value=0x00;
 	para.no_vbat_pwr_on_cnt=0x00;
-	
+	para.sw36_count = 0x00;
 	para.flag=0xA5;
     //write_para();
 	
@@ -227,6 +227,7 @@ void para_default(void)
 	sprintf((char *)(BaseData_ARR+98*9),"%08X",para.lcd_back_light.brightness);
 	sprintf((char *)(BaseData_ARR+103*9),"%08X",para.lcd_back_light.state);
 	sprintf((char *)(BaseData_ARR+102*9),"%08X",para.rtc_coarse_value);
+	sprintf((char *)(BaseData_ARR+BASE_data_SW3_6_TIMES*9),"%08X",para.sw36_count);
 	sprintf((char *)(BaseData_ARR+BASE_data_Dataclass12RTCPowerOffTimer*9),"%08X",para.no_vbat_pwr_on_cnt );
 	
 	sprintf((char *)(BaseData_ARR+BASE_data_ParaFlag*9),"%08X",para.flag);
@@ -245,6 +246,7 @@ void read_para_new(void)
 	  para.flag                = CharToHex((char *)(BaseData_ARR+BASE_data_ParaFlag*9));
 	  para.last_poweroff_year = CharToHex((char *)(BaseData_ARR+BASE_data_PowerOffYear*9));
 	  para.last_poweroff_month  = CharToHex((char *)(BaseData_ARR+BASE_data_PowerOffMonth*9));
+	  para.sw36_count    = CharToHex((char *)(BaseData_ARR+BASE_data_SW3_6_TIMES*9));
 	 	
 	
 	  

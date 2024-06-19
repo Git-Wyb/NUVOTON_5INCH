@@ -345,7 +345,8 @@ void LOW_POWER_cyw(void)
 ////	 f_mount(0,"3:",1);//20181217
 ////	}
     //read_rtc(&pwr_off_time);	
-	  if(LOGO_DATA_OUT_FLAG==3)
+	//  if(LOGO_DATA_OUT_FLAG==3)
+	if(1)
 		{
 		
 		//for(Tp_field = 15; Tp_field!=0;Tp_field--)//OK

@@ -480,7 +480,7 @@ void write_para_to_sdram(void)
 	sprintf((char *)(BaseData_ARR+BASE_data_actioncount*9),"%08X",para.dataclass_1_2_action_count );
 	sprintf((char *)(BaseData_ARR+BASE_data_PowerOffYear*9),"%08X",para.last_poweroff_year );
 	sprintf((char *)(BaseData_ARR+BASE_data_PowerOffMonth*9),"%08X",para.last_poweroff_month );
-	
+	sprintf((char *)(BaseData_ARR+BASE_data_SW3_6_TIMES*9),"%08X",para.sw36_count);
 	sprintf((char *)(BaseData_ARR+BASE_data_ParaFlag*9),"%08X",para.flag);
 }
 

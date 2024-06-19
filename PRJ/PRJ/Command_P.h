@@ -22,6 +22,7 @@
 #define BASE_data_RTCcoarse   102
 #define BASE_data_PowerSave   103
 #define BASE_data_ParaFlag    104
+#define BASE_data_SW3_6_TIMES  105
 #define BASE_data_fieldinfo_count 112
 #define BASE_data_ErrBlock    160
 #define BASE_data_Dataclass12RTCPowerOffTimer 161 //range :1-60

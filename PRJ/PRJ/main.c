@@ -315,7 +315,7 @@ int main(void)
 		while(MODE_WORKTEST==STATUS_Err);
 	//	MODE_WORKTEST = WORK_TEST;
 		TYPE_PRODUCT = PORDUCT_5INCH;
-		MODE_WORKTEST =WORK_FUNCTION;
+		MODE_WORKTEST =WORK_TEST;
 		
 	 while((get_main_pwr_ad_value()<VOLT_WORK));
 	 LED_POWER_ON();
@@ -339,6 +339,14 @@ int main(void)
 		nandflash_init();
     SDRAM_DATA_INIT();
 		
+		
+		//TEST_NANDFLASH();
+		
+		
+//		 LED_POWER_ON();
+//	 LED_LOGO_ON();
+//	 LED_FLASHERR_ON();
+//	 LED_POWERLOW_ON();
 //	  NAND_EraseBlock(backup_tab_nandflash_start);
   
 //		NAND_EraseBlock(1533);

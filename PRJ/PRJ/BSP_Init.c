@@ -663,6 +663,27 @@ void SDRAM_DATA_INIT(void)
 	
 	//sprintf("badmanage_str->BAD_MANAGE_str.NANDFLASH_USER_INX=%x,read\n\r",badmanage_str->BAD_MANAGE_str.NANDFLASH_USER_INX);
 	//NANDFLASH_BADMANAGE_INIT();
+
+	
+	
+	if((READ_PIN_SW1_6!=SW_ON)&&
+		 ((badmanage_str->BAD_MANAGE_str.flag!=BAD_BLOCK_LOCK)||(Tp_CHECK.DATA_U32!=badmanage_str->BAD_MANAGE_str.backup_checksum)||(badmanage_str->BAD_MANAGE_str.ERR_NUMBER>BAD_BLOCK_TOTAL))&&
+	   (MODE_WORKTEST==WORK_FUNCTION)) 
+	{		
+	
+	W25Q128_Read(access_BLOCK_0_BACKUP);
+	#ifdef  SYSUARTPRINTF_ActionTimers 
+	//sysprintf("badmanage_str->BAD_MANAGE_str.flag=0x%08x,badmanage_str->BAD_MANAGE_str.num=0x%08x\r\n",badmanage_str->BAD_MANAGE_str.flag,badmanage_str->BAD_MANAGE_str.ERR_NUMBER);
+	sysprintf("block-0 checksum error,read from spiflash and then poweron again\r\n");
+	#endif
+	NAND_EraseBlock(backup_tab_nandflash_start);
+	NAND_WritePage(backup_tab_nandflash_start,0,badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
+	power_checkreset();
+	//HAL_NVIC_SystemReset( );
+	while(1);
+	
+	}
+	
 	#ifdef  SYSUARTPRINTF_ActionTimers 
 //	  	badmanage_str->BAD_MANAGE_str.ERR_NUMBER = 75;
 //		for(Tp_i=0;Tp_i<75;Tp_i++)
@@ -683,24 +704,6 @@ void SDRAM_DATA_INIT(void)
   }
 	
 	#endif
-	
-	
-	if((READ_PIN_SW1_6!=SW_ON)&&
-		 ((badmanage_str->BAD_MANAGE_str.flag!=BAD_BLOCK_LOCK)||(Tp_CHECK.DATA_U32!=badmanage_str->BAD_MANAGE_str.backup_checksum)||(badmanage_str->BAD_MANAGE_str.ERR_NUMBER>BAD_BLOCK_TOTAL))&&
-	   (MODE_WORKTEST==WORK_FUNCTION)) 
-	{		
-	
-	W25Q128_Read(access_BLOCK_0_BACKUP);
-	#ifdef  SYSUARTPRINTF_ActionTimers 
-	//sysprintf("badmanage_str->BAD_MANAGE_str.flag=0x%08x,badmanage_str->BAD_MANAGE_str.num=0x%08x\r\n",badmanage_str->BAD_MANAGE_str.flag,badmanage_str->BAD_MANAGE_str.ERR_NUMBER);
-	#endif
-	NAND_EraseBlock(backup_tab_nandflash_start);
-	NAND_WritePage(backup_tab_nandflash_start,0,badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
-	power_checkreset();
-	//HAL_NVIC_SystemReset( );
-	while(1);
-	
-	}
 	
 	if(MODE_WORKTEST == WORK_TEST)
 	{

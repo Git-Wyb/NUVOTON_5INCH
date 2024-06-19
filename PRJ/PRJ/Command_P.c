@@ -47,7 +47,8 @@ extern uint8_t LOGO_ERR;
 volatile uint8_t FLAG_NAND_busy = 0,FLAG_POWEROFF_wait=0;
 extern   TAB_Checksum_SPI_U Dataclass1_U;
 extern UINT32 volatile time1ms_count;
- 
+extern uint32_t CHECK_SUM_HIGH;
+extern PARA_TYPE para;
  
  const uint32_t checksum_addr_nand_Arr[NAND_CHECKSUM_IN_SPIFLASH]=
 {image_tab__nandflash_start,
@@ -875,6 +876,7 @@ void check_sum_nand(uint32_t x_addr,uint16_t x_width,uint16_t x_height)
 	uint32_t Tp_i=0,Tp_j=0;
 	uint16_t Tp_numread = 0;
 	uint16_t  x_delay;
+	static uint32_t Tp_check;
 
 	while(Tp_i<2*x_width*x_height)
 	{
@@ -900,7 +902,12 @@ void check_sum_nand(uint32_t x_addr,uint16_t x_width,uint16_t x_height)
 
        for(Tp_j=0;Tp_j<Tp_numread;Tp_j++)
 	   {
-		   CHECK_SUM_NAND +=bmpBuf_kkk[Tp_j];
+		   Tp_check = CHECK_SUM_NAND;
+			 CHECK_SUM_NAND +=bmpBuf_kkk[Tp_j];
+			 if(CHECK_SUM_NAND<Tp_check)
+			 {
+			   CHECK_SUM_HIGH++;
+			 }
 	   }
 
 	}
@@ -1990,6 +1997,7 @@ uint32_t  usb_cannot_find_image:1;//16// u���Ҳ���ͼ���ļ�  
      else	//if()
 	 	{      	
 			ack = 0X1C;
+			para.sw36_count++;
 			code_protocol_ack(get_command_xor(), 1, &ack,0);
     }
 	}

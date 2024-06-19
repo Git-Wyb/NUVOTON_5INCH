@@ -114,6 +114,7 @@ typedef struct
 	uint8_t last_poweroff_year;
 	uint8_t last_poweroff_month;
 	LCD_BACK_LIGHT_TYPE  lcd_back_light;
+	uint32_t sw36_count;
 	//uint32_t basedata_checksum;
 	uint8_t flag; //0xa5 xor;
 }PARA_TYPE;

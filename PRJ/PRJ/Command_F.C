@@ -17,7 +17,9 @@ extern  BADMANAGE_TAB_TYPE_U badmanage_str[1];
 extern AreaConfig gs_AreaInfo[16],Tp_gs_AreaInfo[16];
 extern uint8_t* BaseData_ARR;
 extern FieldArea3All_cyw *pArea3;
-uint32_t CHECK_SUM_NAND_1;
+static uint32_t CHECK_SUM_NAND_1;
+uint32_t CHECK_SUM_HIGH = 0;
+static uint32_t BMP_COUNT = 0;
 extern uint32_t CHECK_SUM_NAND;
 uint8_t checksum_flag=0;
 extern uint8_t *bmpBuf_kkk,*bmpBuf_kkk_bak;
@@ -29,8 +31,11 @@ void Display_checksum(void)
 		char Tp_version[9]={0};
 	     if(checksum_flag == 1)
 			 {
-
-	        SetZuobiao(10, 400 + 60);
+					SetZuobiao(10, 360);
+	        lcd_printf_new("CHECK_SUM_HIGH = 0x%08X         ",CHECK_SUM_HIGH);
+				  SetZuobiao(10, 380);
+		      lcd_printf_new("BMP_COUNT = 0x%08X         ",BMP_COUNT);
+				  SetZuobiao(10, 400 + 60);
 		      lcd_printf_new("NAND Chechsum = 0x%08X         ",CHECK_SUM_NAND_1);
 					SetZuobiao(10, 400 + 20);
 					memcpy(Tp_version,(char *)(BaseData_ARR+BMP_Ver_index*9),8);
@@ -56,7 +61,9 @@ void NAND_BMP_Read_checksum(void)
 	#endif
 		
 	CHECK_SUM_NAND = 0;
-	
+	BMP_COUNT = 0;
+	CHECK_SUM_HIGH = 0;
+		
 	if(bmpBuf_kkk==0)
 	{
 	#ifdef SYSUARTPRINTF_p
@@ -94,7 +101,10 @@ void NAND_BMP_Read_checksum(void)
 	   Tp_addr = READ_TAB_FROMSDRAM(Tp_i,1,Tp_bmp_TAB);
 	   Tp_i++;
 		 if(Tp_addr!=0Xffffffff)
-		 check_sum_nand(Tp_addr*2048,Tp_bmp_TAB[0],Tp_bmp_TAB[1]);
+		 {
+		   BMP_COUNT++;
+			 check_sum_nand(Tp_addr*2048,Tp_bmp_TAB[0],Tp_bmp_TAB[1]);
+		 }
 	}
 	
 	CHECK_SUM_NAND_1 = CHECK_SUM_NAND;
