@@ -3,7 +3,7 @@
 
 ** ELF Header Information
 
-    File Name: .\obj\TBNUVA06.axf
+    File Name: .\obj\TBNUVA06_TestMode.axf
 
     Machine class: ELFCLASS32 (32-bit)
     Data encoding: ELFDATA2LSB (Little endian)
@@ -31,8 +31,8 @@
     Program header entries: 1
     Section header entries: 16
 
-    Program header offset: 1093000 (0x0010ad88)
-    Section header offset: 1093032 (0x0010ada8)
+    Program header offset: 1093020 (0x0010ad9c)
+    Section header offset: 1093052 (0x0010adbc)
 
     Section header string table index: 15
 
@@ -52886,7 +52886,7 @@
 
 
 ** Section #14 '.comment' (SHT_PROGBITS)
-    Size   : 36404 bytes
+    Size   : 36424 bytes
 
 
 ** Section #15 '.shstrtab' (SHT_STRTAB)
