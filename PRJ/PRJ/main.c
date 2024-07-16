@@ -143,6 +143,7 @@ extern uint8_t *BaseData_ARR;
 extern  uint8_t *bmpBuf_kkk,*bmpBuf_kkk_bak;
 #endif
 extern  BADMANAGE_TAB_TYPE_U badmanage_str[1];
+void W25Q128_Read(access_TYPE_E x_type);
 /******************************������************************/
 int main(void)
 {
@@ -439,8 +440,15 @@ int main(void)
 	 
 		//if(0)
         
-        NAND_ReadPage(0,0,(uint8_t *)badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));	
-        sprintf(spchar,"READ NANDFLASH BLOCK0 FLAG: 0x%x\r\n",badmanage_str->BAD_MANAGE_str.flag);
+        //NAND_ReadPage(0,0,(uint8_t *)badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
+        W25Q128_Read(access_BLOCK_0_BACKUP);
+        badmanage_str->BAD_MANAGE_str.flag = 0x11223344;
+        SetZuobiao(10, 240);
+        lcd_printf_new("CHANGE FLAG: 0x11223344");
+        NAND_EraseBlock(0);
+        NAND_WritePage(0,0,badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
+        NAND_ReadPage(0,0,(uint8_t *)badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
+        sprintf(spchar,"Write successfully,READ NANDFLASH BLOCK0 FLAG: 0x%x\r\n",badmanage_str->BAD_MANAGE_str.flag);
         SetZuobiao(10, 280);
         lcd_printf_new(spchar);
         while(1);
