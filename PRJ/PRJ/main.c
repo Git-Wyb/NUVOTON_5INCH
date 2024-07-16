@@ -144,6 +144,8 @@ extern  uint8_t *bmpBuf_kkk,*bmpBuf_kkk_bak;
 #endif
 extern  BADMANAGE_TAB_TYPE_U badmanage_str[1];
 void W25Q128_Read(access_TYPE_E x_type);
+extern uint32_t logodata_basedata_BUFFER;
+extern uint8_t *RxBuffer;
 /******************************������************************/
 int main(void)
 {
@@ -338,7 +340,7 @@ int main(void)
     W25Q128_init();
     //W25Q128_test();
 		nandflash_init();    
-    //SDRAM_DATA_INIT();
+    SDRAM_DATA_INIT();
 		
 //	  NAND_EraseBlock(backup_tab_nandflash_start);
   
@@ -441,14 +443,18 @@ int main(void)
 		//if(0)
         
         //NAND_ReadPage(0,0,(uint8_t *)badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
-        W25Q128_Read(access_BLOCK_0_BACKUP);
-        badmanage_str->BAD_MANAGE_str.flag = 0x11223344;
+        //W25Q128_Read(access_BLOCK_0_BACKUP);
+        //badmanage_str->BAD_MANAGE_str.flag = 0x11223344;
+        //SetZuobiao(10, 240);
+        //lcd_printf_new("CHANGE FLAG: 0x11223344");
+        //NAND_EraseBlock(0);
+        //NAND_WritePage(0,0,badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
+        //NAND_ReadPage(0,0,(uint8_t *)badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
+        //sprintf(spchar,"Write successfully,READ NANDFLASH BLOCK0 FLAG: 0x%x\r\n",badmanage_str->BAD_MANAGE_str.flag);
         SetZuobiao(10, 240);
-        lcd_printf_new("CHANGE FLAG: 0x11223344");
-        NAND_EraseBlock(0);
-        NAND_WritePage(0,0,badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
-        NAND_ReadPage(0,0,(uint8_t *)badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
-        sprintf(spchar,"Write successfully,READ NANDFLASH BLOCK0 FLAG: 0x%x\r\n",badmanage_str->BAD_MANAGE_str.flag);
+        lcd_printf_new("READ NANDFLASH BASEDATA Number.4 System image version");
+        NAND_ReadPage(1533*64,0,RxBuffer,2048);
+        sprintf(spchar,"READ successfully,System image version: %c%c%c%c%c%c%c%c\r\n",*(RxBuffer+36),*(RxBuffer+37),*(RxBuffer+38),*(RxBuffer+39),*(RxBuffer+40),*(RxBuffer+41),*(RxBuffer+42),*(RxBuffer+43));
         SetZuobiao(10, 280);
         lcd_printf_new(spchar);
         while(1);
