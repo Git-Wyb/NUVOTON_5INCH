@@ -142,11 +142,11 @@ extern uint8_t *BaseData_ARR;
 
 extern  uint8_t *bmpBuf_kkk,*bmpBuf_kkk_bak;
 #endif
-
+extern  BADMANAGE_TAB_TYPE_U badmanage_str[1];
 /******************************������************************/
 int main(void)
 {
-
+    char spchar[] = {0};
 	//	uint8_t *u8FrameBufPtr, *u8OSDFrameBufPtr,i; 
 	//int cnt;	
 	//void *_ColorSrcBufferPtr2;
@@ -330,14 +330,14 @@ int main(void)
 		REG_OPERATE(REG_SYS_LVRDCR,1,clear);
 		#ifdef POWER_INT_MODE
 		
-	 power_int_init();
+	 //power_int_init();
 		#endif
 		
 		
     W25Q128_init();
     //W25Q128_test();
-		nandflash_init();
-    SDRAM_DATA_INIT();
+		nandflash_init();    
+    //SDRAM_DATA_INIT();
 		
 //	  NAND_EraseBlock(backup_tab_nandflash_start);
   
@@ -361,7 +361,7 @@ int main(void)
 		#ifdef  SYSUARTPRINTF  
 		sysprintf("para.lcd_back_light.brightness=%X\r\n",para.lcd_back_light.brightness);
 		#endif
-	   Backlinght_Control_Init_HARDV4(para.lcd_back_light.brightness);
+	   Backlinght_Control_Init_HARDV4(0);//Turn on the backlight brightness
 	 
 	 
 			voice_tim_init();
@@ -438,8 +438,13 @@ int main(void)
 //	*(uint8_t *)(display_layer_sdram.LCD_FRAME1_BUFFER+4));
 	 
 		//if(0)
-		
-		
+        
+        NAND_ReadPage(0,0,(uint8_t *)badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));	
+        sprintf(spchar,"READ NANDFLASH BLOCK0 FLAG: 0x%x\r\n",badmanage_str->BAD_MANAGE_str.flag);
+        SetZuobiao(10, 280);
+        lcd_printf_new(spchar);
+        while(1);
+	
 	 if(MODE_WORKTEST==WORK_FUNCTION)
 		{
 		while(1)

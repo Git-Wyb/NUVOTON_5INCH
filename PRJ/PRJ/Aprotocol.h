@@ -109,7 +109,7 @@ typedef struct
 {
 	uint8_t touch_sensibility;
 	uint8_t rtc_coarse_value;
-	uint8_t no_vbat_pwr_on_cnt; //没电池开机次数，用于集积月切换
+	uint8_t no_vbat_pwr_on_cnt; //没电池开机次数，用于集积月切换,No battery boot times, for the accumulation of the month switch
 	uint8_t dataclass_1_2_action_count;
 	uint8_t last_poweroff_year;
 	uint8_t last_poweroff_month;

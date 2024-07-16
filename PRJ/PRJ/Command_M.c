@@ -41,7 +41,7 @@ void PWM_Change(uint8_t x_level)
 		pwmWrite(PWM_TIMER1, (PUCHAR)(&pwmvalue), sizeof(pwmvalue));
 }
 
-void Backlinght_Control_Init_HARDV4(uint8_t x_level)  //0 最亮 255最暗
+void Backlinght_Control_Init_HARDV4(uint8_t x_level)  //0 最亮 255最暗,0 brightest 255 darkest
 {
 	
 	 typePWMVALUE pwmvalue;
