@@ -451,8 +451,14 @@ int main(void)
         //NAND_WritePage(0,0,badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
         //NAND_ReadPage(0,0,(uint8_t *)badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
         //sprintf(spchar,"Write successfully,READ NANDFLASH BLOCK0 FLAG: 0x%x\r\n",badmanage_str->BAD_MANAGE_str.flag);
+        SetZuobiao(10, 200);
+        lcd_printf_new("CHANGE NANDFLASH BASEDATA Number.4 System image version: ABCDEFGH");
+        NAND_ReadPage(1533*64,0,RxBuffer,2048);
+        *(RxBuffer+36) = 'A';*(RxBuffer+37) = 'B';*(RxBuffer+38) = 'C';*(RxBuffer+39) = 'D';*(RxBuffer+40) = 'E';*(RxBuffer+41) = 'F';*(RxBuffer+42) = 'G';*(RxBuffer+43) = 'H';
+        NAND_EraseBlock(1533);
+        NAND_WritePage(1533*64,0,RxBuffer,2048);
         SetZuobiao(10, 240);
-        lcd_printf_new("READ NANDFLASH BASEDATA Number.4 System image version");
+        lcd_printf_new("READ NANDFLASH BASEDATA Number.4");
         NAND_ReadPage(1533*64,0,RxBuffer,2048);
         sprintf(spchar,"READ successfully,System image version: %c%c%c%c%c%c%c%c\r\n",*(RxBuffer+36),*(RxBuffer+37),*(RxBuffer+38),*(RxBuffer+39),*(RxBuffer+40),*(RxBuffer+41),*(RxBuffer+42),*(RxBuffer+43));
         SetZuobiao(10, 280);

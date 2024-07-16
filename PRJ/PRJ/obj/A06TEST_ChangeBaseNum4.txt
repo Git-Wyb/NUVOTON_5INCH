@@ -3,7 +3,7 @@
 
 ** ELF Header Information
 
-    File Name: .\obj\A06TEST_ReadBaseNum4.axf
+    File Name: .\obj\A06TEST_ChangeBaseNum4.axf
 
     Machine class: ELFCLASS32 (32-bit)
     Data encoding: ELFDATA2LSB (Little endian)
@@ -31,8 +31,8 @@
     Program header entries: 1
     Section header entries: 16
 
-    Program header offset: 570428 (0x0008b43c)
-    Section header offset: 570460 (0x0008b45c)
+    Program header offset: 570432 (0x0008b440)
+    Section header offset: 570464 (0x0008b460)
 
     Section header string table index: 15
 
@@ -11119,7 +11119,7 @@
         0x00008de4:    e3a0000a    ....    MOV      r0,#0xa
         0x00008de8:    ebfffd91    ....    BL       delay_ms ; 0x8434
         0x00008dec:    ebffec8f    ....    BL       LVD_init_irq ; 0x4030
-        0x00008df0:    e3a010dc    ....    MOV      r1,#0xdc
+        0x00008df0:    e3a010c8    ....    MOV      r1,#0xc8
         0x00008df4:    e3a0000a    ....    MOV      r0,#0xa
         0x00008df8:    ebfff583    ....    BL       SetZuobiao ; 0x640c
         0x00008dfc:    e59f0128    (...    LDR      r0,[pc,#296] ; [0x8f2c] = 0xe200
@@ -16976,8 +16976,8 @@
         0x0000e228:    6d69206d    m im    DCD    1835606125
         0x0000e22c:    20656761    age     DCD    543516513
         0x0000e230:    73726576    vers    DCD    1936876918
-        0x0000e234:    a36e6f69    ion.    DCD    2741923689
-        0x0000e238:    434241ba    .ABC    DCD    1128415674
+        0x0000e234:    3a6e6f69    ion:    DCD    980316009
+        0x0000e238:    43424120     ABC    DCD    1128415520
         0x0000e23c:    47464544    DEFG    DCD    1195787588
         0x0000e240:    00000048    H...    DCD    72
     Region$$Table$$Base
@@ -17138,7 +17138,7 @@
 
 
 ** Section #14 '.comment' (SHT_PROGBITS)
-    Size   : 36428 bytes
+    Size   : 36432 bytes
 
 
 ** Section #15 '.shstrtab' (SHT_STRTAB)
