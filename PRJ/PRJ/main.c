@@ -150,6 +150,7 @@ extern uint8_t *RxBuffer;
 int main(void)
 {
     char spchar[] = {0};
+    char readbf[10] = {0};
 	//	uint8_t *u8FrameBufPtr, *u8OSDFrameBufPtr,i; 
 	//int cnt;	
 	//void *_ColorSrcBufferPtr2;
@@ -340,7 +341,7 @@ int main(void)
     W25Q128_init();
     //W25Q128_test();
 		nandflash_init();    
-    SDRAM_DATA_INIT();
+    //SDRAM_DATA_INIT();
 		
 //	  NAND_EraseBlock(backup_tab_nandflash_start);
   
@@ -451,16 +452,16 @@ int main(void)
         //NAND_WritePage(0,0,badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
         //NAND_ReadPage(0,0,(uint8_t *)badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
         //sprintf(spchar,"Write successfully,READ NANDFLASH BLOCK0 FLAG: 0x%x\r\n",badmanage_str->BAD_MANAGE_str.flag);
-        SetZuobiao(10, 200);
-        lcd_printf_new("Erase IMAGE TAB 0000");
+        //SetZuobiao(10, 200);
+        //lcd_printf_new("Erase IMAGE TAB 0000");
         //NAND_ReadPage(1529*64,0,RxBuffer,2048);
         //*(RxBuffer) = 'A';*(RxBuffer+37) = 'B';*(RxBuffer+38) = 'C';*(RxBuffer+39) = 'D';*(RxBuffer+40) = 'E';*(RxBuffer+41) = 'F';*(RxBuffer+42) = 'G';*(RxBuffer+43) = 'H';
-        NAND_EraseBlock(1529);
+        //NAND_EraseBlock(1529);
         //NAND_WritePage(1533*64,0,RxBuffer,2048);
-        SetZuobiao(10, 240);
-        lcd_printf_new("Erase OK");
-        NAND_ReadPage(1529*64,0,RxBuffer,2048);
-        sprintf(spchar,"READ successfully,IMAGE TAB: 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x\r\n",*(RxBuffer),*(RxBuffer+1),*(RxBuffer+2),*(RxBuffer+3),*(RxBuffer+4),*(RxBuffer+5),*(RxBuffer+6),*(RxBuffer+7));
+        //SetZuobiao(10, 240);
+        //lcd_printf_new("Erase OK");
+        NAND_ReadPage(1529*64,0,readbf,8);
+        sprintf(spchar,"READ successfully,IMAGE TAB: 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x\r\n",readbf[0],readbf[1],readbf[2],readbf[3],readbf[4],readbf[5],readbf[6],readbf[7]);
         SetZuobiao(10, 280);
         lcd_printf_new(spchar);
         while(1);
