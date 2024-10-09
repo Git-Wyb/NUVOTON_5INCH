@@ -451,6 +451,12 @@ int main(void)
         //NAND_WritePage(0,0,badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
         //NAND_ReadPage(0,0,(uint8_t *)badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
         //sprintf(spchar,"Write successfully,READ NANDFLASH BLOCK0 FLAG: 0x%x\r\n",badmanage_str->BAD_MANAGE_str.flag);
+        SetZuobiao(10, 200);
+        lcd_printf_new("CHANGE NANDFLASH BASEDATA Number.98 set value: 00000044");
+        NAND_ReadPage(1533*64,0,RxBuffer,2048);
+        *(RxBuffer+882) = '0';*(RxBuffer+883) = '0';*(RxBuffer+884) = '0';*(RxBuffer+885) = '0';*(RxBuffer+886) = '0';*(RxBuffer+887) = '0';*(RxBuffer+888) = '4';*(RxBuffer+889) = '4';
+        NAND_EraseBlock(1533);
+        NAND_WritePage(1533*64,0,RxBuffer,2048);
         SetZuobiao(10, 240);
         lcd_printf_new("READ NANDFLASH BASEDATA Number.98 LCD Backlight brightness");
         NAND_ReadPage(1533*64,0,RxBuffer,2048);
