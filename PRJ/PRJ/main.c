@@ -452,9 +452,9 @@ int main(void)
         //NAND_ReadPage(0,0,(uint8_t *)badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
         //sprintf(spchar,"Write successfully,READ NANDFLASH BLOCK0 FLAG: 0x%x\r\n",badmanage_str->BAD_MANAGE_str.flag);
         SetZuobiao(10, 240);
-        lcd_printf_new("READ NANDFLASH BASEDATA Number.4 System image version");
+        lcd_printf_new("READ NANDFLASH BASEDATA Number.98 LCD Backlight brightness");
         NAND_ReadPage(1533*64,0,RxBuffer,2048);
-        sprintf(spchar,"READ successfully,System image version: %c%c%c%c%c%c%c%c\r\n",*(RxBuffer+36),*(RxBuffer+37),*(RxBuffer+38),*(RxBuffer+39),*(RxBuffer+40),*(RxBuffer+41),*(RxBuffer+42),*(RxBuffer+43));
+        sprintf(spchar,"READ successfully,LCD Backlight brightness set value: %c%c%c%c%c%c%c%c\r\n",*(RxBuffer+882),*(RxBuffer+883),*(RxBuffer+884),*(RxBuffer+885),*(RxBuffer+886),*(RxBuffer+887),*(RxBuffer+888),*(RxBuffer+889));
         SetZuobiao(10, 280);
         lcd_printf_new(spchar);
         while(1);
