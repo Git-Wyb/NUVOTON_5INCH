@@ -110,17 +110,36 @@ void check_sw234(void) //100ms run one
 
 		if((READ_PIN_SW1_2==SW_ON)||(READ_PIN_SW1_3==SW_ON)||(READ_PIN_SW1_4==SW_ON)||(READ_PIN_SW1_6==SW_ON))
 				{
-					usb_init();
-					if(gs_usb_mount_flag == 1)//U盘已经加载
-					{
-						 SetZuobiao(10, 400);
-		         lcd_printf_new("USB FOUND        ");
-					}
-					if(LOGO_DATA_OUT_FLAG == 3)
-					{
-						 SetZuobiao(10, 380);
-		         lcd_printf_new("LOGO INIT FINISH     ");
-					}
+                    if(TYPE_PRODUCT == PORDUCT_5INCH)
+                    {
+                        usb_init();
+                    }
+                    else if(TYPE_PRODUCT == PORDUCT_7INCH)
+                    {
+                        if((READ_PIN_SW1_3==SW_ON)||(READ_PIN_SW1_4==SW_ON)) //Nuv7 cancel SW1_6
+                        {
+                           usb_init();
+                        }
+                        else if((READ_PIN_SW1_2==SW_ON) && ((FLAG_SW_FINISH&0x01) == 0))
+                        {
+                            usb_init();
+                        }
+                    }
+                    if((READ_PIN_SW1_2==SW_ON) && (TYPE_PRODUCT == PORDUCT_7INCH) && ((FLAG_SW_FINISH&0x01) == 1))
+                    {}//Nuv7 SW2 hex write end don't allways display "FINISH" because Renesas restart.
+                    else
+                    {
+                        if(gs_usb_mount_flag == 1)//U盘已经加载
+                        {
+                            SetZuobiao(10, 400);
+                            lcd_printf_new("USB FOUND        ");
+                        }
+                        if(LOGO_DATA_OUT_FLAG == 3)
+                        {
+                            SetZuobiao(10, 380);
+                            lcd_printf_new("LOGO INIT FINISH     ");
+                        }
+                    }
 				}	
 
 	//	return;
@@ -344,13 +363,17 @@ void Fresh_lcd_dis(void)
 	{
 		return;
 	}
-	
-	if(FLAG_SW_FINISH & 0x01)
-	{
-		 SetZuobiao(10, 400 + 20);
-		 lcd_printf_new("Update Success     ");
-	
-	}
+	if(TYPE_PRODUCT == PORDUCT_7INCH)
+    {}//Nuv7 SW2 hex write end don't allways display "Success" because Renesas restart.
+    else
+    {
+        if(FLAG_SW_FINISH & 0x01)
+        {
+             SetZuobiao(10, 400 + 20);
+             lcd_printf_new("Update Success     ");
+        
+        }
+    }
 	
 	if(FLAG_SW_FINISH & 0x02)
 	{

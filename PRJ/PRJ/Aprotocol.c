@@ -74,7 +74,7 @@ volatile  uint32_t UART_TX_REAL=0,UART_TX_WANT=0;
 extern uint8_t checksum_flag;
 extern int gs_layFlag ;
 uint8_t flag_layer23_draw = 0;																
-																
+extern uint8_t FLAG_SW_FINISH;																
 																
 typedef enum COMM_HANDLE_STATUS
 {
@@ -881,11 +881,20 @@ void comm_handle(void)
 	}
 	
 	
-	
-	if(READ_PIN_SW1_2==SW_ON)//20180928
-	{
-		return;
-	}
+	if(TYPE_PRODUCT == PORDUCT_7INCH)
+    {
+        if((READ_PIN_SW1_2 == SW_ON) && ((FLAG_SW_FINISH&0x01) == 0))
+        {
+            return;
+        }
+    }
+    else
+    {
+        if(READ_PIN_SW1_2==SW_ON)//20180928
+        {
+            return;
+        }
+    }
 	//if((READ_PIN_SW1_3==SW_ON)&&((FLAG_SW_FINISH&0x04)==0))
 	if(READ_PIN_SW1_3==SW_ON)//20180928
 	{
