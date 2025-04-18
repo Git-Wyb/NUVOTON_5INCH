@@ -213,6 +213,7 @@ int main(void)
 	//vpostVAStartTrigger();
    Timer_1ms_Init();
 //Backlinght_Control_Init_HARDV4(128);
+        AUDIO_AMPLIFIER_WORK_modify;
 		display_init();
 	 
 
