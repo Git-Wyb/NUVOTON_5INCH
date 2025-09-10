@@ -263,8 +263,9 @@ uint8_t* vpostGetFrameBuffer(void)
 //		 return (uint8_t *)((uint32_t)u8BufPtr | 0x80000000);
 		
    u8BufPtr = (uint8_t *)malloc((curDisplayDev.u32DevWidth * curDisplayDev.u32DevHeight * u32BytePerPixel)+64);
+    
     u8BufPtr = (uint8_t *)(shift_pointer((uint32_t)u8BufPtr, 32)+32);
-
+    sysprintf("----ADDR----u8FrameBufPtr = 0X%8X\r\n",u8BufPtr);
     outpw(REG_LCM_VA_BADDR0, (uint32_t)((uint32_t)u8BufPtr | 0x80000000));
     outpw(REG_LCM_VA_FBCTRL, inpw(REG_LCM_VA_FBCTRL) & ~(1<<30) & ~VPOSTB_DB_EN);
 

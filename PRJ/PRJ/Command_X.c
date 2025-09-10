@@ -237,6 +237,7 @@ void read_data_from_stm7buffer(void)
 				}
 				//
 				*(uint8_t *)(BaseData_ARR+Tp_i*9+Tp_j) = *(uint8_t *)(logodata_basedata_stm7_BUFFER+Tp_i*8+Tp_j);
+                sysprintf("----1111----no=%d,data1=%x\r\n",Tp_i,*(uint8_t *)(BaseData_ARR+Tp_i*9+Tp_j));
 				#ifdef SYSUARTPRINTF_ActionTimers
 				sysprintf("no=%d,data1=%x\r\n",Tp_i,*(uint8_t *)(BaseData_ARR+Tp_i*9+Tp_j));
 				#endif
@@ -391,6 +392,7 @@ void read_data_from_stm7buffer(void)
 					//*(char  *)(BaseData_ARR+offset2) = '0'+Tp_data/16;
 					//*(char  *)(BaseData_ARR+offset2+1) = '0'+Tp_data%16;
 					convet_hex_to_hex_asccii(Tp_data,(uint8_t   *)(BaseData_ARR+offset2));
+                    sysprintf("----222----no=%d,offset1=%x\r\n",Tp_i+Tp_j,*(uint8_t *)(logodata_basedata_stm7_BUFFER+offset1));
 					#ifdef SYSUARTPRINTF_ActionTimers
 				  sysprintf("no=%d,offset1=%x\r\n",Tp_i+Tp_j,*(uint8_t *)(logodata_basedata_stm7_BUFFER+offset1));
 				  #endif
@@ -400,6 +402,7 @@ void read_data_from_stm7buffer(void)
 					  if(Tp_data == 0) //*(char *)(BaseData_ARR+offset2+1)=0xff;
 						{
 							convet_hex_to_hex_asccii(0xff,(uint8_t   *)(BaseData_ARR+offset2));
+                            sysprintf("----333----\r\n");
 						}
 					}
 					
@@ -1485,6 +1488,7 @@ f_mount(0, "3:", 1);
 			
 		  if((numOfReadBytes_backup != 2048*64) || (res != FR_OK))//???????
 		  {
+              sysprintf("----555---- break!\r\n");
 			    break;
 		  }
 			SDRAM_TO_NANDFLASH(logodata_basedata_BUFFER ,WriteReadAddr.Page,1);
@@ -1523,6 +1527,7 @@ f_mount(0, "3:", 1);
 		//memcpy(BaseData_ARR[4],Tp_no4,9);
 		SDRAM_DATA_INIT();
     LOGO_DATA_OUT_FLAG =0;
+        sysprintf("----888----SDRAM_DATA_INIT\r\n");
 		return 1;
 	}
 	else

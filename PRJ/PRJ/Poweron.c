@@ -410,14 +410,18 @@ void UnitData_NandToSDRAM(uint8_t Tp_field,uint32_t Tp_addr)
 	uint8_t Tp_flag=0;
 	uint16_t Tp_i =0;
 	uint8_t  Tp_cs=0;//cs??
-	
+    NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr/2048,1);
+    //NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[Tp_field],unit_data__B_nandflash_start,1);
+#if 0	
 	retry:	
 	      if(Tp_flag == 0)
 				{
+                    sysprintf("----UnitData_NandToSDRAM-Tp_flag=0---\r\n");
 				NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr/2048,1);
 				}
 				if(Tp_flag == 1)
 				{
+                    sysprintf("----UnitData_NandToSDRAM-Tp_flag=1---\r\n");
 				NANDFLASH_TO_SDRAM(logodata_sdrambuffer_addr_arry[Tp_field],unit_data__B_nandflash_start,1);
 				}
 				
@@ -427,27 +431,30 @@ void UnitData_NandToSDRAM(uint8_t Tp_field,uint32_t Tp_addr)
 				 Tp_cs = Tp_cs + *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field]+UINT_START1_OFFSET+Tp_i);
 			 }
 			 
-			 #ifdef SYSUARTPRINTF_ActionTimers
+			 //#ifdef SYSUARTPRINTF_ActionTimers
 			 sysprintf("Tp_cs=%X,Tp_cs_offset=%X\r\n",Tp_cs,*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS1_OFFSET));
-			 #endif
+			 //#endif
 			 
-			 if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS1_OFFSET) != Tp_cs)
+			 if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS1_OFFSET) != (uint8_t)Tp_cs)
 			 //if(1)
 			 {
+                 sysprintf("----logodata_sdrambuffer_addr_arry+CS1[%d] = 0X%x  != Tp_cs = 0X%x----\r\n",Tp_field,*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS1_OFFSET),Tp_cs);
 				  Tp_cs = 0; 
 				  for(Tp_i = 0;Tp_i <=MAX_LOGO_UINT_NUM; Tp_i++)
 			    {
 				     Tp_cs = Tp_cs + *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_START2_OFFSET +Tp_i);
 			    }
-					if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] +UINT_CS2_OFFSET) != Tp_cs)
+					if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] +UINT_CS2_OFFSET) != (uint8_t)Tp_cs)
 					{
+                        sysprintf("----logodata_sdrambuffer_addr_arry+CS2[%d] = 0X%x != Tp_cs = 0X%x----\r\n",Tp_field,*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] +UINT_CS2_OFFSET),Tp_cs);
 						  Tp_cs = 0; 
 						  for(Tp_i = 0;Tp_i <=MAX_LOGO_UINT_NUM; Tp_i++)
 			        {
 				         Tp_cs = Tp_cs + *(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_START3_OFFSET +Tp_i);
 			        }
-							if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS3_OFFSET) != Tp_cs)
+							if(*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] + UINT_CS3_OFFSET) != (uint8_t)Tp_cs)
 							{
+                                sysprintf("----logodata_sdrambuffer_addr_arry+CS3[%d] = 0X%x != Tp_cs = 0X%x----\r\n",Tp_field,*(uint8_t *)(logodata_sdrambuffer_addr_arry[Tp_field] +UINT_CS3_OFFSET),Tp_cs);
 								if(Tp_flag ==0)
 								{
 									Tp_flag = 1;
@@ -472,6 +479,8 @@ void UnitData_NandToSDRAM(uint8_t Tp_field,uint32_t Tp_addr)
 			 }
 			 if(Tp_flag ==0)  SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],unit_data__B_nandflash_start,1);
 			 if(Tp_flag ==1)  SDRAM_TO_NANDFLASH(logodata_sdrambuffer_addr_arry[Tp_field],Tp_addr/2048,1);
+             #endif
+             sysprintf("----20250429----UnitData_NandToSDRAM--Tp_flag = %d----\r\n",Tp_flag);
 }
 
 

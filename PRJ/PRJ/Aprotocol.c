@@ -3074,6 +3074,7 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
                i_return_flag        =  RestoreDeviceData( ); // CheckFromDir("3:/BELMONT_BACKUP","0:");//RestoreDeviceData( );
 							if(systerm_error_status.bits.usb_cannot_find_hexortxt)
 							{
+                                sysprintf("----systerm_error_status.bits.usb_cannot_find_hexortxt = %d\r\n",systerm_error_status.bits.usb_cannot_find_hexortxt);
 								return 1;
 							}
 							if(i_return_flag==0)  

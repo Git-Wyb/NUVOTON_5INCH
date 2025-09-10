@@ -565,10 +565,10 @@ void DATACLASS1_Check_Write(void)
 void DATACLASS1_Check_Read(void)
 {
 	SpiFlash_NormalRead(W_block255_sector14,Dataclass1_U.U8_ARRY,NAND_CHECKSUM_IN_SPIFLASH*4);
-	#ifdef  SYSUARTPRINTF_ActionTimers 
-	sysprintf("CHECKSUM Read=%X,%X,%X,%X,%X,%X\r\n",Dataclass1_U.U32_ARRY[0],Dataclass1_U.U32_ARRY[1],Dataclass1_U.U32_ARRY[2],
+	//#ifdef  SYSUARTPRINTF_ActionTimers 
+	sysprintf("----999----CHECKSUM Read=%X,%X,%X,%X,%X,%X\r\n",Dataclass1_U.U32_ARRY[0],Dataclass1_U.U32_ARRY[1],Dataclass1_U.U32_ARRY[2],
 	                                 Dataclass1_U.U32_ARRY[3],Dataclass1_U.U32_ARRY[4],Dataclass1_U.U32_ARRY[5]);
-	#endif
+	//#endif
 }
 
 

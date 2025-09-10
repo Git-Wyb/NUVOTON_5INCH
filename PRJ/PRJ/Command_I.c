@@ -216,7 +216,7 @@ void basedata_ram_to_sdram(void)
 						      Tp_char++;
           }
 					sprintf((char *)(BaseData_ARR+BASE_data_checksum*9),"%08X",Tp_checksum2);
-					
+				sysprintf("----444----Tp_checksum2 = %08X",Tp_checksum2);	
 				 memcpy((uint8_t*)logodata_basedata_BUFFER,BaseData_ARR, logodata_Basedata_SIZE);
 				 memcpy((uint8_t*)(logodata_basedata_BUFFER +Basedata_copy0),BaseData_ARR,logodata_Basedata_SIZE);
 		memcpy((uint8_t*)(logodata_basedata_BUFFER +Basedata_copy1),BaseData_ARR,logodata_Basedata_SIZE);

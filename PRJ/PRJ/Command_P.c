@@ -440,9 +440,9 @@ uint8_t SDRAM_TO_NANDFLASH(uint32_t x_sdram_start,uint32_t x_nandflash_start,uin
 		uint8_t  DATA_U8[4];
 	}Tp_CHECK;
 
-	#ifdef  SYSUARTPRINTF_ActionTimers 
+	//#ifdef  SYSUARTPRINTF_ActionTimers 
 	sysprintf("DDR TO NAND=0X%X\r\n",x_nandflash_start/64);
-	#endif
+	//#endif
 	
 	
 	rewrite:
@@ -492,9 +492,10 @@ uint8_t SDRAM_TO_NANDFLASH(uint32_t x_sdram_start,uint32_t x_nandflash_start,uin
 		
 		if(NAND_WritePage(WriteReadAddr.Page,0,TX_NEW, NAND_PAGE_SIZE))
 		{
-			#ifdef  SYSUARTPRINTF 
+
+			//#ifdef  SYSUARTPRINTF 
 			sysprintf("BAD BLOCK MARK");
-			#endif
+			//#endif
 			BAD_BLOCK_MARK(BAD_BLOCK_CHANGE(WriteReadAddr.Page/64));
 			goto rewrite;
 			//SDRAM_TO_NANDFLASH(x_sdram_start,x_nandflash_start,x_block_num);
@@ -525,9 +526,9 @@ uint8_t SDRAM_TO_NANDFLASH(uint32_t x_sdram_start,uint32_t x_nandflash_start,uin
 		NAND_ReadPage(WriteReadAddr.Page,0,RxBuffer, NAND_PAGE_SIZE);
 		if(memcmp(TX_NEW,RxBuffer,NAND_PAGE_SIZE)!=0)
 		{
-			#ifdef  SYSUARTPRINTF 
+			//#ifdef  SYSUARTPRINTF 
 			sysprintf("BAD BLOCK MARK");
-			#endif
+			//#endif
 			BAD_BLOCK_MARK(BAD_BLOCK_CHANGE(WriteReadAddr.Page/64));
 			goto rewrite;
 			//SDRAM_TO_NANDFLASH(x_sdram_start,x_nandflash_start,x_block_num);
@@ -544,6 +545,7 @@ uint8_t SDRAM_TO_NANDFLASH(uint32_t x_sdram_start,uint32_t x_nandflash_start,uin
 	    {
 				if((x_nandflash_start+Tp_i-63)==checksum_addr_nand_Arr[Tp_j])
 				{
+                    sysprintf("----777----checksum_addr_nand_Arr[%d] = %08X\r\n",Tp_j,checksum_addr_nand_Arr[Tp_j]);
 					switch(Tp_j)
 					{
 						case access_BLOCK_1967_BASEDATA:
@@ -554,6 +556,7 @@ uint8_t SDRAM_TO_NANDFLASH(uint32_t x_sdram_start,uint32_t x_nandflash_start,uin
 						case access_BLOCK_1966_UNIT:
 							  LOG_FLAG|=0X02;
 						     LOG_TIME = time1ms_count;
+                             sysprintf("----888----access_BLOCK_1966_UNIT\r\n");
 							  // W25Q128_Write(access_BLOCK_1966_UNIT);
 							  break;
 						case access_BLOCK_1532_TAB3:
@@ -606,9 +609,9 @@ uint8_t NANDFLASH_TO_SDRAM(uint32_t x_sdram_start,uint32_t x_nandflash_start,uin
 		uint8_t  DATA_U8[4];
 	}Tp_CHECK;
 	
-	#ifdef  SYSUARTPRINTF_ActionTimers 
-	sysprintf("NAND TO DDR=0X%X\r\n",x_nandflash_start/64);
-	#endif
+	//#ifdef  SYSUARTPRINTF_ActionTimers 
+	sysprintf("---1111----NANDFLASH_TO_SDRAM,NAND TO DDR=0X%X\r\n",x_nandflash_start/64);
+	//#endif
 	
 	
 	Tp_CHECK.DATA_U32 = 0;
@@ -660,6 +663,7 @@ uint8_t NANDFLASH_TO_SDRAM(uint32_t x_sdram_start,uint32_t x_nandflash_start,uin
 				{
 					if(Dataclass1_U.U32_ARRY[Tp_j] != Tp_CHECK.DATA_U32)
 					{
+                        sysprintf("---1112---Dataclass1_U.U32_ARRY[%d]=0X%x != Tp_CHECK.DATA_U320=X%X\r\n",Tp_j,Dataclass1_U.U32_ARRY[Tp_j],Tp_CHECK.DATA_U32);
 						switch(Tp_j)
 					  {
 						   case access_BLOCK_1967_BASEDATA:
