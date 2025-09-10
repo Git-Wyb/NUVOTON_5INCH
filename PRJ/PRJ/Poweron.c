@@ -61,7 +61,7 @@ extern uint8_t touch_send_imm;
 extern volatile uint16_t command_D8_D9_time;
 //extern uint8_t *Tp_Image_Buf;
 
-char SOFT_VERSION[] = "TBNUVA06";
+char SOFT_VERSION[] = "TB251710";
  uint8_t flag_AB=0;
 
 uint8_t LOGO_ERR = 0;
