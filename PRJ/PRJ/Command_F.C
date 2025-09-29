@@ -11,6 +11,7 @@
 #include "rtc.h"
 #include "etimer.h"
 #include "display.h"
+#include "gpio.h"
 
 extern uint32_t logodata_sdrambuffer_addr_arry[16];
 extern  BADMANAGE_TAB_TYPE_U badmanage_str[1];
@@ -44,6 +45,24 @@ void Display_checksum(void)
 			 }
 }
 
+void sysprintf_tx_checksum(PINT8 pcStr,...);
+void uart0_tx_checksum(void)
+{
+    char tx_version[9]={0};
+    if(checksum_flag == 1)
+    {
+        memcpy(tx_version,(char *)(BaseData_ARR+LCD_Ver_index*9),8);
+        sysprintf_tx_checksum("LCD VERSION   = %8s\n",tx_version);
+
+        memcpy(tx_version,(char *)(BaseData_ARR+BMP_Ver_index*9),8);
+        sysprintf_tx_checksum("BMP VERSION   = %8s\n",tx_version);
+
+        memcpy(tx_version,(char *)(BaseData_ARR+Master_Ver_index*9),8);
+        sysprintf_tx_checksum("MAIN VERSION  = %8s\n",tx_version);
+
+        sysprintf_tx_checksum("NAND Chechsum = 0x%08X\n",CHECK_SUM_NAND_1);
+    }
+}
 
 void NAND_BMP_Read_checksum(void)
 {
@@ -145,17 +164,27 @@ void RTC_CLKOUT(void)
 	REG_OPERATE(REG_SYS_GPB_MFPL,0x00000F00,set);
 	REG_OPERATE(REG_CLK_PCLKEN0,1<<4,set);//TIM0 CLK ENABLE
 	REG_OPERATE(REG_CLK_DIVCTL8,3<<16,set);//32768 AS CLK
+    //REG_OPERATE(REG_CLK_DIVCTL8,3<<16,clear);//XIN 12M
 	//ETIMER_Open(0,ETIMER_TOGGLE_MODE,20);
 	//Frequency = TMRx_CLK / ((PRESCALE + 1) * TCMP)
 	//32.768k/2=16.384k toggle
 
-	outpw(REG_ETMR0_CMPR, 2);
+	outpw(REG_ETMR0_CMPR, 2);//2->32.768/4; 3->32.768/6; 4->32.768/8
   outpw(REG_ETMR0_PRECNT, 0);
   outpw(REG_ETMR0_CTL, 1 | (1<<5));
 	
 	ETIMER_Start(0);
 }
 
+//INT32 GPIO_OpenBit(GPIO_PORT port, UINT32 bit, GPIO_DIR direction, GPIO_PULL pull);
+void rtc_clkout_1Hz(void)
+{
+    uint32_t temp;
+    temp = inpw(REG_SYS_GPH_MFPL);
+    temp = (temp & ~0xF0000) | 0xD0000;
+    outpw(REG_SYS_GPH_MFPL, temp);
+    //GPIO_OpenBit(0x1C0,BIT4,1,0);//test
+}
 
 void RTC_CLKSTOP(void)
 {

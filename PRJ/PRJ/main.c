@@ -142,7 +142,10 @@ extern uint8_t *BaseData_ARR;
 
 extern  uint8_t *bmpBuf_kkk,*bmpBuf_kkk_bak;
 #endif
-
+UINT32 re_adj = 0Xffffffff;
+UINT32 resta = 0xff;
+UINT8 Wbuff[5] = {0X00,0X00,0XA5,0XB5};
+UINT8 Rbuff[5] = {0};
 /******************************������************************/
 int main(void)
 {
@@ -200,10 +203,7 @@ int main(void)
 	#ifdef POWER_INT_MODE
 	 power_checkon();
 	 #endif
-		
-		
-		//nandflash_init();
-	
+        
 	
 //	memset(u8FrameBufPtr,0x55,800*480*2);
 //	delay_ms(5000);
@@ -292,9 +292,30 @@ int main(void)
 		sysprintf("REG_USBD_OPER=%X\r\n",REG_USBD_OPER);
 	   #endif
 	  protocol_uart_init();
-	
-		
+		rtc_clkout_1Hz();
 		rtc_init();
+        RTC_CLKOUT();
+        
+        while(1);
+        /*
+        re_adj = 0x00000900;
+        
+		resta = RTC_WriteEnable(1);
+		re_adj = inp32(REG_RTC_FREQADJ);
+        re_adj = 0x00000700;
+        resta = RTC_WriteEnable(1);
+        outp32(REG_RTC_FREQADJ,re_adj);
+        re_adj = 0x00000900;
+        resta = RTC_WriteEnable(1);
+        re_adj = inp32(REG_RTC_FREQADJ);
+        re_adj = (re_adj | 0x000000FF);*/
+        resta = RTC_WriteEnable(1);
+		re_adj = inp32(REG_RTC_FREQADJ);
+        resta = RTC_DoFrequencyCompensation(3277600);
+        resta = 0xaa;
+        resta = RTC_WriteEnable(1);
+		re_adj = inp32(REG_RTC_FREQADJ);
+        while(1);
 		//AD_init();
 		
 		//#ifdef POWER_AD_MODE
@@ -313,9 +334,9 @@ int main(void)
 			MODE_WORKTEST=check_io_state(MODE_SELECT);
 		}
 		while(MODE_WORKTEST==STATUS_Err);
-		MODE_WORKTEST = WORK_TEST;
+		//MODE_WORKTEST = WORK_TEST;
 		TYPE_PRODUCT = PORDUCT_5INCH;
-		//MODE_WORKTEST =WORK_FUNCTION;
+		MODE_WORKTEST =WORK_FUNCTION;
 		
 	 while((get_main_pwr_ad_value()<VOLT_WORK));
 	 LED_POWER_ON();
@@ -338,7 +359,11 @@ int main(void)
     //W25Q128_test();
 		nandflash_init();
     SDRAM_DATA_INIT();
-		
+    
+    SpiFlash_NormalRead(W_block128_sector0,Rbuff,4);
+	//SpiFlash_SectorErase(W_block128_sector0);
+    //SpiFlash_NormalPageProgram(W_block128_sector0,Wbuff,4);
+    //SpiFlash_NormalRead(W_block128_sector0,Rbuff,4);
 //	  NAND_EraseBlock(backup_tab_nandflash_start);
   
 //		NAND_EraseBlock(1533);

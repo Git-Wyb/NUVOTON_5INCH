@@ -1001,8 +1001,8 @@ over_flag:
 				 lcd_printf_new("Update Success     ");
 				 FLAG_SW_FINISH = FLAG_SW_FINISH|0x01;
 			 }
-			// *(uint8_t *)(BaseData_ARR+Master_Ver_index*9+8) = 8;
-  		// memcpy(BaseData_ARR+Master_Ver_index*9, ver_temp , *(uint8_t *)(BaseData_ARR+Master_Ver_index*9+8));
+			 *(uint8_t *)(BaseData_ARR+Master_Ver_index*9+8) = 8;
+  		 memcpy(BaseData_ARR+Master_Ver_index*9, ver_temp , *(uint8_t *)(BaseData_ARR+Master_Ver_index*9+8));
 			 
       //////////////////// TIM6_Init((50000-1),(108-1));	//for touch send  NVIC_EnableIRQ(TIM7_IRQn);
 		  //////////////// start_tim6(50000);  

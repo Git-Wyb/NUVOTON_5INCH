@@ -990,7 +990,7 @@ void rtc_init(void)
     RTC_EnableClock(TRUE);
     //RTC ��ʼ��
     RTC_Init();
-	
+ 
 	  RTC_Read(RTC_CURRENT_TIME,&pwr_on_time_ground);
 			
 			#ifdef  SYSUARTPRINTF  

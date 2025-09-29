@@ -12,5 +12,7 @@ int AreaReadCmdF(char cmd, int filed, int idx, char *buf, int *len);
 void RTC_CLKOUT(void);
 void RTC_CLKSTOP(void);
 void Display_checksum(void);
+void uart0_tx_checksum(void);
+void rtc_clkout_1Hz(void);
 #endif
 

@@ -330,8 +330,12 @@ void OneSecondProcess(void)
 						lcd_printf_new("ERROR: Incorrect DIP-SW settings");
 					}
 					NAND_BMP_Read_checksum();
-	        Display_checksum();
-	        while(1);
+                    Display_checksum();
+                    while(1)
+                    {
+                        uart0_tx_checksum();
+                        sysDelay(1000);
+                    }
 				}
 					
 				if(READ_PIN_SW1_2==SW_ON)

@@ -29,6 +29,10 @@ cyw317164627 on 2023/5/23上午9:47:51
 2024.06.12  TBNUVA06  checksum：C190  下午发给了客人。
 编译器版本改为了V5.06 update 5(build 528)生成的A06版本，与软件陈工的编译器版本一样。
 
+2025.09.29  测试用：①测试RTC频率补偿输出，②SW全部ON串口0发送checksum，
+③SW_2+SW_6更新图像和MAIN软件完成后，关机，SW6个全ON，开机，可能不显示MAIN版本，
+改动：SW_2更新完MAIN时将版本号写入nond(BaseData_ARR+Master_Ver_index*9)。但这样改了之后，更新MAIN完成之后开机不显示“软件已更新，请重新上电”了。
+
 
 
 
