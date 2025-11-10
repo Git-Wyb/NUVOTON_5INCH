@@ -44,10 +44,10 @@ static VPOST_T DEF_YIDU = {
     0,                              /*!< MPU mode */
     VPOSTB_COLORTYPE_16M,           /*!< Display colors */
     VPOSTB_DEVICE_SYNC_HIGHCOLOR,   /*!< Type of display panel */
-    0x020F03CF,                     /*!< CRTCSIZE register value */
+    0x020F03CF,                     /*!< CRTCSIZE register value *///0x01F00330
     0x01e00320,                     /*!< CRTCDEND register value */
     0x03510321,                     /*!< CRTCHR register value */
-    0x03a80378,                     /*!< CRTCHSYNC register value */
+    0x03a80378,                     /*!< CRTCHSYNC register value *///0x03800328
     0x01E601E3                      /*!< CRTCVR register value */
 };
 

@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "Command_F.C": "cpp"
+        "Command_F.C": "cpp",
+        "DISPLAY.C": "cpp"
     }
 }
