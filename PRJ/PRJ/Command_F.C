@@ -44,6 +44,24 @@ void Display_checksum(void)
 			 }
 }
 
+void sysprintf_tx_checksum(PINT8 pcStr,...);
+void uart0_tx_checksum(void)
+{
+    char tx_version[9]={0};
+    if(checksum_flag == 1)
+    {
+        memcpy(tx_version,(char *)(BaseData_ARR+LCD_Ver_index*9),8);
+        sysprintf_tx_checksum("LCD VERSION   = %8s\n",tx_version);
+
+        memcpy(tx_version,(char *)(BaseData_ARR+BMP_Ver_index*9),8);
+        sysprintf_tx_checksum("BMP VERSION   = %8s\n",tx_version);
+
+        memcpy(tx_version,(char *)(BaseData_ARR+Master_Ver_index*9),8);
+        sysprintf_tx_checksum("MAIN VERSION  = %8s\n",tx_version);
+
+        sysprintf_tx_checksum("NAND Chechsum = 0x%08X\n",CHECK_SUM_NAND_1);
+    }
+}
 
 void NAND_BMP_Read_checksum(void)
 {

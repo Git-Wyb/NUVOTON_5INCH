@@ -683,24 +683,43 @@ void SDRAM_DATA_INIT(void)
   }
 	
 	#endif
-	
-	
-	if((READ_PIN_SW1_6!=SW_ON)&&
-		 ((badmanage_str->BAD_MANAGE_str.flag!=BAD_BLOCK_LOCK)||(Tp_CHECK.DATA_U32!=badmanage_str->BAD_MANAGE_str.backup_checksum)||(badmanage_str->BAD_MANAGE_str.ERR_NUMBER>BAD_BLOCK_TOTAL))&&
-	   (MODE_WORKTEST==WORK_FUNCTION)) 
-	{		
-	
-	W25Q128_Read(access_BLOCK_0_BACKUP);
-	#ifdef  SYSUARTPRINTF_ActionTimers 
-	//sysprintf("badmanage_str->BAD_MANAGE_str.flag=0x%08x,badmanage_str->BAD_MANAGE_str.num=0x%08x\r\n",badmanage_str->BAD_MANAGE_str.flag,badmanage_str->BAD_MANAGE_str.ERR_NUMBER);
-	#endif
-	NAND_EraseBlock(backup_tab_nandflash_start);
-	NAND_WritePage(backup_tab_nandflash_start,0,badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
-	power_checkreset();
-	//HAL_NVIC_SystemReset( );
-	while(1);
-	
-	}
+	if(TYPE_PRODUCT == PORDUCT_5INCH)
+    {
+        if((READ_PIN_SW1_6!=SW_ON)&&
+             ((badmanage_str->BAD_MANAGE_str.flag!=BAD_BLOCK_LOCK)||(Tp_CHECK.DATA_U32!=badmanage_str->BAD_MANAGE_str.backup_checksum)||(badmanage_str->BAD_MANAGE_str.ERR_NUMBER>BAD_BLOCK_TOTAL))&&
+           (MODE_WORKTEST==WORK_FUNCTION)) 
+        {		
+ 
+        W25Q128_Read(access_BLOCK_0_BACKUP);
+        #ifdef  SYSUARTPRINTF_ActionTimers 
+        //sysprintf("badmanage_str->BAD_MANAGE_str.flag=0x%08x,badmanage_str->BAD_MANAGE_str.num=0x%08x\r\n",badmanage_str->BAD_MANAGE_str.flag,badmanage_str->BAD_MANAGE_str.ERR_NUMBER);
+        #endif
+        NAND_EraseBlock(backup_tab_nandflash_start);
+        NAND_WritePage(backup_tab_nandflash_start,0,badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
+        power_checkreset();
+        //HAL_NVIC_SystemReset( );
+        while(1);
+        
+        }
+    }
+    else if(TYPE_PRODUCT == PORDUCT_7INCH)
+    {
+        if(((badmanage_str->BAD_MANAGE_str.flag!=BAD_BLOCK_LOCK)||(Tp_CHECK.DATA_U32!=badmanage_str->BAD_MANAGE_str.backup_checksum)||(badmanage_str->BAD_MANAGE_str.ERR_NUMBER>BAD_BLOCK_TOTAL))&&
+           (MODE_WORKTEST==WORK_FUNCTION)) 
+        {		
+        
+        W25Q128_Read(access_BLOCK_0_BACKUP);
+        #ifdef  SYSUARTPRINTF_ActionTimers 
+        //sysprintf("badmanage_str->BAD_MANAGE_str.flag=0x%08x,badmanage_str->BAD_MANAGE_str.num=0x%08x\r\n",badmanage_str->BAD_MANAGE_str.flag,badmanage_str->BAD_MANAGE_str.ERR_NUMBER);
+        #endif
+        NAND_EraseBlock(backup_tab_nandflash_start);
+        NAND_WritePage(backup_tab_nandflash_start,0,badmanage_str->BAD_MANAGE_arr,sizeof(badmanage_str->BAD_MANAGE_arr));
+        power_checkreset();
+        //HAL_NVIC_SystemReset( );
+        while(1);
+        
+        }
+    }
 	
 	if(MODE_WORKTEST == WORK_TEST)
 	{
@@ -1075,11 +1094,11 @@ void init_gpio(void)
 			REG_OPERATE(REG_SYS_GPD_MFPL,0XF0000000,clear);
 			GPIO_OpenBit(GPIOD,BIT7,DIR_INPUT,PULL_UP);
 			#ifdef  SYSUARTPRINTF 
-			if(READ_PRODUCTTYPE==PORDUCT_7INCH)
+			if(TYPE_PRODUCT==PORDUCT_7INCH)
 			{
 				sysprintf("product is inch7\r\n");
 			}
-			else if(READ_PRODUCTTYPE==PORDUCT_5INCH)
+			else if(TYPE_PRODUCT==PORDUCT_5INCH)
 			{
 				sysprintf("product is inch5\r\n");
 			}

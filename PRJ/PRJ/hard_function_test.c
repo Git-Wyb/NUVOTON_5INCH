@@ -205,7 +205,7 @@ void hard_function_test(void)
 	switch(test_e)
 	{
 		case test_Reset:
-			  if(READ_PRODUCTTYPE==PORDUCT_5INCH)
+			  if(TYPE_PRODUCT==PORDUCT_5INCH)
 				{
 					SCREEN_CONTROL133_1;
 				  SCREEN_CONTROL134_0;
@@ -222,7 +222,7 @@ void hard_function_test(void)
 			    memset((void *)(display_layer_sdram.LCD_CACHE_BUFFER&(~0x80000000)),0xff,800*480*2);
 		      SetZuobiao(10, 400 + 40);
 		      lcd_printf_new("ONLY-DIP-SW1-ON ");
-		
+  
 		      test_e = SW_DIP1_ON_wait;
 		      break;
 		case SW_DIP1_ON_wait:
@@ -264,14 +264,17 @@ void hard_function_test(void)
 					{
 						LED_FLASHERR_OFF();
 					}
-					if(READ_PIN_SW5==SW_ON)
-					{
-						Tp_sw_count++;
-					}
-					if(READ_PIN_SW1_6==SW_ON)
-					{
-						Tp_sw_count++;
-					}
+                    if(TYPE_PRODUCT == PORDUCT_5INCH)
+                    {
+                        if(READ_PIN_SW5==SW_ON)
+                        {
+                            Tp_sw_count++;
+                        }
+                        if(READ_PIN_SW1_6==SW_ON)
+                        {
+                            Tp_sw_count++;
+                        }
+                    }
 					if((Tp_sw_count==1)&&(READ_PIN_SW1_1==SW_ON))
 					{
 						test_e = SW_DIP1_OFF_dis;
@@ -326,18 +329,28 @@ void hard_function_test(void)
 						Tp_sw_count++;
 						LED_FLASHERR_OFF();
 					}
-					if(READ_PIN_SW5==SW_OFF)
-					{
-						Tp_sw_count++;
-					}
-					if(READ_PIN_SW1_6==SW_OFF)
-					{
-						Tp_sw_count++;
-					}
-					if(Tp_sw_count==6)
-					{
-						test_e = SW_DIP2_ON_dis;
-					}
+                    if(TYPE_PRODUCT == PORDUCT_5INCH)
+                    {
+                        if(READ_PIN_SW5==SW_OFF)
+                        {
+                            Tp_sw_count++;
+                        }
+                        if(READ_PIN_SW1_6==SW_OFF)
+                        {
+                            Tp_sw_count++;
+                        }
+                        if(Tp_sw_count==6)
+                        {
+                            test_e = SW_DIP2_ON_dis;
+                        }
+                    }
+                    else if(TYPE_PRODUCT == PORDUCT_7INCH)
+                    {
+                        if(Tp_sw_count == 4)
+                        {
+                            test_e = SW_DIP2_ON_dis;
+                        }
+                    }
 					
 				   break;
 			case SW_DIP2_ON_dis:
@@ -386,14 +399,17 @@ void hard_function_test(void)
 					{
 						LED_FLASHERR_OFF();
 					}
-					if(READ_PIN_SW5==SW_ON)
-					{
-						Tp_sw_count++;
-					}
-					if(READ_PIN_SW1_6==SW_ON)
-					{
-						Tp_sw_count++;
-					}
+                    if(TYPE_PRODUCT == PORDUCT_5INCH)
+                    {
+                        if(READ_PIN_SW5==SW_ON)
+                        {
+                            Tp_sw_count++;
+                        }
+                        if(READ_PIN_SW1_6==SW_ON)
+                        {
+                            Tp_sw_count++;
+                        }
+                    }
 					if((Tp_sw_count==1)&&(READ_PIN_SW1_2==SW_ON))
 					{
 						test_e = SW_DIP2_OFF_dis;
@@ -448,18 +464,28 @@ void hard_function_test(void)
 						Tp_sw_count++;
 						LED_FLASHERR_OFF();
 					}
-					if(READ_PIN_SW5==SW_OFF)
-					{
-						Tp_sw_count++;
-					}
-					if(READ_PIN_SW1_6==SW_OFF)
-					{
-						Tp_sw_count++;
-					}
-					if(Tp_sw_count==6)
-					{
-						test_e = SW_DIP3_ON_dis;
-					}
+                    if(TYPE_PRODUCT == PORDUCT_5INCH)
+                    {
+                        if(READ_PIN_SW5==SW_OFF)
+                        {
+                            Tp_sw_count++;
+                        }
+                        if(READ_PIN_SW1_6==SW_OFF)
+                        {
+                            Tp_sw_count++;
+                        }
+                        if(Tp_sw_count==6)
+                        {
+                            test_e = SW_DIP3_ON_dis;
+                        }
+                    }
+                    else if(TYPE_PRODUCT == PORDUCT_7INCH)
+                    {
+                        if(Tp_sw_count == 4)
+                        {
+                            test_e = SW_DIP3_ON_dis;
+                        }
+                    }
 					
 				   break;
 			case SW_DIP3_ON_dis:
@@ -508,14 +534,17 @@ void hard_function_test(void)
 					{
 						LED_FLASHERR_OFF();
 					}
-					if(READ_PIN_SW5==SW_ON)
-					{
-						Tp_sw_count++;
-					}
-					if(READ_PIN_SW1_6==SW_ON)
-					{
-						Tp_sw_count++;
-					}
+                    if(TYPE_PRODUCT == PORDUCT_5INCH)
+                    {
+                        if(READ_PIN_SW5==SW_ON)
+                        {
+                            Tp_sw_count++;
+                        }
+                        if(READ_PIN_SW1_6==SW_ON)
+                        {
+                            Tp_sw_count++;
+                        }
+                    }
 					if((Tp_sw_count==1)&&(READ_PIN_SW1_3==SW_ON))
 					{
 						test_e = SW_DIP3_OFF_dis;
@@ -570,18 +599,28 @@ void hard_function_test(void)
 						Tp_sw_count++;
 						LED_FLASHERR_OFF();
 					}
-					if(READ_PIN_SW5==SW_OFF)
-					{
-						Tp_sw_count++;
-					}
-					if(READ_PIN_SW1_6==SW_OFF)
-					{
-						Tp_sw_count++;
-					}
-					if(Tp_sw_count==6)
-					{
-						test_e = SW_DIP4_ON_dis;
-					}
+                    if(TYPE_PRODUCT == PORDUCT_5INCH)
+                    {
+                        if(READ_PIN_SW5==SW_OFF)
+                        {
+                            Tp_sw_count++;
+                        }
+                        if(READ_PIN_SW1_6==SW_OFF)
+                        {
+                            Tp_sw_count++;
+                        }
+                        if(Tp_sw_count==6)
+                        {
+                            test_e = SW_DIP4_ON_dis;
+                        }
+                    }
+                    else if(TYPE_PRODUCT == PORDUCT_7INCH)
+                    {
+                        if(Tp_sw_count == 4)
+                        {
+                            test_e = SW_DIP4_ON_dis;
+                        }
+                    }
 					
 				   break;
 				case SW_DIP4_ON_dis:
@@ -630,14 +669,17 @@ void hard_function_test(void)
 					{
 						LED_FLASHERR_OFF();
 					}
-					if(READ_PIN_SW5==SW_ON)
-					{
-						Tp_sw_count++;
-					}
-					if(READ_PIN_SW1_6==SW_ON)
-					{
-						Tp_sw_count++;
-					}
+                    if(TYPE_PRODUCT == PORDUCT_5INCH)
+                    {
+                        if(READ_PIN_SW5==SW_ON)
+                        {
+                            Tp_sw_count++;
+                        }
+                        if(READ_PIN_SW1_6==SW_ON)
+                        {
+                            Tp_sw_count++;
+                        }
+                    }
 					if((Tp_sw_count==1)&&(READ_PIN_SW1_4==SW_ON))
 					{
 						test_e = SW_DIP4_OFF_dis;
@@ -692,18 +734,28 @@ void hard_function_test(void)
 						Tp_sw_count++;
 						LED_FLASHERR_OFF();
 					}
-					if(READ_PIN_SW5==SW_OFF)
-					{
-						Tp_sw_count++;
-					}
-					if(READ_PIN_SW1_6==SW_OFF)
-					{
-						Tp_sw_count++;
-					}
-					if(Tp_sw_count==6)
-					{
-						test_e = SW_DIP5_ON_dis;
-					}
+                    if(TYPE_PRODUCT == PORDUCT_5INCH)
+                    {
+                        if(READ_PIN_SW5==SW_OFF)
+                        {
+                            Tp_sw_count++;
+                        }
+                        if(READ_PIN_SW1_6==SW_OFF)
+                        {
+                            Tp_sw_count++;
+                        }
+                        if(Tp_sw_count==6)
+                        {
+                            test_e = SW_DIP5_ON_dis;
+                        }
+                    }
+                    else if(TYPE_PRODUCT == PORDUCT_7INCH)
+                    {
+                        if(Tp_sw_count==4)
+                        {
+                            test_e = BACK_light_dis;
+                        }
+                    }
 					
 				   break;
 			case SW_DIP5_ON_dis:
@@ -2182,7 +2234,7 @@ void hard_function_test(void)
 			 lcd_printf_new("                                                                         ");
 			 SetZuobiao(10, 400 + 40); 
 				lcd_printf_new("please Wait");
-				TEST_NANDFLASH();
+				//TEST_NANDFLASH();
 			  W25Q128_earse();
 			  power_save();
 			  REG_OPERATE(REG_CLK_PCLKEN0,1<<1,set);//ENABLE WWDT

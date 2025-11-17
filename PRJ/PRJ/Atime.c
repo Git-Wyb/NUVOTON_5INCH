@@ -37,8 +37,8 @@ E_INT_STATUS tim1ms_control=int_enable;
 void sysTimer0ISR();
 extern volatile uint8_t command_D8_D9_flag;
 extern  uint8_t *BaseData_ARR;
-
-
+extern uint8_t TYPE_PRODUCT;
+void uart0_tx_checksum(void);
 
 
 
@@ -318,21 +318,37 @@ void OneSecondProcess(void)
 					
 				// ClearLayerData(3);//«Â≥˝œ‘ æ«¯”Ú
 				// Backlinght_Control_Init_HARDV4(128);
-				if((READ_PIN_SW1_3==SW_ON)&&(READ_PIN_SW1_6==SW_ON))
-				{
-					if((READ_PIN_SW1_1==SW_ON)&&(READ_PIN_SW1_2==SW_ON)&&(READ_PIN_SW1_3==SW_ON)&&(READ_PIN_SW1_4==SW_ON)&&(READ_PIN_SW1_6==SW_ON))
-					{
-						
-					}
-					else
-					{
-						SetZuobiao(10, 380);
-						lcd_printf_new("ERROR: Incorrect DIP-SW settings");
-					}
-					NAND_BMP_Read_checksum();
-	        Display_checksum();
-	        while(1);
-				}
+                if(TYPE_PRODUCT == PORDUCT_5INCH)
+                {                    
+                    if((READ_PIN_SW1_3==SW_ON)&&(READ_PIN_SW1_6==SW_ON))
+                    {
+                        if((READ_PIN_SW1_1==SW_ON)&&(READ_PIN_SW1_2==SW_ON)&&(READ_PIN_SW1_3==SW_ON)&&(READ_PIN_SW1_4==SW_ON)&&(READ_PIN_SW1_6==SW_ON))
+                        {
+                            
+                        }
+                        else
+                        {
+                            SetZuobiao(10, 380);
+                            lcd_printf_new("ERROR: Incorrect DIP-SW settings");
+                        }
+                        NAND_BMP_Read_checksum();
+                Display_checksum();
+                while(1);
+                    }
+                }
+                else if(TYPE_PRODUCT == PORDUCT_7INCH)
+                {
+                    if((READ_PIN_SW1_1==SW_ON)&&(READ_PIN_SW1_2==SW_ON)&&(READ_PIN_SW1_3==SW_ON)&&(READ_PIN_SW1_4==SW_ON))
+                    {
+                        NAND_BMP_Read_checksum();
+                        Display_checksum();
+                        while(1)
+                        {
+                            uart0_tx_checksum();
+                            sysDelay(1000);
+                        }
+                    }
+                }
 					
 				if(READ_PIN_SW1_2==SW_ON)
 	      {
@@ -341,16 +357,32 @@ void OneSecondProcess(void)
 		       lcd_printf_new("Waiting        ");
 		                                    
 	      } 
-	      if((READ_PIN_SW1_3==SW_ON)||(READ_PIN_SW1_6==SW_ON))
-	      {
-		      
-					SetZuobiao(10, 400 + 40);
-		       lcd_printf_new("Waiting        ");
-					  USB_IMAGE_TYPE = '0';
-		        USB_HAS_USABLE_IMG = 0;
-		        IMAGE_SEARCHED =0;
-		                                    
-	      } 
+          if(TYPE_PRODUCT == PORDUCT_5INCH)
+          {
+              if((READ_PIN_SW1_3==SW_ON)||(READ_PIN_SW1_6==SW_ON))
+              {
+                  
+                        SetZuobiao(10, 400 + 40);
+                   lcd_printf_new("Waiting        ");
+                          USB_IMAGE_TYPE = '0';
+                    USB_HAS_USABLE_IMG = 0;
+                    IMAGE_SEARCHED =0;
+                                                
+              } 
+          }
+          else if(TYPE_PRODUCT == PORDUCT_7INCH)
+          {
+              if(READ_PIN_SW1_3 == SW_ON)
+              {
+                  
+                        SetZuobiao(10, 400 + 40);
+                   lcd_printf_new("Waiting        ");
+                          USB_IMAGE_TYPE = '0';
+                    USB_HAS_USABLE_IMG = 0;
+                    IMAGE_SEARCHED =0;
+                                                
+              }
+          }
 	      if(READ_PIN_SW1_4==SW_ON)
 	      {
 		       

@@ -310,3 +310,16 @@ void sysPutChar(UINT8 ucCh)
 }
 
 /*** (C) COPYRIGHT 2015 Nuvoton Technology Corp. ***/
+
+void sysprintf_tx_checksum(PINT8 pcStr,...)
+{
+	INT8  *argP;
+	vaStart(argP, pcStr);       /* point at the end of the format string */
+    while (*pcStr)
+    {                       /* this works because args are all ints */
+        if (*pcStr == '%')
+            pcStr = FormatItem(pcStr + 1, vaArg(argP, INT));
+        else
+            _PutChar_f(*pcStr++);
+    }
+}

@@ -905,10 +905,13 @@ void comm_handle(void)
 	{
 		return;
 	}
-	if(READ_PIN_SW1_6==SW_ON)//20181130
-	{
-		return;
-	}	
+    if(TYPE_PRODUCT == PORDUCT_5INCH)
+    {
+        if(READ_PIN_SW1_6==SW_ON)//20181130
+        {
+            return;
+        }	
+    }
 	
 	if(rx_finish_state_uart2)  //uart2_send_finish_state
 		{

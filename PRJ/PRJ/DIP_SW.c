@@ -71,7 +71,8 @@ void POWER_5V_SETTING_initstart(void)
 void check_sw5(void)
 {
 	static uint8_t sw5_cnt=0;
-	
+	if(TYPE_PRODUCT == PORDUCT_5INCH)
+    {
       if(sw5_cnt==0)  //开机只检测一次
       	{
 		sw5_cnt=1;
@@ -87,7 +88,14 @@ void check_sw5(void)
 				SCREEN_CONTROL134_0;
 				screen_reverse_bit=1;
 			}
-      	}	
+      	}
+    }  
+    else if(TYPE_PRODUCT == PORDUCT_7INCH)  
+    {
+        SCREEN_CONTROL133_0;
+        SCREEN_CONTROL134_1;
+        screen_reverse_bit=0;
+    }        
 }
 
 
@@ -101,14 +109,17 @@ void check_sw234(void) //100ms run one
 
 	//if(pwr_on_cnt)//没加有些执行不到
 	//	{
-  if((READ_PIN_SW1_3==SW_ON)&&(READ_PIN_SW1_6==SW_ON))
-	 {
-		 SetZuobiao(10, 400 + 60);
-		 lcd_printf_new("ERROR: Incorrect DIP-SW settings");
-		 return;
-	 }
+    if(TYPE_PRODUCT == PORDUCT_5INCH)
+    {
+      if((READ_PIN_SW1_3==SW_ON)&&(READ_PIN_SW1_6==SW_ON))
+         {
+             SetZuobiao(10, 400 + 60);
+             lcd_printf_new("ERROR: Incorrect DIP-SW settings");
+             return;
+         }
+    }
 
-		if((READ_PIN_SW1_2==SW_ON)||(READ_PIN_SW1_3==SW_ON)||(READ_PIN_SW1_4==SW_ON)||(READ_PIN_SW1_6==SW_ON))
+		if((READ_PIN_SW1_2==SW_ON)||(READ_PIN_SW1_3==SW_ON)||(READ_PIN_SW1_4==SW_ON))
 				{
                     if(TYPE_PRODUCT == PORDUCT_5INCH)
                     {
@@ -248,74 +259,76 @@ void check_sw234(void) //100ms run one
 //
 
 	
-	
-	if(READ_PIN_SW1_6==SW_ON)
-	{
-		sw1_6_cnt++;		
-		if(sw1_6_cnt>5)
-		{
-		     sw1_6_cnt=5;
-			if(state.sw1_6==0)
-			{
-				state.sw1_6=1;
-				SetZuobiao(10, 400 + 40);
-				lcd_printf_new("Rewrite All Image                        ");
-				
-				if(gs_usb_mount_flag!=1)
-				{
-					gs_CpyInfo.total =0;
-					gs_CpyInfo.okCnt=0;
-					gs_CpyInfo.failedCnt =0;
-					FLAG_SW_FINISH = FLAG_SW_FINISH|0x04;
-					return;
-				}
-					//f_mount(0, "3:", 1);
-				//res = f_mount(&usb_fatfs, "3:", 1); 
-			
-				if(check_u_disk_img( )==0)
-				{
-					gs_CpyInfo.total =0;
-					gs_CpyInfo.okCnt=0;
-					gs_CpyInfo.failedCnt =0;
-					FLAG_SW_FINISH = FLAG_SW_FINISH|0x04;
-					return;
-				}
-				
-				FLAG_SW3_BEGIN = 0;
-				USB_IMAGE_TYPE='0';
-					CHECK_SUM_USB = 0;
-			 CHECK_SUM_NAND = 0;
-			 badmanage_str->BAD_MANAGE_str.NANDFLASH_CUSTOMER_INX = (uint32_t)(image_file_nandflash_start*2048);
-				//nandflash_format_disk0();
-				//nandflash_format();
-			//	badmanage_str->flag = 0;
-			//	NANDFLASH_BABMANAGE_INIT();
-				nandflash_format();
-				 UsbWriteNandFlash(U2N_P0, NULL, 0);
-				SetZuobiao(10, 400 + 40);
-//				 lcd_printf_new("copy bmp file end,total %d success %d failed %d",gs_CpyInfo.total,gs_CpyInfo.okCnt,gs_CpyInfo.failedCnt);               
-       // lcd_printf_new("Rewrite End      ,total %d success %d failed %d",gs_CpyInfo.total,gs_CpyInfo.okCnt,gs_CpyInfo.failedCnt);
-				//USBH_USR_DeviceDisconnected();
-				FLAG_SW_FINISH = FLAG_SW_FINISH|0x04;
-				//gs_usb_mount_flag = 0;
-			}
-	   	}		   
-	}
-  else
-  {
-			
-		if(sw1_6_cnt)
-		{
-		       sw1_6_cnt--;	
-		  	if(sw1_6_cnt==0)
-		  	{
-			if(state.sw1_6)
-			{
-				//state.sw1_3=0; //DIP2,DIP3,DIP4 ON直用一次即上电检查一次；
-			}
-		  	}	
-		}		   
-	}
+	if(TYPE_PRODUCT == PORDUCT_5INCH)
+    {
+        if(READ_PIN_SW1_6==SW_ON)
+        {
+            sw1_6_cnt++;		
+            if(sw1_6_cnt>5)
+            {
+                 sw1_6_cnt=5;
+                if(state.sw1_6==0)
+                {
+                    state.sw1_6=1;
+                    SetZuobiao(10, 400 + 40);
+                    lcd_printf_new("Rewrite All Image                        ");
+                    
+                    if(gs_usb_mount_flag!=1)
+                    {
+                        gs_CpyInfo.total =0;
+                        gs_CpyInfo.okCnt=0;
+                        gs_CpyInfo.failedCnt =0;
+                        FLAG_SW_FINISH = FLAG_SW_FINISH|0x04;
+                        return;
+                    }
+                        //f_mount(0, "3:", 1);
+                    //res = f_mount(&usb_fatfs, "3:", 1); 
+                
+                    if(check_u_disk_img( )==0)
+                    {
+                        gs_CpyInfo.total =0;
+                        gs_CpyInfo.okCnt=0;
+                        gs_CpyInfo.failedCnt =0;
+                        FLAG_SW_FINISH = FLAG_SW_FINISH|0x04;
+                        return;
+                    }
+                    
+                    FLAG_SW3_BEGIN = 0;
+                    USB_IMAGE_TYPE='0';
+                        CHECK_SUM_USB = 0;
+                 CHECK_SUM_NAND = 0;
+                 badmanage_str->BAD_MANAGE_str.NANDFLASH_CUSTOMER_INX = (uint32_t)(image_file_nandflash_start*2048);
+                    //nandflash_format_disk0();
+                    //nandflash_format();
+                //	badmanage_str->flag = 0;
+                //	NANDFLASH_BABMANAGE_INIT();
+                    nandflash_format();
+                     UsbWriteNandFlash(U2N_P0, NULL, 0);
+                    SetZuobiao(10, 400 + 40);
+    //				 lcd_printf_new("copy bmp file end,total %d success %d failed %d",gs_CpyInfo.total,gs_CpyInfo.okCnt,gs_CpyInfo.failedCnt);               
+           // lcd_printf_new("Rewrite End      ,total %d success %d failed %d",gs_CpyInfo.total,gs_CpyInfo.okCnt,gs_CpyInfo.failedCnt);
+                    //USBH_USR_DeviceDisconnected();
+                    FLAG_SW_FINISH = FLAG_SW_FINISH|0x04;
+                    //gs_usb_mount_flag = 0;
+                }
+            }		   
+        }
+      else
+      {
+                
+            if(sw1_6_cnt)
+            {
+                   sw1_6_cnt--;	
+                if(sw1_6_cnt==0)
+                {
+                if(state.sw1_6)
+                {
+                    //state.sw1_3=0; //DIP2,DIP3,DIP4 ON直用一次即上电检查一次；
+                }
+                }	
+            }		   
+        }
+    }
 	     if(READ_PIN_SW1_2==SW_ON)
 	{
 		sw1_2_cnt++;		
