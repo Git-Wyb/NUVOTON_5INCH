@@ -29,7 +29,7 @@ uint8_t screen_reverse_bit;
 extern uint8_t updata_hex_fromSW2;
 extern Download_ERR_U Download_code;
 extern uint8_t TYPE_PRODUCT;
-
+uint8_t flag_u8 = 0;
 
 void POWER_5V_SETTING_initover(void)
 {
@@ -126,18 +126,16 @@ void check_sw234(void) //100ms run one
                         usb_init();
                     }
                     else if(TYPE_PRODUCT == PORDUCT_7INCH)
-                    {
-                        if((READ_PIN_SW1_3==SW_ON)||(READ_PIN_SW1_4==SW_ON)) //Nuv7 cancel SW1_6
-                        {
-                           usb_init();
-                        }
-                        else if((READ_PIN_SW1_2==SW_ON) && ((FLAG_SW_FINISH&0x01) == 0))
+                    {//Nuv7 cancel SW1_6
+                        if(((READ_PIN_SW1_2==SW_ON)&&((FLAG_SW_FINISH&0x01)==0)) || ((READ_PIN_SW1_3==SW_ON)&&((FLAG_SW_FINISH&0x04)==0)) || 
+                           ((READ_PIN_SW1_4==SW_ON)&&((FLAG_SW_FINISH&0x08) == 0)))
                         {
                             usb_init();
                         }
                     }
-                    if((READ_PIN_SW1_2==SW_ON) && (TYPE_PRODUCT == PORDUCT_7INCH) && ((FLAG_SW_FINISH&0x01) == 1))
-                    {}//Nuv7 SW2 hex write end don't allways display "FINISH" because Renesas restart.
+                    if((TYPE_PRODUCT == PORDUCT_7INCH) && (((READ_PIN_SW1_2==SW_ON)&&((FLAG_SW_FINISH&0x01)==0x01)) || 
+                       ((READ_PIN_SW1_3==SW_ON) && ((FLAG_SW_FINISH&0x04)==0x04)) || ((READ_PIN_SW1_4==SW_ON) && ((FLAG_SW_FINISH&0x08)==0x08))))
+                    {}//Nuv7 SW2/SW3/SW4 end don't allways display "FINISH" because Renesas restart.
                     else
                     {
                         if(gs_usb_mount_flag == 1)//U≈Ã“—æ≠º”‘ÿ
@@ -398,27 +396,35 @@ void Fresh_lcd_dis(void)
 	
 	if(FLAG_SW_FINISH & 0x04)
 	{
-		 SetZuobiao(10, 400 + 40);
-		 lcd_printf_new("copy bmp file end,total %d success %d failed %d",gs_CpyInfo.total,gs_CpyInfo.okCnt,gs_CpyInfo.failedCnt);              
-     SetZuobiao(10, 360);
-		if((CHECK_SUM_USB == CHECK_SUM_NAND)&&(gs_CpyInfo.total==gs_CpyInfo.okCnt)&&(gs_CpyInfo.total!=0))
-		{
-		 lcd_printf_new("PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,USB=0x%08X,NAND=0x%08X",CHECK_SUM_USB,CHECK_SUM_NAND);
-		
-		}
-		else
-		{
-		 lcd_printf_new("NG,NG,NG,NG,NG,NG,NG,NG,NG,NG,NG,NG,NG,USB=0x%08X,NAND=0x%08X",CHECK_SUM_USB,CHECK_SUM_NAND);	
-			
-		}
+        if((flag_u8 & 0x04) == 0)
+        {
+            flag_u8 |= 0x04;
+             SetZuobiao(10, 400 + 40);
+             lcd_printf_new("copy bmp file end,total %d success %d failed %d",gs_CpyInfo.total,gs_CpyInfo.okCnt,gs_CpyInfo.failedCnt);              
+         SetZuobiao(10, 360);
+            if((CHECK_SUM_USB == CHECK_SUM_NAND)&&(gs_CpyInfo.total==gs_CpyInfo.okCnt)&&(gs_CpyInfo.total!=0))
+            {
+             lcd_printf_new("PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,USB=0x%08X,NAND=0x%08X",CHECK_SUM_USB,CHECK_SUM_NAND);
+            
+            }
+            else
+            {
+             lcd_printf_new("NG,NG,NG,NG,NG,NG,NG,NG,NG,NG,NG,NG,NG,USB=0x%08X,NAND=0x%08X",CHECK_SUM_USB,CHECK_SUM_NAND);	
+                
+            }
+        }
 		
 	}
 	
 	
 	if(FLAG_SW_FINISH & 0x08)
 	{
+        if((flag_u8 & 0x08) == 0)
+        {
+            flag_u8 |= 0x08;
 		  SetZuobiao(10, 400 + 60);
 		 lcd_printf_new("Backup End         ");
+        }
 	}
 	
 	if((FLAG_SW_FINISH==0x05)||(FLAG_SW_FINISH==0x06))

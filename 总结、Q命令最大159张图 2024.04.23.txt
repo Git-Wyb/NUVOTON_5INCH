@@ -1,0 +1,87 @@
+1、Q命令最大支持159张图，超出之后会出现死机，
+Q命令之后接I命令或者其他命令，支持不了这么多图片，可能出现死机，因为内存满了。
+
+图像占用内存计算800X480X2 byte
+
+2、D8/D9受信后100ms超时，如果100ms内接其他命令则继续处理，100ms以后接其他命令会报命令受信错误(A01).
+
+3、@03X1*写入BackUp数据之后，需要关机重启数据才生效，如果写完不重启不能再接收@03X1*指令，会报命令受信错误(A01)
+
+4、PA-PE指令：U盘根目录下不能有除文件夹和.bmp图像以外的文件(比如.txt文件.zip文件都不行)，
+	如果存在其他文件，执行指令会报错206.(图像数据烧写错误，对应文件不存在)
+P0-P3指令：BELMONT_BMP_xxxxxxxx文件夹里面不能有除文件夹和.bmp图像以外的文件(比如.txt文件.zip文件都不行)，
+	如果存在其他文件，执行指令会报错206.
+
+5、图像描画(D0命令)，在第2/3层最多描画128张图像(5*5大小)，超过128则报A01。
+
+6、Tp_gs_AreaInfo[Tp_field].addr是I命令分配的虚拟地址(比如：0x6000000=BASEDATA固定,0x6020000=LOGODATA起始地址)，
+logodata_2gbit_change_addr   0x5fa0000 = 0X0BFC0000(NAND LOGOdata起始地址) - 0x6020000(LOGO DATA起始地址)。
+所以NAND实际地址 = Tp_gs_AreaInfo[Tp_field].addr + logodata_2gbit_change_addr。
+
+7、式样书I命令(LOGODATA )分配地址区间0x6020000 - 0x9B40000(虚拟地址)，NAND实际地址区间0xBFC0000 - 0xF5BFFFF，
+所以NAND实际地址区间对应式样书虚拟地址区间0x6020000 - 0x961FFFF，实际地址空间比式样书地址空间少了0x9B40000-0x961FFFF=0x520001≈41块的空间，
+问题就是I命令可分配空间少了41块，这是因为NAND备份快增加到了80块，压缩了LOGODATA 40块的空间，还有1块拿出来作为了UNIT的备份区，所以总共少了41块。
+虽然I命令实际可分配空间为432块，而5寸LOGODATA 市场实际用了311块，7寸LOGODATA 市场实际用了227块，都是能够存下的。
+
+8、导入BACKUP数据后必须关机重新上电。BACKUP数据里的年月(第96、100项)是在关机掉电的时候根据RTC实际更新。
+
+9、U盘写入瑞萨hex只识别文件名八位(比如：TB220511)，多一位少一位都不能识别。
+
+10、瑞萨hex版本是在它软件里的，跟瑞萨hex命名没有关系，是通过W命令发送给新唐的，
+SW2更新时新唐不保存瑞萨hex名称。
+
+11、程序放入SPIflash中，上电将其引导至DDR(SDRAM 128M)中运行。
+UART4 -> LOGO
+UART1 -> 38400(Command)，
+           -> 115200(Update Soft)
+
+12、指令/LOGO通信：新唐UART1(TxPE2/RxPE3)<==>瑞萨UART0
+DEBUG：新唐UART0(TxPE0/RxPE1).
+
+13、F7指令查看的软件版本是当前机器的软件版本，不是抽出BACKUP那台机器的软件版本。
+
+14、LCDMain指瑞萨MCU，LCDSUB指新唐MCU，Main指电源板MCU
+
+15、参考电压2.5V，12位AD(最大值4096)
+指令读出电池电压：@06F1FFF*，应答@071C395D*
+电池AD计算：读出值0x39(十进制57)。
+AD值：57 X 16 X 4 / 3 = 1216。
+电压计算：1216 / 4096 X 2.5 X 4 = 2.96875V 
+为了做成与ST一样
+
+16、5inch/7inch区别的地方2024.05.24
+①、7寸有I2命令，5寸没有，5寸要关掉。2103行if(buff[4]=='2'),改为if(0).
+1845行if((buff[4]=='0')||(buff[4]=='1')||(buff[4]=='2'))去掉||(buff[4]=='2').
+②、W命令7寸受信时就写入，5寸W命令时不写入，掉电时写入。(通过TYPE_PRODUCT = PORDUCT_7INCH;区分)
+③、抽出的文件CSV和BACKUP不一样(通过TYPE_PRODUCT = PORDUCT_7INCH;区分)
+
+17、程序放入SPIflash中，上电将其引导至DDR(SDRAM 128M)中运行。
+
+18、测试模式测完之后，写为正式工作程序，第一次开机启动需要重新分配领域所以需要点时间才能正常开机，大概等待三分钟。
+
+19、typedef enum DATACLASS
+{ 
+	Base_DATACLASS,          //0 基本参数 //BASE_DATA_CLASS,          //
+	ActionNumber_DATACLASS,   //1 动作次数//ACTION_NUMBER_DATA_CLASS,  //
+	ActionTimers_DATACLASS,   //2 动作时间//ACTION_TIMERS_DATA_CLASS,  // //2 
+	UnitPara_DATACLASS,       //3 单元参数//UNIT_PARA_DATA_CLASS,//
+	TestFinalData_DATACLASS,  //4 测定值最终数据//TEST_FINAL_DATA_DATA_CLASS,//
+	TestAllData_DATACLASS,    //5 测定值全部数据//TEST_ALL_DATA_DATA_CLASS,    //5 
+	AnomalyRecord_DATACLASS,  //6 错误履历//ERROR_RECORD_DATACLASS,  //
+	ActionRecord_DATACLASS,    //7 动作履历//ACTION_RECORD_DATACLASS,    //7  
+	//BLANK_DATACLASS
+}DATACLASS_TYPE; 
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -883,30 +883,28 @@ void comm_handle(void)
 	
 	if(TYPE_PRODUCT == PORDUCT_7INCH)
     {
-        if((READ_PIN_SW1_2 == SW_ON) && ((FLAG_SW_FINISH&0x01) == 0))
+        if(((READ_PIN_SW1_2 == SW_ON)&&((FLAG_SW_FINISH&0x01) == 0)) || ((READ_PIN_SW1_3 == SW_ON)&&((FLAG_SW_FINISH&0x04) == 0)) || 
+            ((READ_PIN_SW1_4 == SW_ON)&&((FLAG_SW_FINISH&0x08) == 0)))
         {
             return;
         }
     }
-    else
+    else if(TYPE_PRODUCT == PORDUCT_5INCH)
     {
         if(READ_PIN_SW1_2==SW_ON)//20180928
         {
             return;
         }
-    }
 	//if((READ_PIN_SW1_3==SW_ON)&&((FLAG_SW_FINISH&0x04)==0))
-	if(READ_PIN_SW1_3==SW_ON)//20180928
-	{
-		return;
-	}
-	if(READ_PIN_SW1_4==SW_ON)//20180928
-	//if((READ_PIN_SW1_4==SW_ON)&&((FLAG_SW_FINISH&0x08)==0))
-	{
-		return;
-	}
-    if(TYPE_PRODUCT == PORDUCT_5INCH)
-    {
+        if(READ_PIN_SW1_3==SW_ON)//20180928
+        {
+            return;
+        }    
+        if(READ_PIN_SW1_4==SW_ON)//20180928
+        //if((READ_PIN_SW1_4==SW_ON)&&((FLAG_SW_FINISH&0x08)==0))
+        {
+            return;
+        }
         if(READ_PIN_SW1_6==SW_ON)//20181130
         {
             return;

@@ -2235,6 +2235,12 @@ void hard_function_test(void)
 			 SetZuobiao(10, 400 + 40); 
 				lcd_printf_new("please Wait");
 				//TEST_NANDFLASH();
+             badmanage_str->BAD_MANAGE_str.ERR_NUMBER = 0;
+             for(Tp_i=1; Tp_i<2048;Tp_i++)
+            {
+                NAND_EraseBlock(Tp_i);
+            }
+            Tp_i = 0;
 			  W25Q128_earse();
 			  power_save();
 			  REG_OPERATE(REG_CLK_PCLKEN0,1<<1,set);//ENABLE WWDT
