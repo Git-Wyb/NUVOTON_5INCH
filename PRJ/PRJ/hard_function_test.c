@@ -52,6 +52,8 @@ extern uint8_t wt588h_send_step;
 static uint32_t time_display=0;
 extern UINT32 volatile time1ms_count;
 extern uint8_t TYPE_PRODUCT;
+uint8_t Sw_Scan(void);
+void led_onoff(uint8_t onoff);
 
 void TEST_LCDSHOW(void)
 {
@@ -201,6 +203,7 @@ void hard_function_test(void)
 	static uint32_t sdram_total = 0,sdram_new_addr;
 	static	uint32_t Tp_data_vbat,Tp_data_normal;
 	static  float Tp_advalue;
+    uint8_t sw_num = 0;
 	
 	switch(test_e)
 	{
@@ -222,15 +225,22 @@ void hard_function_test(void)
 			    memset((void *)(display_layer_sdram.LCD_CACHE_BUFFER&(~0x80000000)),0xff,800*480*2);
 		      SetZuobiao(10, 400 + 40);
 		      lcd_printf_new("ONLY-DIP-SW1-ON ");
-  
+              led_onoff(0);
 		      test_e = SW_DIP1_ON_wait;
 		      break;
 		case SW_DIP1_ON_wait:
 			    //gs_usb_mount_flag = 0;
 			    Tp_sw_count = 0;
+                sw_num = Sw_Scan();
+                if(sw_num == 1)
+                {
+                    LED_POWER_ON();
+                    test_e = SW_DIP1_OFF_dis;
+                }
+        /*
 			    if(READ_PIN_SW1_1==SW_ON)
 					{
-						Tp_sw_count++;
+                        Tp_sw_count++;
 						LED_POWER_ON();
 					}
 					else
@@ -279,15 +289,23 @@ void hard_function_test(void)
 					{
 						test_e = SW_DIP1_OFF_dis;
 					}
+                    */
 					
 			    break;
 	   	case SW_DIP1_OFF_dis:
 				   SetZuobiao(10, 400 + 40);
 				   lcd_printf_new("ONLY-DIP-SW1-OFF");
-			     test_e = SW_DIP1_OFF_wait;
+                 test_e = SW_DIP1_OFF_wait;
 				   break;
 		  case SW_DIP1_OFF_wait:
 				  // gs_usb_mount_flag = 0;
+                 sw_num = Sw_Scan();
+                 if(sw_num == 0xFF)
+                 {
+                    led_onoff(0);
+                    test_e = SW_DIP2_ON_dis;
+                 }
+                 /*
 				   Tp_sw_count = 0;
 			    if(READ_PIN_SW1_1==SW_ON)
 					{
@@ -351,7 +369,7 @@ void hard_function_test(void)
                             test_e = SW_DIP2_ON_dis;
                         }
                     }
-					
+					*/
 				   break;
 			case SW_DIP2_ON_dis:
 			    //memset((void *)(display_layer_sdram.LCD_CACHE_BUFFER&(~0x80000000)),0xff,800*480*2);
@@ -362,6 +380,13 @@ void hard_function_test(void)
 		      break;
 		case SW_DIP2_ON_wait:
 			    //gs_usb_mount_flag = 0;
+                sw_num = Sw_Scan();
+                 if(sw_num == 2)
+                 {
+                    LED_LOGO_ON();
+                    test_e = SW_DIP2_OFF_dis;
+                 }
+        /*
 			    Tp_sw_count = 0;
 			    if(READ_PIN_SW1_1==SW_ON)
 					{
@@ -414,7 +439,7 @@ void hard_function_test(void)
 					{
 						test_e = SW_DIP2_OFF_dis;
 					}
-					
+				*/	
 			    break;
 	   	case SW_DIP2_OFF_dis:
 				   SetZuobiao(10, 400 + 40);
@@ -423,6 +448,13 @@ void hard_function_test(void)
 				   break;
 		  case SW_DIP2_OFF_wait:
 				  // gs_usb_mount_flag = 0;
+                sw_num = Sw_Scan();
+                 if(sw_num == 0xFF)
+                 {
+                    led_onoff(0);
+                    test_e = SW_DIP3_ON_dis;
+                 }
+          /*
 				   Tp_sw_count = 0;
 			    if(READ_PIN_SW1_1==SW_ON)
 					{
@@ -486,7 +518,7 @@ void hard_function_test(void)
                             test_e = SW_DIP3_ON_dis;
                         }
                     }
-					
+					*/
 				   break;
 			case SW_DIP3_ON_dis:
 			   // memset((void *)(display_layer_sdram.LCD_CACHE_BUFFER&(~0x80000000)),0xff,800*480*2);
@@ -497,6 +529,13 @@ void hard_function_test(void)
 		      break;
 		case SW_DIP3_ON_wait:
 			    //gs_usb_mount_flag = 0;
+                sw_num = Sw_Scan();
+                 if(sw_num == 3)
+                 {
+                    LED_POWERLOW_ON();
+                    test_e = SW_DIP3_OFF_dis;
+                 }
+        /*
 			    Tp_sw_count = 0;
 			    if(READ_PIN_SW1_1==SW_ON)
 					{
@@ -549,7 +588,7 @@ void hard_function_test(void)
 					{
 						test_e = SW_DIP3_OFF_dis;
 					}
-					
+				*/	
 			    break;
 	   	case SW_DIP3_OFF_dis:
 				   SetZuobiao(10, 400 + 40);
@@ -558,6 +597,13 @@ void hard_function_test(void)
 				   break;
 		  case SW_DIP3_OFF_wait:
 				  // gs_usb_mount_flag = 0;
+                 sw_num = Sw_Scan();
+                 if(sw_num == 0xFF)
+                 {
+                    led_onoff(0);
+                    test_e = SW_DIP4_ON_dis;
+                 }
+          /*
 				   Tp_sw_count = 0;
 			    if(READ_PIN_SW1_1==SW_ON)
 					{
@@ -621,7 +667,7 @@ void hard_function_test(void)
                             test_e = SW_DIP4_ON_dis;
                         }
                     }
-					
+					*/
 				   break;
 				case SW_DIP4_ON_dis:
 			   // memset((void *)(display_layer_sdram.LCD_CACHE_BUFFER&(~0x80000000)),0xff,800*480*2);
@@ -632,6 +678,13 @@ void hard_function_test(void)
 		      break;
 		case SW_DIP4_ON_wait:
 			    //gs_usb_mount_flag = 0;
+                 sw_num = Sw_Scan();
+                 if(sw_num == 4)
+                 {
+                    LED_FLASHERR_ON();
+                    test_e = SW_DIP4_OFF_dis;
+                 }
+        /*
 			    Tp_sw_count = 0;
 			    if(READ_PIN_SW1_1==SW_ON)
 					{
@@ -684,7 +737,7 @@ void hard_function_test(void)
 					{
 						test_e = SW_DIP4_OFF_dis;
 					}
-					
+					*/
 			    break;
 	   	case SW_DIP4_OFF_dis:
 				   SetZuobiao(10, 400 + 40);
@@ -693,6 +746,13 @@ void hard_function_test(void)
 				   break;
 		  case SW_DIP4_OFF_wait:
 				  // gs_usb_mount_flag = 0;
+                 sw_num = Sw_Scan();
+                 if(sw_num == 0xFF)
+                 {
+                    led_onoff(0);
+                    test_e = BACK_light_dis;
+                 }
+          /*
 				   Tp_sw_count = 0;
 			    if(READ_PIN_SW1_1==SW_ON)
 					{
@@ -756,7 +816,7 @@ void hard_function_test(void)
                             test_e = BACK_light_dis;
                         }
                     }
-					
+					*/
 				   break;
 			case SW_DIP5_ON_dis:
 			   // memset((void *)(display_layer_sdram.LCD_CACHE_BUFFER&(~0x80000000)),0xff,800*480*2);
@@ -2272,4 +2332,54 @@ void hard_function_test(void)
 		
 	}
 	
+}
+
+uint8_t flag_sw = 0;
+uint8_t Sw_Scan(void)
+{
+    if(flag_sw==0 &&(READ_PIN_SW1_1==SW_ON || READ_PIN_SW1_2==SW_ON || READ_PIN_SW1_3==SW_ON || READ_PIN_SW1_4==SW_ON || READ_PIN_SW5==SW_ON || READ_PIN_SW1_6==SW_ON))
+    {
+        sysDelay(50);
+        if(READ_PIN_SW1_1==SW_ON || READ_PIN_SW1_2==SW_ON || READ_PIN_SW1_3==SW_ON || READ_PIN_SW1_4==SW_ON || READ_PIN_SW5==SW_ON || READ_PIN_SW1_6==SW_ON)
+        {
+            sysDelay(50);
+            if(READ_PIN_SW1_1==SW_ON) {flag_sw = 1; return 1;}
+            else if (READ_PIN_SW1_2==SW_ON) {flag_sw = 1; return 2;}
+            else if (READ_PIN_SW1_3==SW_ON) {flag_sw = 1; return 3;}
+            else if (READ_PIN_SW1_4==SW_ON) {flag_sw = 1; return 4;}
+            else if (READ_PIN_SW5==SW_ON)   {flag_sw = 1; return 5;}
+            else if (READ_PIN_SW1_6==SW_ON) {flag_sw = 1; return 6;}
+            else return 0;
+        }
+        flag_sw = 0;
+        return 0;
+    }
+    else if(READ_PIN_SW1_1==SW_OFF && READ_PIN_SW1_2==SW_OFF && READ_PIN_SW1_3==SW_OFF && READ_PIN_SW1_4==SW_OFF && READ_PIN_SW5==SW_OFF && READ_PIN_SW1_6==SW_OFF && flag_sw==1)
+    {
+        sysDelay(50);
+        if(READ_PIN_SW1_1==SW_OFF && READ_PIN_SW1_2==SW_OFF && READ_PIN_SW1_3==SW_OFF && READ_PIN_SW1_4==SW_OFF && READ_PIN_SW5==SW_OFF && READ_PIN_SW1_6==SW_OFF && flag_sw==1)
+        {
+            flag_sw = 0;
+            return 0xFF;
+        }
+    }    
+    return 0;
+}
+
+void led_onoff(uint8_t onoff)
+{
+    if(onoff == 0)
+    {
+        LED_POWER_OFF();
+        LED_LOGO_OFF();
+        LED_POWERLOW_OFF();
+        LED_FLASHERR_OFF();
+    }
+    else
+    {
+        LED_POWER_ON();
+        LED_LOGO_ON();
+        LED_POWERLOW_ON();
+        LED_FLASHERR_ON();
+    }
 }
