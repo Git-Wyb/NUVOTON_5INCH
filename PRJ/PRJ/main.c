@@ -180,7 +180,7 @@ int main(void)
 		#ifdef  SYSUARTPRINTF_lowpower
 		sysprintf("----APP start\r\n");
 		#endif
-		
+	/*	
 	#ifdef  SYSUARTPRINTF 
     sysprintf("REG_CLK_PCLKEN0=%x\r\n",REG_CLK_PCLKEN0);
 	  sysprintf("\r\n--------------GPIO_LEDʵ��------------------\r\n");
@@ -189,10 +189,10 @@ int main(void)
 		sysprintf("SYS_UPLL=%d,SYS_APLL=%d,SYS_SYSTEM=%d,SYS_HCLK1=%d,SYS_HCLK234=%d,SYS_PCLK=%d,SYS_CPU=%d/n"
 	             ,sysGetClock(SYS_UPLL),sysGetClock(SYS_APLL),sysGetClock(SYS_SYSTEM),sysGetClock(SYS_HCLK1),sysGetClock(SYS_HCLK234),
 	             sysGetClock(SYS_PCLK),sysGetClock(SYS_CPU));
-  #endif  
+  #endif  */
 		
 		
-		
+		LVD_init_irq();
 		init_gpio();
 		UART_TOIO();
 		POWER_5V_SETTING_initstart();

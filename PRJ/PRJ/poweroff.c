@@ -49,10 +49,13 @@ void LVD_IRQHandler(void)
 {
 	//inpw(REG_SYS_MISCISR);
 	//REG_OPERATE(REG_SYS_MISCISR,1,clear);
+    //REG_OPERATE(REG_CLK_PCLKEN0,1<<1,set);//ENABLE WWDT
+    //WWDT_Open(WWDT_PRESCALER_2048,0x1f,TRUE);
+    /*
 	if(Low_power_flag!=0)
 	{
     GPIO_DisableInt(GPIOH);
-		outpw(REG_NANDECTL, 0x0); /* lock write protect */
+		outpw(REG_NANDECTL, 0x0); // lock write protect 
      while(1);
 	}
 	else
@@ -61,7 +64,7 @@ void LVD_IRQHandler(void)
 		REG_OPERATE(REG_SYS_LVRDCR,1,clear);
 		LOW_POWER_cyw();
 		
-	}
+	}*/
 	//	sysprintf("\r\n--------------LVD INIT------------------\r\n");
 //	REG_OPERATE(REG_SYS_MISCISR,1,clear);
 //	////////////////REG_OPERATE(REG_CLK_PCLKEN0,1<<1,set);//ENABLE WWDT
@@ -592,6 +595,7 @@ void LOW_POWER_cyw(void)
 		#endif
 		#ifdef POWER_INT_MODE
 		outpw(REG_NANDECTL, 0x0); /* lock write protect */
+        //REG_OPERATE(REG_SYS_LVRDCR,1,set);
 		power_checkreset();
         #endif
 		 while(1)
