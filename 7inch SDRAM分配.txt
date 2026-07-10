@@ -1,0 +1,36 @@
+#define bmp_layer1_BUFFER 		display_layer_sdram.LCD_FRAME1_BUFFER
+#define bmp_layer2_BUFFER 		display_layer_sdram.LCD_FRAME2_BUFFER
+#define bmp_layer3_BUFFER 		display_layer_sdram.LCD_FRAME3_BUFFER
+#define bmp_tab_BUFFER    		display_layer_sdram.IMAGE_TAB_BUFFER
+#define SDRAM_Q_TAB       		display_layer_sdram.IMAGE_Q_BUFFER
+#define SDRAM_Q_SHIFT_TAB     	display_layer_sdram.IMAGE_Q_SHIFT_BUFFER
+#define SDRAM_NANDFLASH_TEMP 	display_layer_sdram.NAND_TEMP_BUFFER 
+
+SDRAM: 0X0000 0000 - 0X2000 0000
+
+IMAGE_TAB_BUFFER: (4*64*2048)+64 = 524,352(byte) = 0x44D640(或者0x8044 D640)
+IMAGE_Q_BUFFER   : (65536*8)+64 = 524,352. == Q命令 = 0x4CD680
+IMAGE_Q_SHIFT_BUFFER: (65536*4)+64 = 262,208. = 0x54D6C0
+NAND_TEMP_BUFFER: (800*480*2)+64 = 768,064. == NAND FLASH = 0x58D720
+logodata_basedata_BUFFER: (0x20000)+64 = 131,136. == 领域 = 0x64BE00
+Q命令传输存储和用户图像缓存区域？
+
+
+== LCD表示
+LCD_CACHE_BUFFER = (uint32_t )u8FrameBufPtr = (800 * 480 * 2)+64. = 0x800A1000
+LCD_FRAME_BUFFER = (800 * 480 * 2)+64. = 0x15C840
+LCD_FRAME1_BUFFER = (800 * 480 * 2)+64. = 0x218080, 
+LCD_FRAME2_BUFFER = (800 * 480 * 2)+64. = 0x2D38E0, 
+LCD_FRAME3_BUFFER = (800 * 480 * 2)+64. = 0x38F120
+
+
+串口打印数据：
+1.LCD:u8FrameBufPtr = 0x800A1000
+LCD_CACHE_BUFFER=800A1000 LCD_FRAME_BUFFER=8015C840 LCD_FRAME1_BUFFER=80218080 LCD_FRAME2_BUFFER=802D38E0 LCD_FRAME3_BUFFER=8038F120 
+0
+IMAGE_TAB_BUFFER=0x8044D640
+-----2-----Q commond:IMAGE_Q_BUFFER = 0x804CD680
+SDRAM_Q_TAB=0x       0
+-----3-----Q and image Functional Area:IMAGE_Q_SHIFT_BUFFER = 0x8054D6C0
+-----4-----NAND FLASH Image:NAND_TEMP_BUFFER = 0x8058D720
+5.Functional Area Data:logodata_basedata_BUFFER = 0x8064BE00

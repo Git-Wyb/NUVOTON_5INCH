@@ -561,6 +561,8 @@ void SDRAM_DATA_INIT(void)
 	display_layer_sdram.IMAGE_TAB_BUFFER = (uint32_t )malloc((4*64*2048)+64);
 	display_layer_sdram.IMAGE_TAB_BUFFER = 32+shift_pointer((uint32_t)display_layer_sdram.IMAGE_TAB_BUFFER, 32);
 	display_layer_sdram.IMAGE_TAB_BUFFER = display_layer_sdram.IMAGE_TAB_BUFFER|0X80000000;
+    sysprintf("IMAGE_TAB_BUFFER=0x%8x\r\n",display_layer_sdram.IMAGE_TAB_BUFFER);
+    
 	#ifdef  SYSUARTPRINTF  
 	sysprintf("IMAGE_TAB_BUFFER=0x%8x\r\n",display_layer_sdram.IMAGE_TAB_BUFFER);
   #endif	
@@ -569,8 +571,11 @@ void SDRAM_DATA_INIT(void)
 	display_layer_sdram.IMAGE_Q_BUFFER  = 32+shift_pointer((uint32_t)display_layer_sdram.IMAGE_Q_BUFFER, 32);
 	display_layer_sdram.IMAGE_Q_BUFFER=display_layer_sdram.IMAGE_Q_BUFFER|0X80000000;
 	if(SDRAM_Q_TAB) memset((void *)SDRAM_Q_TAB,0,65536*8);
+    sysprintf("-----2-----Q commond:IMAGE_Q_BUFFER = 0x%8x\r\n",display_layer_sdram.IMAGE_Q_BUFFER);
+	sysprintf("SDRAM_Q_TAB=0x%8x\r\n",*(uint32_t *)(SDRAM_Q_TAB+9*8+4));
+    
 	#ifdef  SYSUARTPRINTF
-	sysprintf("SDRAM_Q_TAB=0x%8x\r\n",display_layer_sdram.IMAGE_Q_BUFFER);
+	sysprintf("Q：IMAGE_Q_BUFFER = 0x%8x\r\n",display_layer_sdram.IMAGE_Q_BUFFER);
 	sysprintf("SDRAM_Q_TAB=0x%8x\r\n",*(uint32_t *)(SDRAM_Q_TAB+9*8+4));
 	GetBmpFIleSize_SDRAMfrist(0x0009,&width,&height);
 	#endif	
@@ -580,11 +585,13 @@ void SDRAM_DATA_INIT(void)
 	display_layer_sdram.IMAGE_Q_SHIFT_BUFFER =  32+shift_pointer((uint32_t)display_layer_sdram.IMAGE_Q_SHIFT_BUFFER, 32);
 	display_layer_sdram.IMAGE_Q_SHIFT_BUFFER = display_layer_sdram.IMAGE_Q_SHIFT_BUFFER|0X80000000;
 	if(SDRAM_Q_SHIFT_TAB) memset((void *)SDRAM_Q_SHIFT_TAB,0,65536*4);
-	
+	sysprintf("-----3-----Q and image Functional Area:IMAGE_Q_SHIFT_BUFFER = 0x%x\r\n",display_layer_sdram.IMAGE_Q_SHIFT_BUFFER);
+    
   display_layer_sdram.NAND_TEMP_BUFFER =  (uint32_t )malloc((800*480*2)+64);
 	display_layer_sdram.NAND_TEMP_BUFFER = 32+shift_pointer(display_layer_sdram.NAND_TEMP_BUFFER,32);
 	display_layer_sdram.NAND_TEMP_BUFFER= display_layer_sdram.NAND_TEMP_BUFFER|0X80000000;
-	
+	sysprintf("-----4-----NAND FLASH Image:NAND_TEMP_BUFFER = 0x%x\r\n",display_layer_sdram.NAND_TEMP_BUFFER);
+    
 	 RxBuffer = (uint8_t  *)(uint32_t )(malloc((NAND_PAGE_SIZE)+64));
 	 //RxBuffer_noshift =RxBuffer;
 	 RxBuffer = (uint8_t  *)(uint32_t )((32+shift_pointer((uint32_t)RxBuffer,32))|0x80000000);
@@ -624,6 +631,7 @@ void SDRAM_DATA_INIT(void)
 	logodata_basedata_BUFFER = 32+shift_pointer(logodata_basedata_BUFFER,32);
 	logodata_basedata_BUFFER = logodata_basedata_BUFFER|0X80000000;
 	logodata_sdrambuffer_addr_arry[0]=logodata_basedata_BUFFER;
+    sysprintf("5.Functional Area Data:logodata_basedata_BUFFER = 0x%x\r\n",logodata_basedata_BUFFER);
 	
 	RX_Test=(uint8_t  *)(uint32_t )(malloc((2048)+64));
 	 RX_Test = (uint8_t  *)(uint32_t )((32+shift_pointer((uint32_t)RX_Test,32))|0x80000000);
@@ -810,12 +818,14 @@ void display_init(void)
 	 #ifdef DEBUG
   if(u8FrameBufPtr == NULL)
 	{
+        sysprintf("NG.LCD:u8FrameBufPtr = 0x%x\r\n",u8FrameBufPtr);
 		#ifdef SYSUARTPRINTF
-		sysprintf("��ȡ�Դ��ַָ��ʧ��!!\n");
+		sysprintf("LCD:u8FrameBufPtr = 0x%x\r\n",u8FrameBufPtr);
 		#endif
 	}
 	else
 	{
+        sysprintf("1.LCD:u8FrameBufPtr = 0x%x\r\n",u8FrameBufPtr);
 		#ifdef SYSUARTPRINTF
 		sysprintf("%X\r\n", (void *)u8FrameBufPtr);
 		sysprintf("%X\r\n", *(uint32_t *)u8FrameBufPtr);
@@ -846,10 +856,12 @@ void display_init(void)
 	display_layer_sdram.LCD_FRAME1_BUFFER = display_layer_sdram.LCD_FRAME1_BUFFER|0x80000000;
 	display_layer_sdram.LCD_FRAME2_BUFFER = display_layer_sdram.LCD_FRAME2_BUFFER|0x80000000;
 	display_layer_sdram.LCD_FRAME3_BUFFER = display_layer_sdram.LCD_FRAME3_BUFFER|0x80000000;
+    sysprintf("LCD_CACHE_BUFFER=%X LCD_FRAME_BUFFER=%X LCD_FRAME1_BUFFER=%X LCD_FRAME2_BUFFER=%X LCD_FRAME3_BUFFER=%X \r\n",
+	display_layer_sdram.LCD_CACHE_BUFFER, display_layer_sdram.LCD_FRAME_BUFFER, 
+	display_layer_sdram.LCD_FRAME1_BUFFER, display_layer_sdram.LCD_FRAME2_BUFFER,display_layer_sdram.LCD_FRAME3_BUFFER);
+    
 	#ifdef SYSUARTPRINTF
 	sysprintf("LCD_CACHE_BUFFER=%X LCD_FRAME_BUFFER=%X LCD_FRAME1_BUFFER=%X LCD_FRAME2_BUFFER=%X LCD_FRAME3_BUFFER=%X \r\n",
-	
-	
 	display_layer_sdram.LCD_CACHE_BUFFER, display_layer_sdram.LCD_FRAME_BUFFER, 
 	display_layer_sdram.LCD_FRAME1_BUFFER, display_layer_sdram.LCD_FRAME2_BUFFER,display_layer_sdram.LCD_FRAME3_BUFFER);
 	#endif
