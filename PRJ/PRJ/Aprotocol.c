@@ -1159,7 +1159,11 @@ uint8_t  decode_protocol(uint8_t *buff,uint16_t len,uint8_t type)
 								
 								flag_layer23_draw = 0;
 								DisCmdDisplay((buff[4] - '0'),bmp_protocol[0].bmp,bmp_protocol[0].num,bmp_protocol[1].bmp,bmp_protocol[1].num,bmp_protocol[2].bmp,bmp_protocol[2].num);                                                         
-						
+                                
+                                bmp_protocol[0].num=0; //Clear it away for future use.
+                                bmp_protocol[1].num=0;
+								bmp_protocol[2].num=0;
+                                
 								if(flag_layer23_draw==1)
 								{
 									return 0;
